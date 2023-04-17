@@ -1,3 +1,11 @@
         <section class="content">
-
+            <h1>{{ 'main.title'|trans }}</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ path('home') }}">{{ 'main.home'|trans }}</a></li>
+                    <li><a href="{{ path('repertory') }}">{{ 'main.repertory'|trans }}</a></li>
+                    <li><a href="{{ path('statistics') }}">{{ 'main.statistics'|trans }}</a></li>
+                    <li><a href="{{ path('profile') }}">{{ 'main.profile'|trans }}</a></li>
+                </ul>
+            </nav>
         </section>

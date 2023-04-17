@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+        <section class="content">
+            <h2>{{ 'authentication.login.title'|trans }}</h2>
+            {{ form_start(form) }}
+                {{ form_row(form.username, {
+                    'id': 'username-input',
+                    'full_name': '_username',
+                    'label': 'authentication.login.username'|trans,
+                    }) }} 
+                {{ form_row(form.password, {
+                    'id': 'password-input',
+                    'full_name': '_password',
+                    'label': 'authentication.login.password'|trans,
+                    }) }} 
+                <button type="submit">{{ 'authentication.login.submit'|trans }}</button>
+            {{ form_end(form) }}
+            <p><a href="#">{{ 'authentication.login.link'|trans }}</a></p>
+        </section>
+{% endblock %}
