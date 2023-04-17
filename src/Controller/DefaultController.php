@@ -8,6 +8,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
+    #[Route('/', name: 'root')]
+    public function root(): Response
+    {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home');  
+        }
+        else {
+            return $this->redirectToRoute('authentication_login');
+        }
+    }
+
     #[Route('/home', name: 'home')]
     public function home(): Response
     {
