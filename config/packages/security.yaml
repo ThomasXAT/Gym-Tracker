@@ -21,6 +21,10 @@ security:
                 check_path: authentication_login
                 username_parameter: login[username]
                 password_parameter: login[password]
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                remember_me_parameter: login[remember_me]
             logout:
                 path: authentication_logout
 

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Athlete;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -22,6 +23,11 @@ class LoginType extends AbstractType
             ])
             ->add('password', PasswordType::class, [
                 'label' => $translator->trans('authentication.login.password'),
+            ])
+            ->add('remember_me', CheckboxType::class, [
+                'label' => $translator->trans('authentication.login.remember_me'),
+                'mapped' => false,
+                'required' => false,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => $translator->trans('authentication.login.submit'),
