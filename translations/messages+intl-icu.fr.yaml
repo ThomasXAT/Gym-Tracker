@@ -10,5 +10,16 @@ authentication:
     title: Formulaire de connexion
     username: Nom d'utilisateur
     password: Mot de passe
+    remember_me: Se souvenir de moi
     submit: Connexion
     link: Je ne possède pas de compte
+  register:
+    title: Formulaire d'inscription
+    firstname: Prénom
+    surname: Nom
+    username: Nom d'utilisateur
+    email: Adresse e-mail
+    password: Mot de passe
+    confirmation: Confirmation du mot de passe
+    submit: Connexion
+    link: Je possède déjà un compte

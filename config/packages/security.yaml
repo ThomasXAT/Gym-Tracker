@@ -19,6 +19,8 @@ security:
             form_login:
                 login_path: authentication_login
                 check_path: authentication_login
+                username_parameter: login[username]
+                password_parameter: login[password]
             logout:
                 path: authentication_logout
 
