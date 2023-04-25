@@ -56,6 +56,16 @@ class AthleteRepository extends ServiceEntityRepository implements PasswordUpgra
         $this->save($user, true);
     }
 
+    public function findOneByUsername($username): ?Athlete
+     {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
 //    /**
 //     * @return Athlete[] Returns an array of Athlete objects
 //     */

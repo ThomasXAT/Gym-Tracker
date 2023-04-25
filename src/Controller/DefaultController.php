@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\AthleteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -57,12 +58,13 @@ class DefaultController extends AbstractController
     }
 
     #[Route('/profile/{username}', name: 'profile')]
-    public function profile(): Response
+    public function profile(AthleteRepository $athleteRepository, String $username): Response
     {
         $page = 'profile';
         return $this->render('main/profile/index.html.twig', [
             'title' => $this->translator->trans('main.'.$page.'.page'),
             'page' => $page,
+            'athlete' => $athleteRepository->findOneByUsername($username)
         ]);
     }
 }

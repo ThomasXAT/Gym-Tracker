@@ -25,6 +25,8 @@ authentication:
     remember_me: Se souvenir de moi
     submit: Se connecter
     link: Je ne possède pas de compte
+  logout:
+    submit: Se déconnecter
   register:
     page: Inscription
     title: Formulaire d'inscription
