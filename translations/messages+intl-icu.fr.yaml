@@ -1,10 +1,21 @@
 
 placeholder: "#"
 title: Gym-Tracker
-  home: Accueil
-  repertory: Répertoire
-  statistics: Statistiques
-  profile: Profil
+main:  
+  home:
+    page: Accueil
+  repertory:
+    page: Répertoire
+  statistics:
+    page: Statistiques
+  profile:
+    page: Profil
+  session:
+    new:  Nouvelle séance
+    start: Débuter la séance
+    continue: Continuer la séance
+    stop: Terminer la séance
+    label: Intitulé de la séance
 authentication:
   login:
     page: Connexion

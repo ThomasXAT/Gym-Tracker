@@ -5,9 +5,16 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\Translator;
 
 class DefaultController extends AbstractController
 {
+    private $translator;
+
+    public function __construct() {
+        $this->translator = new Translator('fr');
+    }
+
     #[Route('/', name: 'root')]
     public function root(): Response
     {
@@ -22,24 +29,40 @@ class DefaultController extends AbstractController
     #[Route('/home', name: 'home')]
     public function home(): Response
     {
-        return $this->render('main/home/index.html.twig');
+        $page = 'home';
+        return $this->render('main/home/index.html.twig', [
+            'title' => $this->translator->trans('main.'.$page.'.page'),
+            'page' => $page,
+        ]);
     }
 
     #[Route('/repertory', name: 'repertory')]
     public function repertory(): Response
     {
-        return $this->render('main/repertory/index.html.twig');
+        $page = 'repertory';
+        return $this->render('main/repertory/index.html.twig', [
+            'title' => $this->translator->trans('main.'.$page.'.page'),
+            'page' => $page,
+        ]);
     }
 
     #[Route('/statistics', name: 'statistics')]
     public function statistics(): Response
     {
-        return $this->render('main/statistics/index.html.twig');
+        $page = 'statistics';
+        return $this->render('main/statistics/index.html.twig', [
+            'title' => $this->translator->trans('main.'.$page.'.page'),
+            'page' => $page,
+        ]);
     }
 
-    #[Route('/profile', name: 'profile')]
+    #[Route('/profile/{username}', name: 'profile')]
     public function profile(): Response
     {
-        return $this->render('main/profile/index.html.twig');
+        $page = 'profile';
+        return $this->render('main/profile/index.html.twig', [
+            'title' => $this->translator->trans('main.'.$page.'.page'),
+            'page' => $page,
+        ]);
     }
 }

@@ -1,0 +1,21 @@
+    <aside id="new_session" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h1 class="modal-title fs-5">{{ 'main.session.new'|trans }}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </header>
+                <main class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="new_session_label" class="form-label">{{ 'main.session.label'|trans }}</label>
+                            <input type="text" id="new_session_label" name="new_session[label]" class="form-control" value="Ma séance du {{ 'now'|date('d/m/Y') }}">
+                        </div>
+                    </form>
+                </main>
+                <footer class="modal-footer">
+                    <button type="button" class="btn btn-success">{{ 'main.session.start'|trans }}</button>
+                </footer>
+            </div>
+        </div>
+    </aside>
