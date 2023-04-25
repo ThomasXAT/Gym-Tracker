@@ -12,10 +12,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Translation\Translator;
 
 #[Route(path: '/authentication', name: 'authentication_')]
 class SecurityController extends AbstractController
 {
+    private $translator;
+
+    public function __construct() {
+        $this->translator = new Translator('fr');
+    }
+
     #[Route(path: '/login', name: 'login')]
     public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
     {
@@ -30,8 +37,11 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('root');
             }
             else {
+                $page = 'login';
                 return $this->render('authentication/login/index.html.twig', [
                     'form' => $form,
+                    'title' => $this->translator->trans('authentication.'.$page.'.page'),
+                    'page' => $page,
                 ]);
             }
         }
@@ -47,28 +57,34 @@ class SecurityController extends AbstractController
     #[Route('/register', name: 'register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $athlete = new Athlete();
-        $form = $this->createForm(RegisterType::class, $athlete);
-        $form->handleRequest($request);
+        if (!$this->getUser()) {
+            $athlete = new Athlete();
+            $form = $this->createForm(RegisterType::class, $athlete);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $athlete->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $athlete,
-                    $form->get('password')->getData()
-                )
-            );
-
-            $entityManager->persist($athlete);
-            $entityManager->flush();
-            // do anything else you need here, like send an email
-
+            if ($form->isSubmitted() && $form->isValid()) {
+                $athlete->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $athlete,
+                        $form->get('password')->getData()
+                    )
+                );
+                $entityManager->persist($athlete);
+                $entityManager->flush();
+                // do anything else you need here, like send an email
+                return $this->redirectToRoute('root');
+            }
+            else {
+                $page = 'register';
+                return $this->render('authentication/register/index.html.twig', [
+                    'form' => $form->createView(),
+                    'title' => $this->translator->trans('authentication.'.$page.'.page'),
+                    'page' => $page,
+                ]);
+            }
+        }
+        else {
             return $this->redirectToRoute('root');
         }
-
-        return $this->render('authentication/register/index.html.twig', [
-            'form' => $form->createView(),
-        ]);
     }
 }

@@ -4,10 +4,10 @@
 {% set section = 'authentication' %}
 {% endif %}
 <!DOCTYPE html>
-<html>
+<html lang="fr" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Gym-Tracker</title>
+    <title>{{'title'|trans }} / {{ title|trans }}</title>
 {% block stylesheets %}
     {{ encore_entry_link_tags('app') }}
 {% endblock %}
@@ -16,13 +16,14 @@
 {% endblock %}
 </head>
 <body>
-    <header class="{{ section }}">
+    <h1 hidden>{{ 'title'|trans }}</h1>
+    <header class="{{ section }} {% if section == 'main' %}border-bottom {% endif %}p-2 p-md-3">
 {% include("/#{section}/header.html.twig") %}
     </header>
-    <main class="{{ section }}">
+    <main class="{{ section }} p-2 p-md-3">
 {% block body %}{% endblock %}
     </main>
-    <footer class="{{ section }}">
+    <footer class="{{ section }} p-2 p-md-3">
 {% include("/#{section}/footer.html.twig") %}
     </footer>
 </body>

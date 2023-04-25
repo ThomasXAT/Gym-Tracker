@@ -1,0 +1,18 @@
+            {{ form_start(form) }}
+                <section id="section-username" class="form-floating mb-3">
+                    {{ form_widget(form.username) }}
+                    {{ form_label(form.username) }}
+                </section>
+                <section id="section-password" class="form-floating mb-3">
+                    {{ form_widget(form.password) }}
+                    {{ form_label(form.password) }}
+                </section>
+                <section id="section-remember_me" class="form-check mb-3">
+                    {{ form_widget(form.remember_me) }}
+                    {{ form_label(form.remember_me) }}
+                </section>
+                <section id="section-submit" class="d-grid gap-2">
+                    {{ form_widget(form.submit) }}         
+                </section>
+                {{ form_widget(form._token) }}
+            {{ form_end(form) }}

@@ -1,38 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-        <section class="content">
-            <h2>{{ 'authentication.register.title'|trans }}</h2>
-            {{ form_start(form) }}
-                <section id="section-fullname">
-                    <div>
-                        {{ form_label(form.firstname) }}
-                        {{ form_widget(form.firstname) }}
-                    </div>
-                    <div>
-                        {{ form_label(form.surname) }}
-                        {{ form_widget(form.surname) }}
-                    </div>
-                </section>
-                <section id="section-username">
-                    {{ form_label(form.username) }}
-                    {{ form_widget(form.username) }}
-                </section>
-                <section id="section-email">
-                    {{ form_label(form.email) }}
-                    {{ form_widget(form.email) }}
-                </section>
-                <section id="section-password">
-                    {{ form_label(form.password) }}
-                    {{ form_widget(form.password) }}
-                </section>
-                <section id="section-confirmation">
-                    {{ form_label(form.confirmation) }}
-                    {{ form_widget(form.confirmation) }}
-                </section>
-                <section id="section-submit">
-                    {{ form_widget(form.submit) }}
-                </section>
-            {{ form_end(form) }}
-            <p><a href="{{ path('authentication_login') }}">{{ 'authentication.register.link'|trans }}</a></p>
+        <section class="content container">
+            <div id="title" class="text-center py-3">
+                <h2>{{ 'authentication.register.title'|trans }}</h2>
+                <p class="required">{{ 'authentication.register.required'|trans }}</p>
+            </div>
+{{ include('authentication/register/_form.html.twig') }}        
+            <p class="text-center py-3"><a href="{{ path('authentication_login') }}">{{ 'authentication.register.link'|trans }}</a></p>
         </section>
 {% endblock %}

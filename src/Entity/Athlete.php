@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: AthleteRepository::class)]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[UniqueEntity(fields: ['username'], message: 'Ce nom d\'utilisateur n\'est pas disponible')]
 class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -29,10 +29,10 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: false)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 24, nullable: false)]
+    #[ORM\Column(length: 24, nullable: true)]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 24, nullable: true)]

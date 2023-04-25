@@ -1,25 +1,28 @@
 
-main:
-  title: Gym-Tracker
+placeholder: "#"
+title: Gym-Tracker
   home: Accueil
   repertory: Répertoire
   statistics: Statistiques
   profile: Profil
 authentication:
   login:
+    page: Connexion
     title: Formulaire de connexion
     username: Nom d'utilisateur
     password: Mot de passe
     remember_me: Se souvenir de moi
-    submit: Connexion
+    submit: Se connecter
     link: Je ne possède pas de compte
   register:
+    page: Inscription
     title: Formulaire d'inscription
+    required: Champs obligatoires
     firstname: Prénom
     surname: Nom
     username: Nom d'utilisateur
     email: Adresse e-mail
     password: Mot de passe
     confirmation: Confirmation du mot de passe
-    submit: Connexion
+    submit: S'inscrire
     link: Je possède déjà un compte

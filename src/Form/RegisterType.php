@@ -14,31 +14,51 @@ use Symfony\Component\Translation\Translator;
 
 class RegisterType extends AbstractType
 {
+    private $translator;
+
+    public function __construct() {
+        $this->translator = new Translator('fr');
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $translator = new Translator('fr');
         $builder
             ->add('firstname', TextType::class, [
-                'label' => $translator->trans('authentication.register.firstname'),
+                'label' => $this->translator->trans('authentication.register.firstname'),
+                'required' => false,
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label_attr' => ['class' => 'form-label'],
             ])
             ->add('surname', TextType::class, [
-                'label' => $translator->trans('authentication.register.surname'),
+                'label' => $this->translator->trans('authentication.register.surname'),
+                'required' => false,
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label_attr' => ['class' => 'form-label'],
             ])     
             ->add('username', TextType::class, [
-                'label' => $translator->trans('authentication.register.username'),
+                'label' => $this->translator->trans('authentication.register.username'),
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label_attr' => ['class' => 'form-label'],
             ])
             ->add('email', EmailType::class, [
-                'label' => $translator->trans('authentication.register.email'),
+                'label' => $this->translator->trans('authentication.register.email'),
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label_attr' => ['class' => 'form-label'],
             ])     
             ->add('password', PasswordType::class, [
-                'label' => $translator->trans('authentication.register.password'),
+                'label' => $this->translator->trans('authentication.register.password'),
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label_attr' => ['class' => 'form-label'],
             ])
             ->add('confirmation', PasswordType::class, [
-                'label' => $translator->trans('authentication.register.confirmation'),
+                'label' => $this->translator->trans('authentication.register.confirmation'),
                 'mapped' => false,
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label_attr' => ['class' => 'form-label'],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => $translator->trans('authentication.register.submit'),
+                'label' => $this->translator->trans('authentication.register.submit'),
+                'attr' => ['class' => 'btn btn-success'],
             ])
         ;
     }
@@ -47,6 +67,7 @@ class RegisterType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Athlete::class,
+            'attr' => ['class' => 'mx-auto'],
         ]);
     }
 }

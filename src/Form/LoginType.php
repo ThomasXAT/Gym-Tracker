@@ -14,23 +14,37 @@ use Symfony\Component\Translation\Translator;
 
 class LoginType extends AbstractType
 {
+    private $translator;
+
+    public function __construct() {
+        $this->translator = new Translator('fr');
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $translator = new Translator('fr');
         $builder
             ->add('username', TextType::class, [
-                'label' => $translator->trans('authentication.login.username'),
+                'label' => $this->translator->trans('authentication.login.username'),
+                'required' => false,
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label_attr' => ['class' => 'form-label'],
             ])
             ->add('password', PasswordType::class, [
-                'label' => $translator->trans('authentication.login.password'),
+                'label' => $this->translator->trans('authentication.login.password'),
+                'required' => false,
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label_attr' => ['class' => 'form-label'],
             ])
             ->add('remember_me', CheckboxType::class, [
-                'label' => $translator->trans('authentication.login.remember_me'),
+                'label' => $this->translator->trans('authentication.login.remember_me'),
                 'mapped' => false,
                 'required' => false,
+                'attr' => ['class' => 'form-check-input'],
+                'label_attr' => ['class' => 'form-check-label'],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => $translator->trans('authentication.login.submit'),
+                'label' => $this->translator->trans('authentication.login.submit'),
+                'attr' => ['class' => 'btn btn-success'],
             ])
         ;
     }
@@ -39,6 +53,7 @@ class LoginType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Athlete::class,
+            'attr' => ['class' => 'mx-auto'],
         ]);
     }
 }

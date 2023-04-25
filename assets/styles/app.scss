@@ -1,5 +1,12 @@
 @import "~bootstrap/scss/bootstrap";
 
-body {
-    background-color: lightgray;
+.authentication {
+    .content {
+        max-width: 420px !important;
+    }
+}
+
+.required:after {
+    content:"*";
+    color:red;
 }
