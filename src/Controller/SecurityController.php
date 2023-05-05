@@ -34,7 +34,7 @@ class SecurityController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $athlete = $form->getData();
-                return $this->redirectToRoute('root');
+                return $this->redirectToRoute('home');
             }
             else {
                 $page = 'login';
@@ -46,7 +46,7 @@ class SecurityController extends AbstractController
             }
         }
         else {
-            return $this->redirectToRoute('root');
+            return $this->redirectToRoute('home');
         }
     }
 
@@ -72,7 +72,7 @@ class SecurityController extends AbstractController
                 $entityManager->persist($athlete);
                 $entityManager->flush();
                 // do anything else you need here, like send an email
-                return $this->redirectToRoute('root');
+                return $this->redirectToRoute('home');
             }
             else {
                 $page = 'register';
@@ -84,7 +84,7 @@ class SecurityController extends AbstractController
             }
         }
         else {
-            return $this->redirectToRoute('root');
+            return $this->redirectToRoute('home');
         }
     }
 }

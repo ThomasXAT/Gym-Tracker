@@ -1,7 +1,7 @@
         <section class="content container">
             <nav class="d-flex align-items-center">
                 {# Logo #}<section class="col-6 col-md-2 text-start">
-                    <a href="{{ path('root') }}">
+                    <a href="{{ path('home') }}">
                         <picture>
                             <source srcset="{{ asset('build/images/Gym-Tracker.png') }}" height="50px" media="(min-width: 768px)">
                             <img src="{{ asset('build/images/GT.png') }}" alt="{{ 'title'|trans }}" height="38px">
@@ -12,7 +12,7 @@
                     <ul class="nav justify-content-center">
                         <li class="nav-item"><a class="nav-link {% if page is defined and page == 'home' %}text-white{% else %}text-body{% endif %}" href="{{ path('home') }}">{{ 'main.home.page'|trans }}</a></li>
                         <li class="nav-item"><a class="nav-link {% if page is defined and page == 'repertory' %}text-white{% else %}text-body{% endif %}" href="{{ path('repertory') }}">{{ 'main.repertory.page'|trans }}</a></li>
-                        <li class="nav-item"><a class="nav-link {% if page is defined and page == 'statistics' %}text-white{% else %}text-body{% endif %}" href="{{ path('statistics') }}">{{ 'main.statistics.page'|trans }}</a></li>
+                        <li class="nav-item"><a class="nav-link {% if page is defined and page == 'statistics' %}text-white{% else %}text-body{% endif %}" href="{{ path('statistics', { 'username': app.user.username }) }}">{{ 'main.statistics.page'|trans }}</a></li>
                         <li class="nav-item"><a class="nav-link {% if page is defined and page == 'profile' %}text-white{% else %}text-body{% endif %}" href="{{ path('profile', { 'username': app.user.username }) }}">{{ 'main.profile.page'|trans }}</a></li>
                     </ul>
                 </section>

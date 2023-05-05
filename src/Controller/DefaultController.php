@@ -16,18 +16,7 @@ class DefaultController extends AbstractController
         $this->translator = new Translator('fr');
     }
 
-    #[Route('/', name: 'root')]
-    public function root(): Response
-    {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('home');  
-        }
-        else {
-            return $this->redirectToRoute('authentication_login');
-        }
-    }
-
-    #[Route('/home', name: 'home')]
+    #[Route('/', name: 'home')]
     public function home(): Response
     {
         $page = 'home';
@@ -47,24 +36,25 @@ class DefaultController extends AbstractController
         ]);
     }
 
-    #[Route('/statistics', name: 'statistics')]
-    public function statistics(): Response
-    {
-        $page = 'statistics';
-        return $this->render('main/statistics/index.html.twig', [
-            'title' => $this->translator->trans('main.'.$page.'.page'),
-            'page' => $page,
-        ]);
-    }
-
-    #[Route('/profile/{username}', name: 'profile')]
+    #[Route('/{username}', name: 'profile')]
     public function profile(AthleteRepository $athleteRepository, String $username): Response
     {
         $page = 'profile';
         return $this->render('main/profile/index.html.twig', [
             'title' => $this->translator->trans('main.'.$page.'.page'),
             'page' => $page,
-            'athlete' => $athleteRepository->findOneByUsername($username)
+            'athlete' => $athleteRepository->findOneByUsername($username),
+        ]);
+    }
+
+    #[Route('/{username}/statistics', name: 'statistics')]
+    public function statistics(AthleteRepository $athleteRepository, String $username): Response
+    {
+        $page = 'statistics';
+        return $this->render('main/statistics/index.html.twig', [
+            'title' => $this->translator->trans('main.'.$page.'.page'),
+            'page' => $page,
+            'athlete' => $athleteRepository->findOneByUsername($username),
         ]);
     }
 }
