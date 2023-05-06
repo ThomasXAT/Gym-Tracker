@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-        <section class="content container">
+        <section class="content container" {{ stimulus_controller('register') }}>
             <div id="title" class="text-center py-3">
                 <h2>{{ 'authentication.register.title'|trans }}</h2>
                 <p class="required">{{ 'authentication.register.required'|trans }}</p>

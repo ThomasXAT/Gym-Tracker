@@ -58,7 +58,7 @@ class RegisterType extends AbstractType
             ])
             ->add('submit', SubmitType::class, [
                 'label' => $this->translator->trans('authentication.register.submit'),
-                'attr' => ['class' => 'btn btn-success'],
+                'attr' => ['class' => 'btn btn-success', 'disabled' => 'disabled'],
             ])
         ;
     }
@@ -67,7 +67,7 @@ class RegisterType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Athlete::class,
-            'attr' => ['class' => 'mx-auto'],
+            'attr' => ['id' => 'form-register', 'class' => 'mx-auto'],
         ]);
     }
 }

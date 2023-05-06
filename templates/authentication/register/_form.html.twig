@@ -1,12 +1,14 @@
             {{ form_start(form) }}
-                <section id="section-fullname" class="d-flex mb-3">
-                    <div class="form-floating col-6 pe-1">
-                        {{ form_widget(form.firstname) }}
-                        {{ form_label(form.firstname) }}
-                    </div>
-                    <div class="form-floating col-6 ms-1 pe-1">
-                        {{ form_widget(form.surname) }}
-                        {{ form_label(form.surname) }}
+                <section id="section-fullname" class="mb-3">
+                    <div class="d-flex">
+                        <section id="section-firstname" class="form-floating col-6 pe-1">
+                            {{ form_widget(form.firstname) }}
+                            {{ form_label(form.firstname) }}
+                        </section>
+                        <section id="section-surname" class="form-floating col-6 ms-1 pe-1">
+                            {{ form_widget(form.surname) }}
+                            {{ form_label(form.surname) }}
+                        </section>
                     </div>
                     <p id="help-fullname" class="form-text text-danger"></p>
                 </section>
@@ -25,7 +27,7 @@
                     {{ form_label(form.password) }}
                     <p id="help-password" class="form-text text-danger"></p>
                 </section>
-                <section id="section-confirmation" class="form-floating mb-3">
+                <section id="section-confirmation" class="form-floating mb-3" hidden>
                     {{ form_widget(form.confirmation) }}
                     {{ form_label(form.confirmation) }}
                     <p id="help-confirmation" class="form-text text-danger"></p>

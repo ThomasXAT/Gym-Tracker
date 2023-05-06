@@ -44,7 +44,7 @@ class LoginType extends AbstractType
             ])
             ->add('submit', SubmitType::class, [
                 'label' => $this->translator->trans('authentication.login.submit'),
-                'attr' => ['class' => 'btn btn-success'],
+                'attr' => ['class' => 'btn btn-success', 'disabled' => 'disabled'],
             ])
         ;
     }
@@ -53,7 +53,7 @@ class LoginType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Athlete::class,
-            'attr' => ['class' => 'mx-auto'],
+            'attr' => ['id' => 'form-login', 'class' => 'mx-auto'],
         ]);
     }
 }
