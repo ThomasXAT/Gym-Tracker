@@ -10,7 +10,7 @@ use Symfony\Component\Translation\Translator;
 
 class DefaultController extends AbstractController
 {
-    private $translator;
+    private Translator $translator;
 
     public function __construct() {
         $this->translator = new Translator('fr');
@@ -43,7 +43,7 @@ class DefaultController extends AbstractController
         return $this->render('main/profile/index.html.twig', [
             'title' => $this->translator->trans('main.'.$page.'.page'),
             'page' => $page,
-            'athlete' => $athleteRepository->findOneByUsername($username),
+            'athlete' => $athleteRepository->findByUsername($username),
         ]);
     }
 
@@ -54,7 +54,7 @@ class DefaultController extends AbstractController
         return $this->render('main/statistics/index.html.twig', [
             'title' => $this->translator->trans('main.'.$page.'.page'),
             'page' => $page,
-            'athlete' => $athleteRepository->findOneByUsername($username),
+            'athlete' => $athleteRepository->findByUsername($username),
         ]);
     }
 }

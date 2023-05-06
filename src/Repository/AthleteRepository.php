@@ -56,13 +56,28 @@ class AthleteRepository extends ServiceEntityRepository implements PasswordUpgra
         $this->save($user, true);
     }
 
-    public function findOneByUsername($username): ?Athlete
+    public function findByUsername($username): ?Athlete
      {
         return $this->createQueryBuilder('a')
             ->andWhere('a.username = :username')
             ->setParameter('username', $username)
             ->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * @return Athlete[] Returns an array of Athlete objects
+     */
+    public function findCurrentSession(Athlete $athlete): array
+    {
+        return $this->createQueryBuilder('a')
+            ->join('a.sessions', 's')
+            ->where('s.athlete = :athlete')
+            ->andWhere('s.current = 1')
+            ->setParameter('athlete', $athlete->getId())
+            ->getQuery()
+            ->getResult()
         ;
     }
 
