@@ -1,3 +1,15 @@
         <section class="content container">
-            <p class="text-center py-2 py-md-3 my-0">Développé par Thomas JORGE</p>
+<div class="d-flex justify-content-between align-items-center">
+    <section>
+        <p class="mb-0">Développé par Thomas JORGE</p>
+    </section>
+    <section>
+        <a href="{{ path('authentication_logout') }}">
+            <button class="btn btn-outline-danger text-nowrap">{{ 'authentication.logout.submit'|trans }}</button>
+        </a>
+    </section>
+</div>
+
+
+
         </section>
