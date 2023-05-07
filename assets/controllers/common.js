@@ -1,38 +1,70 @@
-function setValid(id) {
-    if ($("#" + id).hasClass("is-invalid")) {
-        $("#" + id).removeClass("is-invalid").addClass("is-valid");
-    }
-    else {
-        $("#" + id).addClass("is-valid");
+export var athlete = {
+    ajax: function() {
+        return new Promise(function(resolve, reject) {
+            $.ajax({
+                url: '/ajax/athlete',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    resolve(response);
+                },
+                error: function(error) {
+                    reject(error);
+                }
+            });
+        });
+    },
+    get: async function(username = null) {
+        try {
+            let athletes = await athlete.ajax();
+            let result;
+            if (username) {
+                result = athletes[username.toLowerCase()];
+            }
+            else {
+                result = athletes;
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
-function setInvalid(id) {
-    if ($("#" + id).hasClass("is-valid")) {
-        $("#" + id).removeClass("is-valid").addClass("is-invalid");
-    }
-    else {
-        $("#" + id).addClass("is-invalid");
-    }
-}
-
-function setNeutral(id) {
-    if ($("#" + id).hasClass("is-valid")) {
-        $("#" + id).removeClass("is-valid");
-    }
-    if ($("#" + id).hasClass("is-invalid")) {
-        $("#" + id).removeClass("is-invalid");
-    }
+export var input = {
+    setValid: function(id) {
+        if ($("#" + id).hasClass("is-invalid")) {
+            $("#" + id).removeClass("is-invalid").addClass("is-valid");
+        }
+        else {
+            $("#" + id).addClass("is-valid");
+        }
+    },
+    setInvalid: function(id) {
+        if ($("#" + id).hasClass("is-valid")) {
+            $("#" + id).removeClass("is-valid").addClass("is-invalid");
+        }
+        else {
+            $("#" + id).addClass("is-invalid");
+        }
+    },
+    setNeutral: function(id) {
+        if ($("#" + id).hasClass("is-valid")) {
+            $("#" + id).removeClass("is-valid");
+        }
+        if ($("#" + id).hasClass("is-invalid")) {
+            $("#" + id).removeClass("is-invalid");
+        }
+    },
 }
 
 export var verify = {
     username: function(id, help = false) {
         if (help) {
             $("#help-username").html("");
-            setNeutral(id);
+            input.setNeutral(id);
         } 
         if ($("#" + id).val() != "") {
-            if (help) {setInvalid(id);}
+            if (help) {input.setInvalid(id);}
             if (!/^[a-zA-Z0-9_]+$/.test($("#" + id).val())) {
                 if (help) {$("#help-username").html("Identifiant incorrect. Caractères autorisés : espaces, tirets bas et lettres (majuscules et minuscules).");}
             }
@@ -43,19 +75,19 @@ export var verify = {
                 if (help) {$("#help-username").html("Identifiant trop long. Taille maximale : 16 caractères.");}
             }
             else {
-                if (help) {setValid(id);}
+                if (help) {input.setValid(id);}
                 return true;
             }
         }
         return false;
     },
-    password: function(id, help = false, confirm = false) {
+    password: function(id, help = false) {
         if (help) {
             $("#help-password").html("");
-            setNeutral(id);
+            input.setNeutral(id);
         }
         if ($("#" + id).val() != "") {
-            if (help) {setInvalid(id);}
+            if (help) {input.setInvalid(id);}
             if ($("#" + id).val().length < 8) {
                 if (help) {$("#help-password").html("Mot de passe trop court. Taille minimale : 8 caractères.");}
             }
@@ -63,8 +95,7 @@ export var verify = {
                 if (help) {$("#help-password").html("Mot de passe trop long. Taille maximale : 48 caractères.");}
             }
             else {
-                if (help) {setValid(id);}
-                if (confirm) {$("#section-confirmation").prop("hidden", false);}
+                if (help) {input.setValid(id);}
                 return true;
             }
         }
@@ -72,9 +103,9 @@ export var verify = {
         return false;
     },
     firstname: function(id, help = false) {
-        if (help) {setNeutral(id);}
+        if (help) {input.setNeutral(id);}
         if ($("#" + id).val() != "") {
-            if (help) {setInvalid(id);}
+            if (help) {input.setInvalid(id);}
             $("#" + id).val($("#" + id).val().split(/(\s|-)+/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(""));
             if (!/^[a-zA-Zà-üÀ-Ü-\s]+$/.test($("#" + id).val())) {
                 if (help) {$("#help-fullname").html("Prénom incorrect. Caractères autorisés : espaces, tirets et lettres (majuscules, minuscules et accentuées).");}  
@@ -89,15 +120,15 @@ export var verify = {
                 return false;
             }
             else {
-                if (help) {setValid(id);}
+                if (help) {input.setValid(id);}
             }
         }
         return true;
     },
     surname: function(id, help = false) {
-        if (help) {setNeutral(id);}
+        if (help) {input.setNeutral(id);}
         if ($("#" + id).val() != "") {
-            if (help) {setInvalid(id);}
+            if (help) {input.setInvalid(id);}
             $("#" + id).val($("#" + id).val().split(/(\s|-)+/).map(word => word.toUpperCase()).join(""));
             if (!/^[a-zA-Zà-üÀ-Ü-\s]+$/.test($("#" + id).val())) {
                 if (help) {$("#help-fullname").html("Nom incorrect. Caractères autorisés : espaces, tirets et lettres (majuscules, minuscules et accentuées).");}  
@@ -112,7 +143,7 @@ export var verify = {
                 return false;
             }
             else {
-                if (help) {setValid(id);}
+                if (help) {input.setValid(id);}
             }
         }
         return true;
@@ -130,10 +161,10 @@ export var verify = {
     email: function(id, help = false) {
         if (help) {
             $("#help-email").html("");
-            setNeutral(id);
+            input.setNeutral(id);
         }
         if ($("#" + id).val() != "") {
-            if (help) {setInvalid(id);}
+            if (help) {input.setInvalid(id);}
             $("#" + id).val($("#" + id).val().toLowerCase());
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($("#" + id).val())) {
                 if (help) {$("#help-email").html("Veuillez saisir une adresse e-mail valide.");}
@@ -142,7 +173,7 @@ export var verify = {
                 if (help) {$("#help-email").html("Adresse trop longue. Taille maximale : 128 caractères.");}
             }
             else {
-                if (help) {setValid(id);}
+                if (help) {input.setValid(id);}
                 return true;
             }
         }
@@ -151,15 +182,15 @@ export var verify = {
     confirmation: function(idConfirmation, idPassword, help = false) {
         if (help) {
             $("#help-confirmation").html("");
-            setNeutral(idConfirmation);
+            input.setNeutral(idConfirmation);
         }
         if ($("#" + idConfirmation).val() != "") {
-            if (help) {setInvalid(idConfirmation);}
+            if (help) {input.setInvalid(idConfirmation);}
             if ($("#" + idConfirmation).val() != $("#" + idPassword).val()) {
                 if (help) {$("#help-confirmation").html("Les mots de passe ne correspondent pas.");}
             }
             else {
-                if (help) {setValid(idConfirmation);}
+                if (help) {input.setValid(idConfirmation);}
                 return true;
             }
         }
