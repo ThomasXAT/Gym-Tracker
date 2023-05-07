@@ -43,7 +43,7 @@ class DefaultController extends AbstractController
         return $this->render('main/profile/index.html.twig', [
             'title' => $this->translator->trans('main.'.$page.'.page'),
             'page' => $page,
-            'athlete' => $athleteRepository->findByUsername($username),
+            'athlete' => $athleteRepository->findOneBy(['username' => $username]),
         ]);
     }
 
@@ -54,7 +54,7 @@ class DefaultController extends AbstractController
         return $this->render('main/statistics/index.html.twig', [
             'title' => $this->translator->trans('main.'.$page.'.page'),
             'page' => $page,
-            'athlete' => $athleteRepository->findByUsername($username),
+            'athlete' => $athleteRepository->findOneBy(['username' => $username]),
         ]);
     }
 }

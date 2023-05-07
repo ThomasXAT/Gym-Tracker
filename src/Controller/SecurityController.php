@@ -87,4 +87,5 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('home');
         }
     }
+
 }
