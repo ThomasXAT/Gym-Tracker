@@ -5,13 +5,14 @@ namespace App\Entity;
 use App\Repository\AthleteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: AthleteRepository::class)]
-#[UniqueEntity(fields: ['username'], message: 'Ce nom d\'utilisateur n\'est pas disponible')]
+#[UniqueEntity(fields: ['username'], message: 'Cet identifiant n\'est pas disponible')]
 class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -31,7 +32,7 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255, nullable: false)]
+    #[ORM\Column(length: 128, nullable: false)]
     private ?string $email = null;
 
     #[ORM\Column(length: 24, nullable: true)]
@@ -42,6 +43,18 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'athlete', targetEntity: Session::class)]
     private Collection $sessions;
+
+    #[ORM\Column(length: 1024, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $height = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $weight = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $picture = null;
 
     public function __construct()
     {
@@ -180,6 +193,54 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
                 $session->setAthlete(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getHeight(): ?int
+    {
+        return $this->height;
+    }
+
+    public function setHeight(?int $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function getWeight(): ?int
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(?int $weight): self
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }
