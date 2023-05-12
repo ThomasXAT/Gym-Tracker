@@ -1,39 +1,20 @@
 {% extends 'base.html.twig' %}
 {% block body %}
         <section class="content container">
+            <h2 id="title" hidden>{{ athlete.username }}</h2>
             <div class="d-md-flex justify-content-between">
-                {# Information #}<section id="information" class="col-12 col-md-4 col-lg-3 pe-md-2 mx-auto">
-                    <div class="card text-center">
+                {# Information #}<section id="information" class="col-12 col-md-4 col-xl-3 pe-md-2 py-2 mx-auto" {{ stimulus_controller('information') }}></section>
+                {# Sessions #}<section id="sessions" class="col-12 col-md-8 col-xl-9 ps-md-2 py-2 d-flex">
+                    <div class="card text-center flex-fill">
                         <header class="card-header">
-                            <img class="profile-picture border p-1" src="https://news.artnet.com/app/news-upload/2015/12/Mona_Lisa-256x256.jpeg" alt="{{ athlete.username }}" width="75%" />
                         </header>
                         <main class="card-body">
-{% if athlete.firstname != null or athlete.surname != null %}
-                            <section class="fs-3">
-{% if athlete.firstname != null %}
-                                <span class="text-break">{{ athlete.firstname }}</span>
-{% endif %}
-{% if athlete.firstname != null and athlete.surname != null %}
-                                <span> </span>
-{% endif %}
-{% if athlete.surname != null %}
-                                <span class="text-break">{{ athlete.surname }}</span>
-{% endif %}
-                            </section>
-{% endif %}
-                            <section>
-                                <a class="text-decoration-none" href="{{ path('profile', { 'username': athlete.username }) }}">@{{ athlete.username }}</a>
-                            </section>
+                            <table class="table table-dark table-hover">
+                            </table>
                         </main>
                         <footer class="card-footer">
-{% if athlete == app.user %}
-                            <a href="{{ path('authentication_logout') }}"><button class="btn btn-outline-danger">{{ 'authentication.logout.submit'|trans }}</button></a>
-{% endif %}
                         </footer>
                     </div>
-                </section>
-                <section class="col-12 col-md-8 col-lg-9 ps-md-2">
-                
                 </section>
             </div>
         </section>

@@ -20,5 +20,17 @@ main.main, .modal-body {
 }
 
 #information {
-    max-width: 300px;
+    max-width: 280px;
+    .card {
+        height: 360px;
+        .card-body {
+            #section-description {
+                height: 140px !important;
+            }
+        }
+    }
+}
+
+.pointer {
+    cursor: pointer;
 }
