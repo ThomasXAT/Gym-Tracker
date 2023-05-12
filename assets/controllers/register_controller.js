@@ -1,43 +1,53 @@
 import { Controller } from '@hotwired/stimulus';
 import { verify } from './common';
+import { input } from './common';
 
 export default class extends Controller {
     connect() {
         $("#section-firstname").on("keyup", function() {
-            verify.firstname("register_firstname", true);
+            verify.surname($("#register_surname"), true)
+            verify.firstname($("#register_firstname"), true)
         });
+
         $("#section-surname").on("keyup", function() {
-            verify.surname("register_surname", true);
-        });
-        $("#section-fullname").on("keyup", function() {
-            verify.fullname("register_firstname", "register_surname", true);
-        });
-        $("#section-username").on("keyup", function() {
-            verify.username("register_username", true);
-        });
-        $("#section-email").on("keyup", function() {
-            verify.email("register_email", true);
-        });
-        $("#section-password").on("keyup", function() {
-            verify.password("register_password", true, true);
-        });
-        $("#section-confirmation").on("keyup", function() {
-            verify.confirmation("register_confirmation", "register_password", true);
+            verify.firstname($("#register_firstname"), true)
+            verify.surname($("#register_surname"), true)
         });
         $("#form-register").on("keyup", function() {
-            let button = $("#register_submit");
-            if (
-                verify.fullname("register_firstname", "register_surname") &&
-                verify.username("register_username") &&
-                verify.email("register_email") &&
-                verify.password("register_password") &&
-                verify.confirmation("register_confirmation", "register_password")
-            ) {
-                button.prop("disabled", false);
-            }
-            else {
-                button.prop("disabled", true);
-            }
+            $.ajax({
+                url: '/api/athlete',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    let fullname = false;
+                        if (verify.firstname($("#register_firstname")) && verify.surname($("#register_surname"))) {
+                            $("#help-fullname").html("");
+                            fullname = true;
+                        }
+                    let username = false;
+                        if (response[$("#register_username").val().toLowerCase()]) {
+                            $("#help-username").html("Cet identifiant n'est pas disponible.");
+                            input.setInvalid($("#register_username"));
+                        }
+                        else {
+                            username = verify.username($("#register_username"), true);
+                        }
+                    let email = verify.email($("#register_email"), true);
+                    let password = false;
+                        if (verify.password($("#register_password"), true)) {
+                            $("#section-confirmation").prop("hidden", false);
+                            if (verify.confirmation($("#register_confirmation"), $("#register_password"), true)) {
+                                password = true;
+                            }
+                        }
+                        else {
+                            $("#section-confirmation").prop("hidden", true);
+                            $("#register_confirmation").val("");
+                        }
+                    let submit = $("#register_submit");
+                    fullname && username && email && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
+                }
+            });
         });
     }
 }
