@@ -40,21 +40,6 @@ class SessionRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @return Session[] Returns an array of Session objects
-     */
-    public function findByAthlete(Athlete $athlete): array
-    {
-        return $this->createQueryBuilder('s')
-            ->where('s.athlete = :athlete')
-            ->andWhere('s.current = 0')
-            ->setParameter('athlete', $athlete->getId())
-            ->orderBy('s.start', 'DESC')
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
 //    /**
 //     * @return Session[] Returns an array of Session objects
 //     */
