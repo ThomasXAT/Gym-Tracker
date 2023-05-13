@@ -1,6 +1,6 @@
-import { Controller } from '@hotwired/stimulus';
+import { Controller } from "@hotwired/stimulus";
 
-let title = $("#title");
+let identifier = $("#identifier");
 let information = $("#information");
 let card = $("<div></div>")
     .addClass("card")
@@ -17,14 +17,14 @@ let footer = $("<footer></footer>")
 
 function front() {
     $.ajax({
-        url: '/api/athlete',
-        type: 'GET',
-        dataType: 'json',
+        url: "/api/athlete",
+        type: "GET",
+        dataType: "json",
         success: function(response) {
             header.empty();
             main.empty();
             footer.empty();
-            let athlete = response[title.text().toLowerCase()];
+            let athlete = response[identifier.text()];
             // Picture
             let section_picture = $("<section></section>")
                 .appendTo(header)
@@ -128,14 +128,14 @@ function front() {
 
 function back() {
     $.ajax({
-        url: '/api/athlete',
-        type: 'GET',
-        dataType: 'json',
+        url: "/api/athlete",
+        type: "GET",
+        dataType: "json",
         success: function(response) {
             header.empty();
             main.empty();
             footer.empty(); 
-            let athlete = response[title.text().toLowerCase()];
+            let athlete = response[identifier.text()];
             // Email
             let section_email = $("<section></section>")
                 .appendTo(header)

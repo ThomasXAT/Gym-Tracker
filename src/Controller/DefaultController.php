@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\AthleteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\Translator;
 
@@ -40,21 +41,29 @@ class DefaultController extends AbstractController
     public function profile(AthleteRepository $athleteRepository, String $username): Response
     {
         $page = 'profile';
-        return $this->render('main/profile/index.html.twig', [
-            'title' => $this->translator->trans('main.'.$page.'.page'),
-            'page' => $page,
-            'athlete' => $athleteRepository->findOneBy(['username' => $username]),
-        ]);
+        $athlete = $athleteRepository->findOneBy(['username' => $username]);
+        if ($athlete) {
+            return $this->render('main/profile/index.html.twig', [
+                'title' => $this->translator->trans('main.'.$page.'.page'),
+                'page' => $page,
+                'athlete' => $athlete,
+            ]);
+        }
+        throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }
 
     #[Route('/{username}/statistics', name: 'statistics')]
     public function statistics(AthleteRepository $athleteRepository, String $username): Response
     {
         $page = 'statistics';
-        return $this->render('main/statistics/index.html.twig', [
-            'title' => $this->translator->trans('main.'.$page.'.page'),
-            'page' => $page,
-            'athlete' => $athleteRepository->findOneBy(['username' => $username]),
-        ]);
+        $athlete = $athleteRepository->findOneBy(['username' => $username]);
+        if ($athlete) {
+            return $this->render('main/statistics/index.html.twig', [
+                'title' => $this->translator->trans('main.'.$page.'.page'),
+                'page' => $page,
+                'athlete' => $athlete,
+            ]);
+        }
+        throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }
 }

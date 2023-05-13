@@ -1,6 +1,6 @@
-import { Controller } from '@hotwired/stimulus';
-import { verify } from './common';
-import { input } from './common';
+import { Controller } from "@hotwired/stimulus";
+import { verify } from "./common";
+import { input } from "./common";
 
 export default class extends Controller {
     connect() {
@@ -15,9 +15,9 @@ export default class extends Controller {
         });
         $("#form-register").on("keyup", function() {
             $.ajax({
-                url: '/api/athlete',
-                type: 'GET',
-                dataType: 'json',
+                url: "/api/athlete?username=" + $("#register_username").val(),
+                type: "GET",
+                dataType: "json",
                 success: function(response) {
                     let fullname = false;
                         if (verify.firstname($("#register_firstname")) && verify.surname($("#register_surname"))) {
@@ -25,7 +25,7 @@ export default class extends Controller {
                             fullname = true;
                         }
                     let username = false;
-                        if (response[$("#register_username").val().toLowerCase()]) {
+                        if (Object.keys(response).length) {
                             $("#help-username").html("Cet identifiant n'est pas disponible.");
                             input.setInvalid($("#register_username"));
                         }

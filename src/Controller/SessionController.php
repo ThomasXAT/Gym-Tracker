@@ -59,29 +59,17 @@ class SessionController extends AbstractController
 
     #[Route('api/session', name: 'api_session')]
     public function list(SessionRepository $sessionRepository) {
-        $sessions = $sessionRepository->findBy(['current' => false]);
+        $sessions = $sessionRepository->findBy($_GET);
         $result = array();
         for($i = 0; $i < sizeof($sessions); $i++) {
             $result[$sessions[$i]->getId()]['title'] = $sessions[$i]->getTitle();
             $result[$sessions[$i]->getId()]['subtitle'] = $sessions[$i]->getSubtitle();
+            $result[$sessions[$i]->getId()]['athlete'] = $sessions[$i]->getAthlete()->getId();
+            $result[$sessions[$i]->getId()]['current'] = $sessions[$i]->isCurrent();
             $result[$sessions[$i]->getId()]['start'] = $sessions[$i]->getStart();
             $result[$sessions[$i]->getId()]['end'] = $sessions[$i]->getEnd();
-            $result[$sessions[$i]->getId()]['athlete'] = $sessions[$i]->getAthlete()->getUsername();
         }
         return $this->json($result);
     }
 
-    #[Route('api/session/{username}', name: 'api_session_athlete')]
-    public function listByAthlete(string $username, AthleteRepository $athleteRepository, SessionRepository $sessionRepository) {
-        $athlete = $athleteRepository->findOneBy(['username' => $username]);
-        $sessions = $sessionRepository->findBy(['athlete' => $athlete, 'current' => false]);
-        $result = array();
-        for($i = 0; $i < sizeof($sessions); $i++) {
-            $result[$sessions[$i]->getId()]['title'] = $sessions[$i]->getTitle();
-            $result[$sessions[$i]->getId()]['subtitle'] = $sessions[$i]->getSubtitle();
-            $result[$sessions[$i]->getId()]['start'] = $sessions[$i]->getStart();
-            $result[$sessions[$i]->getId()]['end'] = $sessions[$i]->getEnd();
-        }
-        return $this->json($result);
-    }
 }

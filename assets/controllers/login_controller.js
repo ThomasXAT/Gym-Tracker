@@ -1,5 +1,5 @@
-import { Controller } from '@hotwired/stimulus';
-import { verify } from './common';
+import { Controller } from "@hotwired/stimulus";
+import { verify } from "./common";
 
 export default class extends Controller {
     connect() {

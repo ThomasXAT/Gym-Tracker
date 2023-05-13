@@ -13,16 +13,16 @@ class AthleteController extends AbstractController
 
     #[Route('api/athlete', name: 'api_athlete')]
     public function list(AthleteRepository $athleteRepository) {
-        $athletes = $athleteRepository->findAll();
+        $athletes = $athleteRepository->findBy($_GET);
         $result = array();
         for($i = 0; $i < sizeof($athletes); $i++) {
-            $result[strtolower($athletes[$i]->getUserIdentifier())]['username'] = $athletes[$i]->getUsername();
-            $result[strtolower($athletes[$i]->getUserIdentifier())]['firstname'] = $athletes[$i]->getFirstname();
-            $result[strtolower($athletes[$i]->getUserIdentifier())]['surname'] = $athletes[$i]->getSurname();
-            $result[strtolower($athletes[$i]->getUserIdentifier())]['email'] = $athletes[$i]->getEmail();
-            $result[strtolower($athletes[$i]->getUserIdentifier())]['description'] = $athletes[$i]->getDescription();
-            $result[strtolower($athletes[$i]->getUserIdentifier())]['height'] = $athletes[$i]->getHeight();
-            $result[strtolower($athletes[$i]->getUserIdentifier())]['weight'] = $athletes[$i]->getWeight();
+            $result[$athletes[$i]->getId()]['username'] = $athletes[$i]->getUsername();
+            $result[$athletes[$i]->getId()]['firstname'] = $athletes[$i]->getFirstname();
+            $result[$athletes[$i]->getId()]['surname'] = $athletes[$i]->getSurname();
+            $result[$athletes[$i]->getId()]['email'] = $athletes[$i]->getEmail();
+            $result[$athletes[$i]->getId()]['description'] = $athletes[$i]->getDescription();
+            $result[$athletes[$i]->getId()]['height'] = $athletes[$i]->getHeight();
+            $result[$athletes[$i]->getId()]['weight'] = $athletes[$i]->getWeight();
         }
         return $this->json($result);
     }
