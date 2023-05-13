@@ -7,45 +7,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\Translator;
 
 class DefaultController extends AbstractController
 {
-    private Translator $translator;
-
-    public function __construct() {
-        $this->translator = new Translator('fr');
-    }
-
     #[Route('/', name: 'home')]
     public function home(): Response
     {
-        $page = 'home';
         return $this->render('main/home/index.html.twig', [
-            'title' => $this->translator->trans('main.'.$page.'.page'),
-            'page' => $page,
+            'page' => 'home',
         ]);
     }
 
     #[Route('/repertory', name: 'repertory')]
     public function repertory(): Response
     {
-        $page = 'repertory';
         return $this->render('main/repertory/index.html.twig', [
-            'title' => $this->translator->trans('main.'.$page.'.page'),
-            'page' => $page,
+            'page' => 'repertory',
         ]);
     }
 
     #[Route('/{username}', name: 'profile')]
     public function profile(AthleteRepository $athleteRepository, String $username): Response
     {
-        $page = 'profile';
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
             return $this->render('main/profile/index.html.twig', [
-                'title' => $this->translator->trans('main.'.$page.'.page'),
-                'page' => $page,
+                'page' => 'profile',
                 'athlete' => $athlete,
             ]);
         }
@@ -55,12 +42,10 @@ class DefaultController extends AbstractController
     #[Route('/{username}/statistics', name: 'statistics')]
     public function statistics(AthleteRepository $athleteRepository, String $username): Response
     {
-        $page = 'statistics';
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
             return $this->render('main/statistics/index.html.twig', [
-                'title' => $this->translator->trans('main.'.$page.'.page'),
-                'page' => $page,
+                'page' => 'statistics',
                 'athlete' => $athlete,
             ]);
         }

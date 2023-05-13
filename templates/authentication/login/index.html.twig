@@ -2,7 +2,7 @@
 {% block body %}
         <section class="content container" {{ stimulus_controller('login') }}>
             <div id="title" class="text-center py-3">
-                <h2 id="title">{{ 'authentication.login.title'|trans }}</h2>
+                <h2 id="title">{{ 'authentication.login.form'|trans }}</h2>
             </div>
 {{ include('authentication/login/_form.html.twig') }}        
             <p class="text-center py-3"><a href="{{ path('authentication_register') }}">{{ 'authentication.login.link'|trans }}</a></p>

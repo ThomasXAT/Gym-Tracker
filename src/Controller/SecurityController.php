@@ -12,17 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Translation\Translator;
 
 #[Route(path: '/authentication', name: 'authentication_')]
 class SecurityController extends AbstractController
 {
-    private $translator;
-
-    public function __construct() {
-        $this->translator = new Translator('fr');
-    }
-
     #[Route(path: '/login', name: 'login')]
     public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
     {
@@ -37,11 +30,9 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('home');
             }
             else {
-                $page = 'login';
                 return $this->render('authentication/login/index.html.twig', [
+                    'page' => 'login',
                     'form' => $form,
-                    'title' => $this->translator->trans('authentication.'.$page.'.page'),
-                    'page' => $page,
                 ]);
             }
         }
@@ -75,11 +66,9 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('home');
             }
             else {
-                $page = 'register';
                 return $this->render('authentication/register/index.html.twig', [
+                    'page' => 'register',
                     'form' => $form->createView(),
-                    'title' => $this->translator->trans('authentication.'.$page.'.page'),
-                    'page' => $page,
                 ]);
             }
         }

@@ -3,13 +3,13 @@ placeholder: "#"
 title: Gym-Tracker
 main:  
   home:
-    page: Accueil
+    title: Accueil
   repertory:
-    page: Répertoire
+    title: Répertoire
   statistics:
-    page: Statistiques
+    title: Statistiques
   profile:
-    page: Profil
+    title: Profil
   session:
     new:  Nouvelle séance
     start: Débuter la séance
@@ -18,8 +18,8 @@ main:
     label: Intitulé de la séance
 authentication:
   login:
-    page: Connexion
-    title: Formulaire de connexion
+    title: Connexion
+    form: Formulaire de connexion
     username: Nom d'utilisateur
     password: Mot de passe
     remember_me: Se souvenir de moi
@@ -28,8 +28,8 @@ authentication:
   logout:
     submit: Se déconnecter
   register:
-    page: Inscription
-    title: Formulaire d'inscription
+    title: Inscription
+    form: Formulaire d'inscription
     required: Champs obligatoires
     firstname: Prénom
     surname: Nom
