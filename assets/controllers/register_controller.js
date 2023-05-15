@@ -4,28 +4,46 @@ import { input } from "./common";
 
 export default class extends Controller {
     connect() {
-        $("#section-firstname").on("keyup", function() {
-            verify.surname($("#register_surname"), true)
-            verify.firstname($("#register_firstname"), true)
-        });
-
-        $("#section-surname").on("keyup", function() {
-            verify.firstname($("#register_firstname"), true)
-            verify.surname($("#register_surname"), true)
-        });
-        $("#form-register").on("keyup", function() {
-            $.ajax({
-                url: "/api/athlete?username=" + $("#register_username").val(),
-                type: "GET",
-                dataType: "json",
-                success: function(response) {
+        const FORBIDDEN = [
+            "authentication",
+            "administration",
+            "api",
+        ];
+        $.ajax({
+            url: "/api/athlete",
+            type: "GET",
+            dataType: "json",
+            success: function(response) {  
+                $("#section-firstname").on("input", function() {
+                    verify.surname($("#register_surname"), true)
+                    verify.firstname($("#register_firstname"), true)
+                });
+        
+                $("#section-surname").on("input", function() {
+                    verify.firstname($("#register_firstname"), true)
+                    verify.surname($("#register_surname"), true)
+                });
+                $("#form-register").on("input", function() {
                     let fullname = false;
                         if (verify.firstname($("#register_firstname")) && verify.surname($("#register_surname"))) {
                             $("#help-fullname").html("");
                             fullname = true;
                         }
                     let username = false;
-                        if (Object.keys(response).length) {
+                        let available = true;
+                        $.each(response, function(i, athlete) {
+                            if ($("#register_username").val().toLowerCase() === athlete.username.toLowerCase()) {
+                                available = false;
+                            }
+                            else {
+                                $.each(FORBIDDEN, function(i, word) {
+                                    if ($("#register_username").val().toLowerCase() === word) {
+                                        available = false;
+                                    }
+                                });
+                            }
+                        }); 
+                        if (!available) {
                             $("#help-username").html("Cet identifiant n'est pas disponible.");
                             input.setInvalid($("#register_username"));
                         }
@@ -46,8 +64,8 @@ export default class extends Controller {
                         }
                     let submit = $("#register_submit");
                     fullname && username && email && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
-                }
-            });
+                });
+            }
         });
     }
 }

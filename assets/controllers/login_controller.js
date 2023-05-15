@@ -3,7 +3,7 @@ import { verify } from "./common";
 
 export default class extends Controller {
     connect() {
-      $("#form-login").on("keyup", function() {
+      $("#form-login").on("input", function() {
             let username = verify.username($("#login_username"));
             let password =  verify.password($("#login_password"));
             let submit = $("#login_submit");
