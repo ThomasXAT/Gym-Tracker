@@ -35,7 +35,7 @@ class DefaultController extends AbstractController
         ]);
     }
 
-    #[Route('/{username}', name: 'profile')]
+    #[Route('/@{username}', name: 'profile')]
     public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AthleteRepository $athleteRepository, String $username): Response
     {
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
@@ -80,7 +80,7 @@ class DefaultController extends AbstractController
         throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }
 
-    #[Route('/{username}/statistics', name: 'statistics')]
+    #[Route('/@{username}/statistics', name: 'statistics')]
     public function statistics(AthleteRepository $athleteRepository, String $username): Response
     {
         $athlete = $athleteRepository->findOneBy(['username' => $username]);

@@ -16,6 +16,11 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 #[Route(path: '/authentication', name: 'authentication_')]
 class SecurityController extends AbstractController
 {
+    #[Route(path: '/', name: 'index')]
+    public function index(): Response {
+        return $this->redirectToRoute('authentication_login');
+    }
+
     #[Route(path: '/login', name: 'login')]
     public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
     {

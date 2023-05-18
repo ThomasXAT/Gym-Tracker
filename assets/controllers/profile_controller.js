@@ -100,7 +100,7 @@ var load = {
                             let username = $("<a></a>")
                                 .appendTo(section_username)
                                 .attr("id", "username")
-                                .attr("href", athlete["username"])
+                                .attr("href", "@" + athlete["username"])
                                 .text("@" + athlete["username"])
                                 .addClass("text-decoration-none text-truncate")
                             ;

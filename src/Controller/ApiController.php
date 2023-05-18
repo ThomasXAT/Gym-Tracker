@@ -7,10 +7,10 @@ use App\Repository\SessionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('api/', name: 'api_')]
+#[Route('/api', name: 'api_')]
 class ApiController extends AbstractController
 {
-    #[Route('athlete', name: 'athlete')]
+    #[Route('/athlete', name: 'athlete')]
     public function athlete(AthleteRepository $athleteRepository) {
         $athletes = $athleteRepository->findBy($_GET);
         $result = array();
@@ -27,7 +27,7 @@ class ApiController extends AbstractController
         return $this->json($result);
     }
 
-    #[Route('session', name: 'session')]
+    #[Route('/session', name: 'session')]
     public function session(SessionRepository $sessionRepository) {
         $sessions = $sessionRepository->findBy($_GET);
         $result = array();
