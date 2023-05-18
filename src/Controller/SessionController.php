@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Athlete;
 use App\Entity\Session;
-use App\Repository\AthleteRepository;
 use App\Repository\SessionRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,14 +17,14 @@ class SessionController extends AbstractController
     public function start(string $title, SessionRepository $sessionRepository, EntityManagerInterface $entityManager): Response
     {
         /**
-         * @var Athlete $athlete
+         * @var Athlete $user
          */
-        $athlete = $this->getUser();
-        if (!$sessionRepository->findOneBy(['athlete' => $athlete, 'current' => true])) {
+        $user = $this->getUser();
+        if (!$sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
             $session = new Session();
             $session
                 ->setTitle($title)
-                ->setAthlete($athlete)
+                ->setAthlete($user)
                 ->setStart(new DateTime)
             ;
             $entityManager->persist($session);
@@ -38,13 +37,10 @@ class SessionController extends AbstractController
     public function stop(SessionRepository $sessionRepository, EntityManagerInterface $entityManager): Response
     {
         /**
-         * @var Athlete $athlete
+         * @var Athlete $user
          */
-        $athlete = $this->getUser();
-        if ($session = $sessionRepository->findOneBy(['athlete' => $athlete, 'current' => true])) {
-            /**
-             * @var Session $session
-             */
+        $user = $this->getUser();
+        if ($session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
             $session
                 ->setCurrent(false)
                 ->setEnd(new DateTime)
@@ -54,22 +50,4 @@ class SessionController extends AbstractController
         }
         return $this->redirectToRoute('home');
     }
-
-    // API
-
-    #[Route('api/session', name: 'api_session')]
-    public function list(SessionRepository $sessionRepository) {
-        $sessions = $sessionRepository->findBy($_GET);
-        $result = array();
-        for($i = 0; $i < sizeof($sessions); $i++) {
-            $result[$sessions[$i]->getId()]['title'] = $sessions[$i]->getTitle();
-            $result[$sessions[$i]->getId()]['subtitle'] = $sessions[$i]->getSubtitle();
-            $result[$sessions[$i]->getId()]['athlete'] = $sessions[$i]->getAthlete()->getId();
-            $result[$sessions[$i]->getId()]['current'] = $sessions[$i]->isCurrent();
-            $result[$sessions[$i]->getId()]['start'] = $sessions[$i]->getStart();
-            $result[$sessions[$i]->getId()]['end'] = $sessions[$i]->getEnd();
-        }
-        return $this->json($result);
-    }
-
 }

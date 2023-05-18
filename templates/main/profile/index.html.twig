@@ -2,10 +2,10 @@
 {% block body %}
         <section class="content container">
             <span id="identifier" hidden>{{ athlete.id }}</span>
-            <div class="d-md-flex justify-content-between">
-                {# Information #}<section id="information" class="col-12 col-md-4 col-xl-3 pe-md-2 py-2 mx-auto" {{ stimulus_controller('information') }}></section>
-                {# Sessions #}<section id="sessions" class="col-12 col-md-8 col-xl-9 ps-md-2 py-2 d-flex">
-                    <div class="card text-center flex-fill">
+            <div class="row justify-content-between">
+                {# Information #}<section id="information" class="col-12 col-md-4 col-xl-3 pe-md-2 p-2 mx-auto" {{ stimulus_controller('information') }}></section>
+                {# Description #}<section id="description" class="col-12 col-md-8 col-xl-9 ps-md-2 p-2 d-flex">
+                    <div class="card flex-fill">
                         <header class="card-header">
                         </header>
                         <main class="card-body">

@@ -26,8 +26,5 @@
     <footer class="{{ section }} {% if section == 'main' %}border-top {% endif %}p-2 p-md-3">
 {% include("/#{section}/footer.html.twig") %}
     </footer>
-{% if section == 'main' %}
-{{ include('main/_session.html.twig') }}
-{% endif %}
 </body>
 </html>

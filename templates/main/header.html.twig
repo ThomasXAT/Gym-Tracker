@@ -17,7 +17,8 @@
                     </ul>
                 </section>
                 {# New session #}<section class="col-6 col-md-2 text-end">
-                    <button class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#new_session">{{ 'main.session.new'|trans }}</button>
+                    <button class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_session">{{ 'main.session.new'|trans }}</button>
                 </section>
             </nav>
+{{ include('main/_session.html.twig') }}
         </section>

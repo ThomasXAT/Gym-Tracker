@@ -1,15 +1,12 @@
         <section class="content container">
-<div class="d-flex justify-content-between align-items-center">
-    <section>
-        <p class="mb-0">Développé par Thomas JORGE</p>
-    </section>
-    <section>
-        <a href="{{ path('authentication_logout') }}">
-            <button class="btn btn-outline-danger text-nowrap">{{ 'authentication.logout.submit'|trans }}</button>
-        </a>
-    </section>
-</div>
-
-
-
+            <div class="d-flex justify-content-between align-items-center">
+                <section>
+                    <p class="mb-0">Thomas JORGE &copy {{ 'now'|date('Y') }}</p>
+                </section>
+                <section>
+                    <a href="{{ path('authentication_logout') }}">
+                        <button class="btn btn-outline-danger text-nowrap">{{ 'authentication.logout.submit'|trans }}</button>
+                    </a>
+                </section>
+            </div>
         </section>
