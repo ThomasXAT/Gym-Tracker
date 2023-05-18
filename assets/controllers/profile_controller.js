@@ -1,8 +1,11 @@
 import { Controller } from "@hotwired/stimulus";
+import { verify } from "./common";
+import { input } from "./common";
 
-export default class extends Controller {
-    connect() {
-        let identifier = $("#identifier");
+const IDENTIFIER = parseInt($("#identifier").text());
+
+var load = {
+    information: function() {
         let information = $("#information");
         let card = $("<div></div>")
             .addClass("card")
@@ -17,11 +20,11 @@ export default class extends Controller {
             .addClass("card-footer")
             .appendTo(card);
         $.ajax({
-            url: "/api/athlete?id=" + identifier.text(),
+            url: "/api/athlete?id=" + IDENTIFIER,
             type: "GET",
             dataType: "json",
             success: function(response) {
-                let athlete = response[identifier.text()];
+                let athlete = response[IDENTIFIER];
                 function recto() {
                     header.empty();
                     main.empty();
@@ -124,7 +127,6 @@ export default class extends Controller {
                                 verso();
                             });
                 }
-
                 function verso() {
                     header.empty();
                     main.empty();
@@ -166,6 +168,62 @@ export default class extends Controller {
                             });
                 }
                 recto();
+            }
+        });
+    },
+};
+
+export default class extends Controller {
+    connect() {
+        load.information();
+    }
+    edit() {
+        $.ajax({
+            url: "/api/athlete?id=" + IDENTIFIER,
+            type: "GET",
+            dataType: "json",
+            success: function(response) { 
+                input.setValid($("#profile_firstname").val(response[IDENTIFIER].firstname));
+                $("#profile_surname").val(response[IDENTIFIER].surname);
+                $("#profile_email").val(response[IDENTIFIER].email);
+                $("#help-fullname").html("");
+                verify.firstname($("#profile_firstname"), true);
+                verify.surname($("#profile_surname"), true);
+                verify.email($("#profile_email"), true);
+
+                $("#section-firstname").on("input", function() {
+                    verify.surname($("#profile_surname"), true);
+                    verify.firstname($("#profile_firstname"), true);
+                });
+        
+                $("#section-surname").on("input", function() {
+                    verify.firstname($("#profile_firstname"), true);
+                    verify.surname($("#profile_surname"), true);
+                });
+                $("#form-profile").on("input", function() {
+                    let fullname = false;
+                        if (verify.firstname($("#profile_firstname")) && verify.surname($("#profile_surname"))) {
+                            $("#help-fullname").html("");
+                            fullname = true;
+                        }
+                    let email = verify.email($("#profile_email"), true);
+                    let password = true;
+                    if ($("#profile_password").val()) {
+                        password = false;
+                    }
+                        if (verify.password($("#profile_password"), true)) {
+                            $("#section-confirmation").prop("hidden", false);
+                            if (verify.confirmation($("#profile_confirmation"), $("#profile_password"), true)) {
+                                password = true;
+                            }
+                        }
+                        else {
+                            $("#section-confirmation").prop("hidden", true);
+                            $("#profile_confirmation").val("");
+                        }
+                    let submit = $("#profile_submit");
+                    fullname && email && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
+                });
             }
         });
     }

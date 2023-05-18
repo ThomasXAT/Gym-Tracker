@@ -20,7 +20,7 @@ main.main, .modal-body {
 }
 
 #information {
-    max-width: 280px;
+    max-width: 285px;
     .card {
         height: 360px;
         .card-body {
@@ -31,6 +31,16 @@ main.main, .modal-body {
     }
 }
 
+#description {
+    .card {
+        height: 360px;
+    }
+}
+
 .pointer {
     cursor: pointer;
+}
+
+#test {
+    max-width: 420px !important;
 }

@@ -1,0 +1,13 @@
+            <aside id="_edit" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <header class="modal-header">
+                            <p class="modal-title fs-5"><a id="username" href="{{ athlete.username }}" class="text-decoration-none text-truncate">@{{ athlete.username }}</a></p>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </header>
+                        <main class="modal-body">
+{{ include('main/profile/_form.html.twig') }}
+                        </main>
+                    </div>
+                </div>
+            </aside>

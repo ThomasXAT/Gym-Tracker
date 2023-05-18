@@ -15,13 +15,13 @@ export default class extends Controller {
             dataType: "json",
             success: function(response) {  
                 $("#section-firstname").on("input", function() {
-                    verify.surname($("#register_surname"), true)
-                    verify.firstname($("#register_firstname"), true)
+                    verify.surname($("#register_surname"), true);
+                    verify.firstname($("#register_firstname"), true);
                 });
         
                 $("#section-surname").on("input", function() {
-                    verify.firstname($("#register_firstname"), true)
-                    verify.surname($("#register_surname"), true)
+                    verify.firstname($("#register_firstname"), true);
+                    verify.surname($("#register_surname"), true);
                 });
                 $("#form-register").on("input", function() {
                     let fullname = false;

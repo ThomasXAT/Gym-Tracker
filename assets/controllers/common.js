@@ -23,7 +23,7 @@ export var input = {
             input.removeClass("is-invalid");
         }
     },
-}
+};
 
 export var verify = {
     firstname: function(firstname, help = false) {
@@ -157,4 +157,4 @@ export var verify = {
         }
         return false;
     },
-}
+};

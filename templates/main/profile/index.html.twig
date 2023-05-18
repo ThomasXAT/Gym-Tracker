@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-        <section class="content container">
+        <section class="content container" {{ stimulus_controller('profile') }}>
             <span id="identifier" hidden>{{ athlete.id }}</span>
             <div class="row justify-content-between">
-                {# Information #}<section id="information" class="col-12 col-md-4 col-xl-3 pe-md-2 p-2 mx-auto" {{ stimulus_controller('information') }}></section>
+                {# Information #}<section id="information" class="col-12 col-md-4 col-xl-3 pe-md-2 p-2 mx-auto"></section>
                 {# Description #}<section id="description" class="col-12 col-md-8 col-xl-9 ps-md-2 p-2 d-flex">
                     <div class="card flex-fill">
                         <header class="card-header">
@@ -17,5 +17,11 @@
                     </div>
                 </section>
             </div>
+{% if athlete == app.user %}
+            <div class="text-center">
+                <button class="btn btn-link text-nowrap text-decoration-none" data-action="click->profile#edit" data-bs-toggle="modal" data-bs-target="#_edit">{{ 'main.profile.edit.submit'|trans }}</button>
+            </div>
+{{ include('main/profile/_edit.html.twig') }}
+{% endif %}
         </section>
 {% endblock %}

@@ -10,6 +10,19 @@ main:
     title: Statistiques
   profile:
     title: Profil
+    edit:
+      required: Champs obligatoires
+      firstname: Prénom
+      surname: Nom
+      username: Nom d'utilisateur
+      email: Adresse e-mail
+      password: Nouveau mot de passe
+      confirmation: Confirmation du mot de passe
+      description: Description
+      height: Taille
+      weight: Poids
+      picture: Photo de profil
+      submit: Éditer le profil
   session:
     new:  Nouvelle séance
     start: Débuter la séance
