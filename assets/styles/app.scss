@@ -53,3 +53,16 @@ main.main, .modal-body {
         width: 133.333px;
     }
 }
+
+@media screen and (max-width: 767px) {
+    header.main {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;      
+    }
+    main.main {
+        margin-top: 55px;
+    }
+}
