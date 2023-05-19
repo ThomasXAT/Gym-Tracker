@@ -1,6 +1,6 @@
         <section class="content container">
-            <nav class="d-flex align-items-center">
-                {# Logo #}<section class="col-6 col-md-2 text-start">
+            <nav class="d-flex justify-content-between align-items-center">
+                {# Logo #}<section>
                     <a href="{{ path('home') }}">
                         <picture>
                             <source srcset="{{ asset('build/images/Gym-Tracker.png') }}" height="50px" media="(min-width: 768px)">
@@ -8,7 +8,7 @@
                         </picture>
                     </a>
                 </section>
-                {# Navigation #}<section class="d-none d-md-block col-md-8">
+                {# Navigation #}<section class="d-none d-md-block">
                     <ul class="nav justify-content-center">
                         <li class="nav-item"><a class="nav-link {% if page is defined and page == 'home' %}text-white{% else %}text-body{% endif %}" href="{{ path('home') }}">{{ 'main.home.title'|trans }}</a></li>
                         <li class="nav-item"><a class="nav-link {% if page is defined and page == 'repertory' %}text-white{% else %}text-body{% endif %}" href="{{ path('repertory') }}">{{ 'main.repertory.title'|trans }}</a></li>
@@ -16,7 +16,7 @@
                         <li class="nav-item"><a class="nav-link {% if page is defined and page == 'profile' %}text-white{% else %}text-body{% endif %}" href="{{ path('profile', { 'username': app.user.username }) }}">{{ 'main.profile.title'|trans }}</a></li>
                     </ul>
                 </section>
-                {# New session #}<section class="col-6 col-md-2 text-end">
+                {# New session #}<section>
                     <button class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_session">{{ 'main.session.new'|trans }}</button>
                 </section>
             </nav>

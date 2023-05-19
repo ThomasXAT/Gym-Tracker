@@ -1,9 +1,7 @@
 @import "~bootstrap/scss/bootstrap";
 
-.authentication {
-    .content {
-        max-width: 420px !important;
-    }
+.authentication > .content, #section-identity {
+    max-width: 420px !important;
 }
 
 .required:after {
@@ -20,8 +18,11 @@ main.main, .modal-body {
 }
 
 #information {
-    max-width: 285px;
+    @media screen and (min-width: 992px) {
+        width: 285px;
+    }
     .card {
+        width: 269px;
         height: 360px;
         .card-body {
             #section-description {
@@ -32,6 +33,7 @@ main.main, .modal-body {
 }
 
 #description {
+    max-width: 640px;
     .card {
         height: 360px;
     }
@@ -39,8 +41,4 @@ main.main, .modal-body {
 
 .pointer {
     cursor: pointer;
-}
-
-#test {
-    max-width: 420px !important;
 }

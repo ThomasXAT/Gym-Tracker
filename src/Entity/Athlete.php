@@ -44,7 +44,7 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'athlete', targetEntity: Session::class)]
     private Collection $sessions;
 
-    #[ORM\Column(length: 1024, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
