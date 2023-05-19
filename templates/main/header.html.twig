@@ -4,20 +4,21 @@
                     <a href="{{ path('home') }}">
                         <picture>
                             <source srcset="{{ asset('build/images/Gym-Tracker.png') }}" height="50px" media="(min-width: 768px)">
-                            <img src="{{ asset('build/images/GT.png') }}" alt="{{ 'title'|trans }}" height="38px">
+                            <img id="logo" src="{{ asset('build/images/GT.png') }}" alt="{{ 'title'|trans }}" height="38px">
                         </picture>
                     </a>
                 </section>
-                {# Navigation #}<section class="d-none d-md-block">
-                    <ul class="nav justify-content-center">
-                        <li class="nav-item"><a class="nav-link {% if page is defined and page == 'home' %}text-white{% else %}text-body{% endif %}" href="{{ path('home') }}">{{ 'main.home.title'|trans }}</a></li>
-                        <li class="nav-item"><a class="nav-link {% if page is defined and page == 'repertory' %}text-white{% else %}text-body{% endif %}" href="{{ path('repertory') }}">{{ 'main.repertory.title'|trans }}</a></li>
-                        <li class="nav-item"><a class="nav-link {% if page is defined and page == 'statistics' %}text-white{% else %}text-body{% endif %}" href="{{ path('statistics', { 'username': app.user.username }) }}">{{ 'main.statistics.title'|trans }}</a></li>
-                        <li class="nav-item"><a class="nav-link {% if page is defined and page == 'profile' %}text-white{% else %}text-body{% endif %}" href="{{ path('profile', { 'username': app.user.username }) }}">{{ 'main.profile.title'|trans }}</a></li>
-                    </ul>
+                {# Search #}<section id="section-search" class="d-none d-md-block">
+                        <form method="get" action="/">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <input id="search" name="search" type="text" class="form-control" placeholder="Rechercher un athlète" {% if search is defined %}value="{{ search }}"{% endif %}>
+                            </div>
+                        </form>
                 </section>
-                {# New session #}<section>
+                {# New session #}<section class="d-flex">
                     <button class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_session">{{ 'main.session.new'|trans }}</button>
+                    <a class="ps-2 d-none d-md-block" href="{{ path('profile', { 'username': app.user.username }) }}"><img id="picture" width="38px" class="profile-picture border" src="{% if app.user.picture %}{{ app.user.picture }}{% else %}/build/images/placeholder-athlete.jpg{% endif %}"></a></li>
                 </section>
             </nav>
 {{ include('main/_session.html.twig') }}

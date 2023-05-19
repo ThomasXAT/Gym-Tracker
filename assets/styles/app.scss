@@ -42,3 +42,14 @@ main.main, .modal-body {
 .pointer {
     cursor: pointer;
 }
+
+#search {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#logo {
+    @media screen and (min-width: 768px) {
+        width: 133.333px;
+    }
+}
