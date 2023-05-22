@@ -9,7 +9,7 @@
     color: #dc3545 !important;
 }
 
-main.main, .modal-body {
+main.main, footer.main, .modal-body {
     background-color: #1b1f22 !important;
 }
 
@@ -23,6 +23,7 @@ main.main, .modal-body {
     }
     .card {
         width: 269px;
+        min-width: 269px;
         height: 360px;
         .card-body {
             #section-description {
@@ -60,9 +61,36 @@ main.main, .modal-body {
         top: 0;
         right: 0;
         left: 0;
-        z-index: 1030;      
+        z-index: 1;
+        height: 55px;
     }
     main.main {
         margin-top: 55px;
     }
+
+    footer.main {
+        margin-bottom: 55px;
+    }
 }
+
+.p-picture-little {
+    padding: 0.054285714rem;
+}
+
+.p-picture-mobile {
+    padding: 0.05rem;
+}
+
+#nav-mobile {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: 55px;
+}
+
+#nav-mobile > section.content {  
+    padding-inline: 0 !important;
+}
+  

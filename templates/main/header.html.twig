@@ -3,8 +3,8 @@
                 {# Logo #}<section>
                     <a href="{{ path('home') }}">
                         <picture>
-                            <source srcset="{{ asset('build/images/Gym-Tracker.png') }}" height="50px" media="(min-width: 768px)">
-                            <img id="logo" src="{{ asset('build/images/GT.png') }}" alt="{{ 'title'|trans }}" height="38px">
+                            <source srcset="{{ asset('images/Gym-Tracker.png') }}" height="50px" media="(min-width: 768px)">
+                            <img id="logo" src="{{ asset('images/GT.png') }}" alt="{{ 'title'|trans }}" height="38px">
                         </picture>
                     </a>
                 </section>
@@ -18,8 +18,7 @@
                 </section>
                 {# New session #}<section class="d-flex">
                     <button class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_session">{{ 'main.session.new'|trans }}</button>
-                    <a class="ps-2 d-none d-md-block" href="{{ path('profile', { 'username': app.user.username }) }}"><img id="picture" width="38px" class="profile-picture border" src="{% if app.user.picture %}{{ app.user.picture }}{% else %}/build/images/placeholder-athlete.jpg{% endif %}"></a></li>
+                    <a class="ps-2 d-none d-md-block" href="{{ path('profile', { 'username': app.user.username }) }}"><img id="picture" width="38px" height="38px" class="profile-picture border p-picture-little" src="{% if app.user.picture %}{{ asset(app.user.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}"></a></li>
                 </section>
             </nav>
-{{ include('main/_session.html.twig') }}
         </section>

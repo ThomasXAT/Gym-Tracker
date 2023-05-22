@@ -17,14 +17,22 @@
 </head>
 <body>
     <h1 hidden>{{ 'title'|trans }}</h1>
-    <header class="{{ section }} {% if section == 'main' %}bg-dark border-bottom {% endif %}p-2 p-md-3">
+    <header class="{{ section }} {% if section == 'main' %}bg-dark border-bottom {% endif %}py-3 px-md-3 d-flex align-items-center">
 {% include("/#{section}/header.html.twig") %}
     </header>
+{% if section == 'main' %}
+{{ include('main/_session.html.twig') }}
+{% endif %}
     <main class="{{ section }} p-2 p-md-3">
 {% block body %}{% endblock %}
     </main>
-    <footer class="{{ section }} {% if section == 'main' %}bg-dark border-top {% endif %}p-2 p-md-3">
+    <footer class="{{ section }} p-2 p-md-3">
 {% include("/#{section}/footer.html.twig") %}
     </footer>
+{% if section == 'main' %}
+    <div id="nav-mobile" class="{{ section }} d-md-none {% if section == 'main' %}bg-dark border-top {% endif %} d-flex align-items-center">
+{{ include('main/nav-mobile.html.twig') }}   
+    </div>
+{% endif %}
 </body>
 </html>
