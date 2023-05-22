@@ -9,7 +9,7 @@
                         <div class="card mx-3 mx-lg-0">
                             <header class="card-header">
                                 <section id="section-picture" class="text-center py-1">
-                                    <img id="picture" width="75%" class="profile-picture border p-1" src="{% if athlete.picture %}{{ athlete.picture }}{% else %}/build/images/placeholder-athlete.jpg{% endif %}">
+                                    <img id="picture" width="175px" height="175px" class="profile-picture border p-1" src="{% if athlete.picture %}{{ asset(athlete.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}">
                                 </section>
                             </header>
                             <main class="card-body justify-content-center align-items-center d-flex">

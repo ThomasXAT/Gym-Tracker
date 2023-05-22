@@ -11,7 +11,11 @@ main:
   profile:
     title: Profil
     edit:
+      form: Édition du profil
       required: Champs obligatoires
+      picture: Photo de profil
+      delete_picture: Supprimer la photo de profil
+      identity: Informations personnelles
       firstname: Prénom
       surname: Nom
       username: Nom d'utilisateur
@@ -21,7 +25,6 @@ main:
       description: Description
       height: Taille
       weight: Poids
-      picture: Photo de profil
       submit: Éditer le profil
   session:
     new:  Nouvelle séance

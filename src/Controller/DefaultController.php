@@ -5,7 +5,13 @@ namespace App\Controller;
 use App\Form\ProfileType;
 use App\Repository\AthleteRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Imagine\Gd\Imagine;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -49,6 +55,42 @@ class DefaultController extends AbstractController
                     }
                     else {
                         $athlete->setPassword($oldPassword);
+                    }
+                    /**
+                     * @var UploadedFile $file
+                     */
+                    $file = $form->get('file')->getData();
+                    if ($file) {
+                        $root = $this->getParameter('root');
+                        $directory = 'images/athletes/' . $athlete->getUsername() . '/picture/';
+                        $name = uniqid();
+                        $filesystem = new Filesystem();
+                        if ($filesystem->exists($root . $directory)) {
+                            $filesystem->remove($root . $directory);
+                        }    
+                        try {
+                            $file->move($root . $directory, $name);
+                            $imagine = new Imagine();
+                            $image = $imagine->open($root . $directory . $name);
+                            $width = $image->getSize()->getWidth();
+                            $height = $image->getSize()->getHeight();
+                            $size = min($width, $height);
+                            $x = ($width - $size) / 2;
+                            $y = ($height - $size) / 2;
+                            $image->crop(new Point($x, $y), new Box($size, $size));
+                            if ($size > 512) {
+                                $image->resize(new Box(512, 512));
+                            }
+                            $image->save($root . $directory . $name . '.jpg');
+                            $athlete->setPicture($directory . $name . '.jpg');
+                            if ($filesystem->exists($root . $directory . $name)) {
+                                $filesystem->remove($root . $directory . $name);
+                            }
+                        } catch (FileException $e) {
+                        }
+                    }
+                    elseif (isset($_POST['profile']['_delete_picture']) && $_POST['profile']['_delete_picture']) {
+                        $athlete->setPicture(null);
                     }
                     $entityManager->persist($athlete);
                     $entityManager->flush();
