@@ -82,10 +82,8 @@
                     </div>
                 </section>
             </div>
-{% if athlete == app.user %}
-            <div class="text-center">
-                <button class="btn btn-link text-nowrap text-decoration-none" data-action="click->profile#edit" data-bs-toggle="modal" data-bs-target="#_edit">{{ 'main.profile.edit.submit'|trans }}</button>
-            </div>
+{% if athlete is defined and athlete == app.user %}
+            <button id="button-edit" class="btn btn-light text-nowrap" data-action="click->profile#edit" data-bs-toggle="modal" data-bs-target="#_edit"><i class="fa-solid fa-pen-to-square"></i> {{ 'main.profile.edit.button'|trans }}</button>
 {{ include('main/profile/_edit.html.twig') }}
 {% endif %}
         </section>

@@ -11,6 +11,7 @@ main:
   profile:
     title: Profil
     edit:
+      button: Éditer
       form: Édition du profil
       required: Champs obligatoires
       picture: Photo de profil
