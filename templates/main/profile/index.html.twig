@@ -30,7 +30,7 @@
                                     </section>
 {% endif %}
                                     <section id="section-username" class="overflow-auto">
-                                        <a id="username" href="@{{ athlete.username }}" class="text-decoration-none text-truncate">@{{ athlete.username }}</a>
+                                        <span id="username" class="text-truncate identifier">@{{ athlete.username }}</span>
                                     </section>
                                 </section>
                             </main>
@@ -64,7 +64,7 @@
                 </section>
                 {# Description #}<section id="description" class="col-12 col-lg-8 col-xl-7 ps-md-2 p-2 mx-auto ms-lg-0">
                     <div class="card flex-fill">
-                        <main class="card-body overflow-auto">
+                        <main class="card-body overflow-auto identifier">
                             {{ athlete.description|raw }}
                         </main>
                         <footer class="card-footer">

@@ -1,8 +1,8 @@
         <section class="content container">
             <ul class="nav text-center">
                 <li class="col-3 my-auto"><a class="{% if page is defined and page == 'home' %}text-white{% else %}text-body{% endif %}" href="/"><i class="fa-solid fa-house fa-xl"></i></a></li>
-                <li class="col-3 my-auto"><a class="{% if page is defined and page == 'repertory' %}text-white{% else %}text-body{% endif %}" href="/?search"><i class="fa-solid fa-magnifying-glass fa-xl"></i></a></li>
+                <li class="col-3 my-auto"><a class="{% if page is defined and (page == 'repertory' or (page == 'profile' and athlete != app.user)) %}text-white{% else %}text-body{% endif %}" href="/?search"><i class="fa-solid fa-magnifying-glass fa-xl"></i></a></li>
                 <li class="col-3 my-auto"><a class="{% if page is defined and page == 'statistics' %}text-white{% else %}text-body{% endif %}" href="#"><i class="fa-solid fa-chart-pie fa-xl"></i></a></li>
-                <li class="col-3 my-auto"><a href="{{ path('profile', { 'username': app.user.username }) }}"><img id="nav-mobile-picture" width="35px" height="35px" class="profile-picture border p-picture-mobile {% if page is defined and page == 'profile' %}border-white{% endif %}" src="{% if app.user.picture %}{{ asset(app.user.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}"></a></li></li>
+                <li class="col-3 my-auto"><a href="{{ path('profile', { 'username': app.user.username }) }}"><img id="nav-mobile-picture" width="35px" height="35px" class="profile-picture border p-picture-little{% if page is defined and page == 'profile' and athlete is defined and athlete == app.user %} border-white{% endif %}" src="{% if app.user.picture %}{{ asset(app.user.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}"></a></li></li>
             </ul>
         </section>
