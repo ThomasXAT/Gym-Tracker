@@ -23,6 +23,7 @@ main:
       password: Nouveau mot de passe
       confirmation: Confirmation du mot de passe
       description: Description
+      quotation: Citation
       height: Taille
       weight: Poids
       submit: Éditer le profil

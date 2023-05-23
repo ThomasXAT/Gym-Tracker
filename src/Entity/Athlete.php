@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Culture\Quotation;
 use App\Repository\AthleteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -55,6 +56,9 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $picture = null;
+
+    #[ORM\ManyToOne(inversedBy: 'athletes')]
+    private ?Quotation $quotation = null;
 
     public function __construct()
     {
@@ -241,6 +245,18 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getQuotation(): ?Quotation
+    {
+        return $this->quotation;
+    }
+
+    public function setQuotation(?Quotation $quotation): self
+    {
+        $this->quotation = $quotation;
 
         return $this;
     }

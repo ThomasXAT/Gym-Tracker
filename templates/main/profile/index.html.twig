@@ -67,8 +67,18 @@
                         <main class="card-body overflow-auto identifier">
                             {{ athlete.description|raw }}
                         </main>
+{% if athlete.quotation %}
                         <footer class="card-footer">
+                            <figure id="quotation">
+                                <blockquote class="blockquote overflow-auto">
+                                    <span class="text-truncate">{{ athlete.quotation.text }}</span>
+                                </blockquote>
+                                <figcaption class="blockquote-footer overflow-auto">
+                                    <span class="text-truncate">{{ athlete.quotation.author }}</span>
+                                </figcaption>
+                            </figure>
                         </footer>
+{% endif %}
                     </div>
                 </section>
             </div>

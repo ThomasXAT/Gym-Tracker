@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Athlete;
+use App\Entity\Culture\Quotation;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -79,9 +81,20 @@ class ProfileType extends AbstractType
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('description', TextareaType::class, [
+                'label' => $this->translator->trans('main.profile.edit.description'),
                 'required' => false,
                 'attr' => ['class' => 'editor'],
-            ])  
+                'label_attr' => ['class' => 'form-label'],
+            ])
+            ->add('quotation', EntityType::class, [
+                'class' => Quotation::class,
+                'choice_label' => 'text',
+                'multiple' => false,
+                'label' => $this->translator->trans('main.profile.edit.quotation'),
+                'required' => false,
+                'attr' => ['class' => 'form-select'],
+                'label_attr' => ['class' => 'form-label'],
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => $this->translator->trans('main.profile.edit.submit'),
                 'attr' => ['class' => 'btn btn-success'],
