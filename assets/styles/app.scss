@@ -6,7 +6,7 @@
 
 .required:after {
     content:"*";
-    color: #dc3545 !important;
+    color: var(--bs-danger) !important;
 }
 
 main.main, footer.main, .modal-body {
@@ -74,10 +74,6 @@ main.main, footer.main, .modal-body {
 }
 
 .p-picture-little {
-    padding: 0.054285714rem;
-}
-
-.p-picture-mobile {
     padding: 0.05rem;
 }
 
@@ -93,4 +89,3 @@ main.main, footer.main, .modal-body {
 #nav-mobile > section.content {  
     padding-inline: 0 !important;
 }
-  

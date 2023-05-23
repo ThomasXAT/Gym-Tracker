@@ -79,10 +79,8 @@ class ProfileType extends AbstractType
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('description', TextareaType::class, [
-                'label' => $this->translator->trans('main.profile.edit.description'),
                 'required' => false,
-                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
-                'label_attr' => ['class' => 'form-label'],
+                'attr' => ['class' => 'editor'],
             ])  
             ->add('submit', SubmitType::class, [
                 'label' => $this->translator->trans('main.profile.edit.submit'),

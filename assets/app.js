@@ -17,6 +17,26 @@ require("@fortawesome/fontawesome-free/js/all.js");
 
 require("bootstrap");
 
+// CKEditor
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import "@ckeditor/ckeditor5-build-classic/build/translations/fr";
+
+let editors = document.querySelectorAll(".editor");
+editors.forEach(function(editor) {
+    ClassicEditor.create(editor, {
+        language: "fr",
+        toolbar: {
+            items: [
+                "heading",
+                "|", "bold", "italic",
+                "|", "bulletedList", "numberedList",
+                "|", "undo", "redo",
+            ],
+            shouldNotGroupWhenFull: false
+        }        
+    });
+});
+
 let identifiers = document.querySelectorAll(".identifier");
 if (identifiers.length > 0) {
     $.ajax({
