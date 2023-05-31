@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+        <h2 hidden>{{ athlete.username }}</h2>
+        <span id="identifier" hidden>{{ athlete.id }}</span>
+        <section class="content container">
+            <div class="row">
+                {# Sessions #}<section id="sessions" class="p-2 mx-auto">
+{{ include('main/profile/_sessions.html.twig') }}
+                </section>
+            </div>
+        </section>
+{% endblock %}

@@ -9,7 +9,7 @@
     color: var(--bs-danger) !important;
 }
 
-main.main, footer.main, .modal-body {
+main.main, footer.main, .modal-body, .accordion-collapse {
     background-color: #1b1f22 !important;
 }
 
@@ -40,8 +40,17 @@ main.main, footer.main, .modal-body {
     }
 }
 
+#sessions {
+    max-width: 925px;
+}
+
 .pointer {
     cursor: pointer;
+}
+
+.arrow:hover {
+    color: #fff !important;
+    border-color: #fff !important;
 }
 
 #search {
@@ -51,7 +60,7 @@ main.main, footer.main, .modal-body {
 
 #logo {
     @media screen and (min-width: 768px) {
-        width: 133.333px;
+        width: 134px;
     }
 }
 
@@ -61,7 +70,7 @@ main.main, footer.main, .modal-body {
         top: 0;
         right: 0;
         left: 0;
-        z-index: 1;
+        z-index: 1030;
         height: 55px;
     }
     main.main {
@@ -82,7 +91,7 @@ main.main, footer.main, .modal-body {
     bottom: 0;
     right: 0;
     left: 0;
-    z-index: 1;
+    z-index: 1030;
     height: 55px;
 }
 
@@ -95,9 +104,25 @@ main.main, footer.main, .modal-body {
     bottom: 0;
     right: 0;
     left: 0;
-    z-index: 1;
+    z-index: 1030;
     margin: 10px;
     @media screen and (max-width: 767px) {
         margin-bottom: 65px;
     }
+}
+
+footer.main {
+    background-color: #262A2E !important;
+}
+
+.session-title {
+    background-color: #262A2E;
+}
+
+.session-date {
+    background-color: #262A2E;
+}
+
+#button-edit {
+    max-width: 90px;
 }

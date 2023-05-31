@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+        <h2 hidden>{{ athlete.username }}</h2>
+        <span id="identifier" hidden>{{ athlete.id }}</span>
         <section class="content container" {{ stimulus_controller('profile') }}>
-            <span id="identifier" hidden>{{ athlete.id }}</span>
-            <div class="row">
-                {# Information #}<section id="information" class="col-12 col-lg-4 col-xl-3 pe-md-2 p-2 mx-auto me-lg-0">
+            <div class="row justify-content-center">
+                {# Information #}<section id="information" class="pe-md-2 p-2 mx-auto me-lg-0">
                     {# Recto #}<div id="recto" class="d-flex justify-content-center align-items-center">
-                        <span data-action="click->profile#verso" class="pointer d-lg-none"><i class="fa-solid fa-arrow-left fa-lg"></i></span>
+                        <span data-action="click->profile#verso" class="pointer arrow d-lg-none"><i class="fa-solid fa-arrow-left fa-lg"></i></span>
                         <div class="card mx-3 mx-lg-0">
                             <header class="card-header">
                                 <section id="section-picture" class="text-center py-1">
@@ -36,16 +37,16 @@
                             </main>
                             <footer class="card-footer">
                                 <section id="section-verso" class="d-flex justify-content-between align-items-center">
-                                    <span data-action="click->profile#verso" class="pointer d-none d-lg-block"><i class="fa-solid fa-arrow-left"></i></span>
-                                    <span data-action="click->profile#verso" class="m-auto pointer">1 / 2</span>
-                                    <span data-action="click->profile#verso" class="pointer d-none d-lg-block"><i class="fa-solid fa-arrow-right"></i></span>
+                                    <span data-action="click->profile#verso" class="pointer arrow d-none d-lg-block"><i class="fa-solid fa-arrow-left"></i></span>
+                                    <span data-action="click->profile#verso" class="m-auto arrow pointer">1 / 2</span>
+                                    <span data-action="click->profile#verso" class="pointer arrow d-none d-lg-block"><i class="fa-solid fa-arrow-right"></i></span>
                                 </section>
                             </footer>
                         </div>
-                        <span data-action="click->profile#verso" class="pointer d-lg-none"><i class="fa-solid fa-arrow-right fa-lg"></i></span>
+                        <span data-action="click->profile#verso" class="pointer arrow d-lg-none"><i class="fa-solid fa-arrow-right fa-lg"></i></span>
                     </div>
                     {# Verso #}<div id="verso" class="justify-content-center align-items-center d-none">
-                        <span data-action="click->profile#recto" class="pointer d-lg-none"><i class="fa-solid fa-arrow-left fa-lg"></i></span>
+                        <span data-action="click->profile#recto" class="pointer arrow d-lg-none"><i class="fa-solid fa-arrow-left fa-lg"></i></span>
                         <div class="card mx-3 mx-lg-0">
                             <header class="card-header">
                             </header>
@@ -53,16 +54,16 @@
                             </main>
                             <footer class="card-footer">
                                 <section id="section-recto" class="d-flex justify-content-between align-items-center">
-                                    <span data-action="click->profile#recto" class="pointer d-none d-lg-block"><i class="fa-solid fa-arrow-left"></i></span>
-                                    <span data-action="click->profile#recto" class="m-auto pointer">2 / 2</span>
-                                    <span data-action="click->profile#recto" class="pointer d-none d-lg-block"><i class="fa-solid fa-arrow-right"></i></span>
+                                    <span data-action="click->profile#recto" class="pointer arrow d-none d-lg-block"><i class="fa-solid fa-arrow-left"></i></span>
+                                    <span data-action="click->profile#recto" class="m-auto arrow pointer">2 / 2</span>
+                                    <span data-action="click->profile#recto" class="pointer arrow d-none d-lg-block"><i class="fa-solid fa-arrow-right"></i></span>
                                 </section>
                             </footer>
                         </div>
-                        <span data-action="click->profile#recto" class="pointer d-lg-none"><i class="fa-solid fa-arrow-right fa-lg"></i></span>
+                        <span data-action="click->profile#recto" class="pointer arrow d-lg-none"><i class="fa-solid fa-arrow-right fa-lg"></i></span>
                     </div>
                 </section>
-                {# Description #}<section id="description" class="col-12 col-lg-8 col-xl-7 ps-md-2 p-2 mx-auto ms-lg-0">
+                {# Description #}<section id="description" class="ps-md-2 p-2 mx-auto ms-lg-0">
                     <div class="card flex-fill">
                         <main class="card-body overflow-auto identifier">
                             {{ athlete.description|raw }}
@@ -81,6 +82,15 @@
 {% endif %}
                     </div>
                 </section>
+{% if sessions is defined and sessions %}
+                {# Sessions #}<section id="sessions" class="p-2">
+                    <h3 class="text-white">{{ 'main.profile.sessions.last'|trans }}</h3>
+{{ include('main/profile/_sessions.html.twig') }}
+                    <div class="text-end">
+                        <a class="text-truncate text-decoration-none" href="{{ path('sessions', {'username': athlete.username}) }}">{{ 'main.profile.sessions.full'|trans }}</a>
+                    </div>
+                </section>
+{% endif %}
             </div>
 {% if athlete is defined and athlete == app.user %}
             <button id="button-edit" class="btn btn-light text-nowrap" data-action="click->profile#edit" data-bs-toggle="modal" data-bs-target="#_edit"><i class="fa-solid fa-pen-to-square"></i> {{ 'main.profile.edit.button'|trans }}</button>

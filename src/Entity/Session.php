@@ -15,7 +15,7 @@ class Session
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 64)]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]

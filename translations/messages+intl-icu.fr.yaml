@@ -28,6 +28,10 @@ main:
       height: Taille
       weight: Poids
       submit: Éditer le profil
+    sessions:
+      last: Dernières séances
+      list: Liste des séances
+      full: Consulter la liste complète
   session:
     new:  Nouvelle séance
     start: Débuter la séance

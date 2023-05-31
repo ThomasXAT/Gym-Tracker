@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\ProfileType;
 use App\Repository\AthleteRepository;
+use App\Repository\SessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
@@ -35,10 +36,11 @@ class DefaultController extends AbstractController
     }
 
     #[Route('/@{username}', name: 'profile')]
-    public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AthleteRepository $athleteRepository, String $username): Response
+    public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AthleteRepository $athleteRepository, SessionRepository $sessionRepository, String $username): Response
     {
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
+            $sessions = $sessionRepository->findBy(['athlete' => $athlete], ['start' => 'desc'], 3);
             if ($this->getUser() == $athlete) {
                 $oldPassword = $athlete->getPassword();
                 $form = $this->createForm(ProfileType::class, $athlete);
@@ -103,6 +105,7 @@ class DefaultController extends AbstractController
                     return $this->render('main/profile/index.html.twig', [
                         'page' => 'profile',
                         'athlete' => $athlete,
+                        'sessions' => $sessions,
                         'form' => $form,
                     ]);
                 }
@@ -110,7 +113,28 @@ class DefaultController extends AbstractController
             return $this->render('main/profile/index.html.twig', [
                 'page' => 'profile',
                 'athlete' => $athlete,
+                'sessions' => $sessions,
             ]);
+        }
+        throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
+    }
+
+    #[Route('/@{username}/sessions', name: 'sessions')]
+    public function sessions(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, String $username): Response
+    {
+        $athlete = $athleteRepository->findOneBy(['username' => $username]);
+        if ($athlete) {
+            $sessions = $sessionRepository->findBy(['athlete' => $athlete], ['start' => 'desc']);
+            if ($sessions) {
+                return $this->render('main/profile/sessions/index.html.twig', [
+                    'page' => 'sessions',
+                    'athlete' => $athlete,
+                    'sessions' => $sessions,
+                ]);
+            }
+            else {
+                return $this->redirectToRoute('profile', ['username' => $athlete->getUsername()]);
+            }
         }
         throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }
