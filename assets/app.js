@@ -39,28 +39,27 @@ editors.forEach(function(editor) {
 
 let identifiers = document.querySelectorAll(".identifier");
 if (identifiers.length > 0) {
-    $.ajax({
-        url: "/api/athlete",
-        type: "GET",
-        dataType: "json",
-        success: function(response) {
-            let athletes = [];
+    fetch("/api/athlete")
+        .then(response => response.json())
+        .then(data => {
+            let athletes = Object.values(data);
             let string;
-            $.each(response, function(i, athlete) {
-                athletes.push(athlete)
-            }); 
-            athletes.sort(function(a, b) {
-                return b.username.length - a.username.length;
-            });
-            identifiers.forEach(function(identifier) {
-                athletes.forEach(function(athlete) {
+            athletes.sort((a, b) => b.username.length - a.username.length);
+            identifiers.forEach(identifier => {
+                athletes.forEach(athlete => {
                     string = identifier.innerHTML;
-                    identifier.innerHTML = string.replace(
+                    identifier.innerHTML = string.replaceAll(
                         "@" + athlete.username, 
-                        "<a class='text-decoration-none' href='@" + athlete.username + "'>@" + athlete.username + "</a>"
+                        "<a class='text-decoration-none' href='/@~" + athlete.username + "'><span>@</span><span>" + athlete.username + "</span></a>"
                     );
-                })
+                });
             });
-        }
-    });
+            identifiers.forEach(identifier => {
+                identifier.innerHTML = identifier.innerHTML.replaceAll("/@~", "/@");
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    ;
 }

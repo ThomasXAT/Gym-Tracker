@@ -33,7 +33,7 @@ export var verify = {
         if (firstname.val() != "") {
             if (help) {input.setInvalid(firstname);}
             firstname.val(firstname.val().split(/(\s|-)+/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(""));
-            if (!/^[a-zA-Zà-üÀ-Ü-\s]+$/.test(firstname.val())) {
+            if (!new RegExp(/^[a-zA-Zà-üÀ-Ü-\s]+$/).test(firstname.val())) {
                 if (help) {$("#help-fullname").html("Prénom incorrect. Caractères autorisés : espaces, tirets et lettres (majuscules, minuscules et accentuées).");}  
                 return false;
             }
@@ -58,7 +58,7 @@ export var verify = {
         if (surname.val() != "") {
             if (help) {input.setInvalid(surname);}
             surname.val(surname.val().split(/(\s|-)+/).map(word => word.toUpperCase()).join(""));
-            if (!/^[a-zA-Zà-üÀ-Ü-\s]+$/.test(surname.val())) {
+            if (!new RegExp(/^[a-zA-Zà-üÀ-Ü-\s]+$/).test(surname.val())) {
                 if (help) {$("#help-fullname").html("Nom incorrect. Caractères autorisés : espaces, tirets et lettres (majuscules, minuscules et accentuées).");}  
                 return false;
             }
@@ -83,7 +83,7 @@ export var verify = {
         } 
         if (username.val() != "") {
             if (help) {input.setInvalid(username);}
-            if (!/^[a-zA-Z0-9_]+$/.test(username.val())) {
+            if (!new RegExp(/^[a-zA-Z0-9_]+$/).test(username.val())) {
                 if (help) {$("#help-username").html("Identifiant incorrect. Caractères autorisés : espaces, tirets bas et lettres (majuscules et minuscules).");}
             }
             else if (username.val().length < 2) {
@@ -107,7 +107,7 @@ export var verify = {
         if (email.val() != "") {
             if (help) {input.setInvalid(email);}
             email.val(email.val().toLowerCase());
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.val())) {
+            if (!new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i).test(email.val())) {
                 if (help) {$("#help-email").html("Veuillez saisir une adresse e-mail valide.");}
             }
             else if (email.val().length > 128) {
@@ -158,15 +158,3 @@ export var verify = {
         return false;
     },
 };
-
-export function dataURLtoFile(dataURL, fileName) {
-    var arr = dataURL.split(','), 
-        mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]), 
-        n = bstr.length, 
-        u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], fileName, { type: mime });
-}

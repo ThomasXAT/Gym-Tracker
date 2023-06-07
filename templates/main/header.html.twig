@@ -8,17 +8,17 @@
                         </picture>
                     </a>
                 </section>
-                {# Search #}<section id="section-search" class="d-none d-md-block">
-                        <form method="get" action="/">
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                <input id="search" name="search" type="text" class="form-control" placeholder="Rechercher un athlète" {% if search is defined %}value="{{ search }}"{% endif %}>
-                            </div>
-                        </form>
+                {# Search #}<section id="section-search" class="d-none d-md-flex">
+                    <form method="get" action="/">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                            <input id="search" name="search" type="text" class="form-control" placeholder="Rechercher un athlète" {% if search is defined %}value="{{ search }}"{% endif %}>
+                        </div>
+                    </form>
+                    <a class="ps-2 d-none d-md-block" href="{{ path('profile', { 'username': app.user.username }) }}"><img id="picture" width="38px" height="38px" class="profile-picture pointer border p-picture-little{% if page is defined and page == 'profile' and athlete is defined and athlete == app.user %} border-white{% endif %}" src="{% if app.user.picture %}{{ asset(app.user.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}"></a>
                 </section>
-                {# New session #}<section class="d-flex">
+                {# New session #}<section>
                     <button class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_session">{{ 'main.session.new'|trans }}</button>
-                    <a class="ps-2 d-none d-md-block" href="{{ path('profile', { 'username': app.user.username }) }}"><img id="picture" width="38px" height="38px" class="profile-picture arrow border p-picture-little{% if page is defined and page == 'profile' and athlete is defined and athlete == app.user %} border-white{% endif %}" src="{% if app.user.picture %}{{ asset(app.user.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}"></a>
                 </section>
             </nav>
         </section>

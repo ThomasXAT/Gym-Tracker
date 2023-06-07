@@ -1,9 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import { verify } from "./common";
 import { input } from "./common";
-import { dataURLtoFile } from "./common";
 
-const IDENTIFIER = parseInt($("#identifier").text());
 let RECTO = $("#recto");
 const VERSO = $("#verso");
 
@@ -11,16 +9,12 @@ export default class extends Controller {
     connect() {
     }
     recto() {
-        VERSO.removeClass("d-flex");
-        RECTO.removeClass("d-none");
-        VERSO.addClass("d-none");
-        RECTO.addClass("d-flex");
+        VERSO.removeClass("d-flex").addClass("d-none");
+        RECTO.removeClass("d-none").addClass("d-flex");
     }
     verso() {
-        RECTO.removeClass("d-flex");
-        VERSO.removeClass("d-none");
-        RECTO.addClass("d-none");
-        VERSO.addClass("d-flex");
+        RECTO.removeClass("d-flex").addClass("d-none");
+        VERSO.removeClass("d-none").addClass("d-flex");
     }
     edit() {
         verify.firstname($("#profile_firstname"), true);

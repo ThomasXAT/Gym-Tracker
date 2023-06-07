@@ -56,6 +56,33 @@ class AthleteRepository extends ServiceEntityRepository implements PasswordUpgra
         $this->save($user, true);
     }
 
+    public function findByUsername(String $search) {
+        return $this->createQueryBuilder('a')
+            ->orWhere('a.username like :search')
+            ->setParameter('search', '%' . strtolower($search) . '%')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByFullname(String $search) {
+        return $this->createQueryBuilder('a')
+            ->orWhere('concat(a.firstname, \' \', a.surname) like :search')            
+            ->setParameter('search', '%' . strtolower($search) . '%')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByDescription(String $search) {
+        return $this->createQueryBuilder('a')
+            ->orWhere('a.description like :search')
+            ->setParameter('search', '%' . strtolower($search) . '%')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return Athlete[] Returns an array of Athlete objects
 //     */

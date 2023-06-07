@@ -22,12 +22,30 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function home(): Response
+    public function home(AthleteRepository $athleteRepository): Response
     {
         if (isset($_GET["search"])) {
+            $search = $_GET["search"];
+            $results = array();
+            if ($search) {
+                $results = array_merge(
+                    $results,
+                    $athleteRepository->findByUsername($search)
+                );
+                $results = array_merge(
+                    $results,
+                    $athleteRepository->findByFullname($search)
+                );
+                $results = array_merge(
+                    $results,
+                    $athleteRepository->findByDescription($search)
+                );  
+                $results = array_unique($results, SORT_REGULAR);
+            }
             return $this->render('main/repertory/index.html.twig', [
                 'page' => 'repertory',
-                'search' => $_GET["search"],
+                'search' => $search,
+                'results' => $results,
             ]);
         }
         return $this->render('main/home/index.html.twig', [

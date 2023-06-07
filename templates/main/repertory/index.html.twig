@@ -1,6 +1,57 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-        <section class="content">
-
+        <section class="content container" {{ stimulus_controller('repertory') }}>
+            {# Search #}<section id="section-search-mobile" class="d-md-none p-3">
+                <form method="get" action="/">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input id="search" name="search" type="text" class="form-control" placeholder="Rechercher un athlète" {% if search is defined %}value="{{ search }}"{% endif %}>
+                    </div>
+                </form>
+            </section>
+{% if search|length %}
+            {# Print #}<section id="print" class="text-center p-3">
+                <span>{{ 'main.repertory.results'|trans }}</span>
+                <br>
+                <h2 class="fs-3">« <span class="text-white">{{ search }}</span> »</h2>
+            </section>
+            {# Results #}<section id="results" class="text-center">
+{% if results|length %}
+{% for athlete in results %}
+{% if athlete != app.user %}
+                <div class="card athlete pointer mx-auto my-2" data-username="{{ athlete.username }}">
+                    <main class="card-body d-flex justify-content-between align-items-center">
+                        <section class="text-start">
+                            <img id="picture" width="96px" height="96px" class="profile-picture border p-picture-repertory" src="{% if athlete.picture %}{{ asset(athlete.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}">
+                        </section>
+                        <section class="text-center w-100 ms-auto overflow-auto px-3">
+{% if athlete.firstname or athlete.surname %}
+                            <section class="fs-3 overflow-auto">
+                                <span class="text-truncate">
+{% if athlete.firstname %}
+                                    <span>{{ athlete.firstname }}</span>
+{% if athlete.surname %}
+    
+{% endif %}
+{% endif %}
+{% if athlete.surname %}
+                                    <span>{{ athlete.surname }}</span>
+{% endif %}
+                                </span>
+                            </section>
+{% endif %}
+                            <section class="overflow-auto">
+                                <span class="text-truncate identifier">@{{ athlete.username }}</span>
+                            </section>
+                        </section>
+                    </main>
+                </div>
+{% endif %}
+{% endfor %}
+{% else %} 
+                <p class="text-danger">{{ 'main.repertory.empty'|trans }}</p>
+{% endif %}
+            </div>
+{% endif %}
         </section>
 {% endblock %}

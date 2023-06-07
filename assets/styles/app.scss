@@ -44,13 +44,18 @@ main.main, footer.main, .modal-body, .accordion-collapse {
     max-width: 925px;
 }
 
-.pointer {
+.pointer:hover {
     cursor: pointer;
-}
-
-.arrow:hover {
     color: #fff !important;
     border-color: #fff !important;
+}
+
+.pointer:hover > main > section > img {
+    border-color: #fff !important;
+}
+
+.pointer-only {
+    cursor: pointer;
 }
 
 #search {
@@ -84,6 +89,10 @@ main.main, footer.main, .modal-body, .accordion-collapse {
 
 .p-picture-little {
     padding: 0.05rem;
+}
+
+.p-picture-repertory {
+    padding: 0.15rem;
 }
 
 #nav-mobile {
@@ -125,4 +134,12 @@ footer.main {
 
 #button-edit {
     max-width: 90px;
+}
+
+main.main {
+    min-height: 75vh;
+}
+
+.card.athlete {
+    max-width: 400px;
 }
