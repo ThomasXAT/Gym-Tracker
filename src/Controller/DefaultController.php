@@ -54,7 +54,7 @@ class DefaultController extends AbstractController
     }
 
     #[Route('/@{username}', name: 'profile')]
-    public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AthleteRepository $athleteRepository, SessionRepository $sessionRepository, String $username): Response
+    public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, AthleteRepository $athleteRepository, SessionRepository $sessionRepository, String $username): Response
     {
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
@@ -112,8 +112,7 @@ class DefaultController extends AbstractController
                     elseif (isset($_POST['profile']['_delete_picture']) && $_POST['profile']['_delete_picture']) {
                         $athlete->setPicture(null);
                     }
-                    $entityManager->persist($athlete);
-                    $entityManager->flush();
+                    $athleteRepository->save($athlete, true);
                     if ($newPassword) {
                         return $this->redirectToRoute('authentication_logout');
                     }

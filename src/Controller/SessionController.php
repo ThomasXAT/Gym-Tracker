@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SessionController extends AbstractController
 {
     #[Route('session/start/{title}', name: 'session_start')]
-    public function start(string $title, SessionRepository $sessionRepository, EntityManagerInterface $entityManager): Response
+    public function start(string $title, SessionRepository $sessionRepository): Response
     {
         /**
          * @var Athlete $user
@@ -27,14 +27,13 @@ class SessionController extends AbstractController
                 ->setAthlete($user)
                 ->setStart(new DateTime)
             ;
-            $entityManager->persist($session);
-            $entityManager->flush();
+            $sessionRepository->save($session, true);
         }
         return $this->redirectToRoute('home');
     }
 
     #[Route('session/stop', name: 'session_stop')]
-    public function stop(SessionRepository $sessionRepository, EntityManagerInterface $entityManager): Response
+    public function stop(SessionRepository $sessionRepository): Response
     {
         /**
          * @var Athlete $user
@@ -45,8 +44,7 @@ class SessionController extends AbstractController
                 ->setCurrent(false)
                 ->setEnd(new DateTime)
             ;
-            $entityManager->persist($session);
-            $entityManager->flush();
+            $sessionRepository->save($session, true);
         }
         return $this->redirectToRoute('home');
     }

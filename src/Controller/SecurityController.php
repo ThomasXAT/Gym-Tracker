@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Athlete;
 use App\Form\LoginType;
 use App\Form\RegisterType;
+use App\Repository\AthleteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +52,7 @@ class SecurityController extends AbstractController
     {}
     
     #[Route('/register', name: 'register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, AthleteRepository $athleteRepository): Response
     {
         if (!$this->getUser()) {
             $athlete = new Athlete();
@@ -65,8 +66,7 @@ class SecurityController extends AbstractController
                         $form->get('password')->getData()
                     )
                 );
-                $entityManager->persist($athlete);
-                $entityManager->flush();
+                $athleteRepository->save($athlete, true);
                 // do anything else you need here, like send an email
                 return $this->redirectToRoute('home');
             }

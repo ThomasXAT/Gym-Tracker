@@ -16,7 +16,7 @@ class Bundle
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'bundles')]
+    #[ORM\ManyToOne(targetEntity: "Muscle", cascade: ["persist"])]
     private ?Muscle $muscle = null;
 
     public function getId(): ?int
