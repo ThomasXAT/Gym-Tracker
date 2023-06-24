@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
         <section class="content container" {{ stimulus_controller('repertory') }}>
-            {# Search #}<section id="section-search-mobile" class="d-md-none p-3">
+            {# Search #}<section id="section-search-mobile" class="d-md-none p-3 mx-auto">
                 <form method="get" action="/">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
@@ -10,7 +10,7 @@
                 </form>
             </section>
 {% if search|length %}
-            {# Print #}<section id="print" class="text-center p-3">
+            {# Print #}<section id="print" class="text-center p-3 d-none d-md-block">
                 <span>{{ 'main.repertory.results'|trans }}</span>
                 <br>
                 <h2 class="fs-3">« <span class="text-white">{{ search }}</span> »</h2>
@@ -19,7 +19,7 @@
 {% if results|length %}
 {% for athlete in results %}
 {% if athlete != app.user %}
-                <div class="card athlete pointer mx-auto my-2" data-username="{{ athlete.username }}">
+                <div class="card athlete pointer-only mx-auto my-2" data-username="{{ athlete.username }}">
                     <main class="card-body d-flex justify-content-between align-items-center">
                         <section class="text-start">
                             <img id="picture" width="96px" height="96px" class="profile-picture border p-picture-repertory" src="{% if athlete.picture %}{{ asset(athlete.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}">
@@ -48,7 +48,8 @@
                 </div>
 {% endif %}
 {% endfor %}
-{% else %} 
+{% endif %}
+{% if results|length == null or (results|length == 1 and results[0] == app.user) %} 
                 <p class="text-danger">{{ 'main.repertory.empty'|trans }}</p>
 {% endif %}
             </div>

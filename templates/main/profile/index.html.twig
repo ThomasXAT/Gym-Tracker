@@ -3,7 +3,7 @@
         <h2 hidden>{{ athlete.username }}</h2>
         <section class="content container" {{ stimulus_controller('profile') }}>
             <div class="row justify-content-center">
-                {# Information #}<section id="information" class="pe-md-2 p-2 mx-auto me-lg-0">
+                {# Information #}<section id="information" class="pe-md-2 p-2 mx-auto{% if athlete.description or athlete.quotation %} me-lg-0{% endif %}">
                     {# Recto #}<div id="recto" class="d-flex justify-content-center align-items-center">
                         <span data-action="click->profile#verso" class="pointer d-lg-none"><i class="fa-solid fa-arrow-left fa-lg"></i></span>
                         <div class="card mx-3 mx-lg-0">
@@ -62,6 +62,7 @@
                         <span data-action="click->profile#recto" class="pointer d-lg-none"><i class="fa-solid fa-arrow-right fa-lg"></i></span>
                     </div>
                 </section>
+{% if athlete.description or athlete.quotation %}
                 {# Description #}<section id="description" class="ps-md-2 p-2 mx-auto ms-lg-0">
                     <div class="card flex-fill">
                         <main class="card-body overflow-auto identifier">
@@ -81,6 +82,7 @@
 {% endif %}
                     </div>
                 </section>
+{% endif %}
 {% if sessions is defined and sessions %}
                 {# Sessions #}<section id="sessions" class="p-2">
                     <h3 class="text-white">{{ 'main.profile.sessions.last'|trans }}</h3>
