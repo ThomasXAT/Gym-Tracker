@@ -2,24 +2,27 @@ import { Controller } from "@hotwired/stimulus";
 import { verify } from "./common";
 import { input } from "./common";
 
-let RECTO = $("#recto");
-const VERSO = $("#verso");
-
 export default class extends Controller {
     connect() {
     }
     recto() {
-        VERSO.removeClass("d-flex").addClass("d-none");
-        RECTO.removeClass("d-none").addClass("d-flex");
+        $("#verso").removeClass("d-flex").addClass("d-none");
+        $("#recto").removeClass("d-none").addClass("d-flex");
     }
     verso() {
-        RECTO.removeClass("d-flex").addClass("d-none");
-        VERSO.removeClass("d-none").addClass("d-flex");
+        $("#recto").removeClass("d-flex").addClass("d-none");
+        $("#verso").removeClass("d-none").addClass("d-flex");
     }
     edit() {
+        $("#range-height").val($("#profile_height").val());
+        $("#range-weight").val($("#profile_weight").val());
         verify.firstname($("#profile_firstname"), true);
         verify.surname($("#profile_surname"), true);
         verify.email($("#profile_email"), true);
+        if ($("#profile_height").val() !== "" || $("#profile_weight").val() !== "" ) {
+            verify.height($("#profile_height"), true);
+            verify.weight($("#profile_weight"), true);
+        }
         let picture = true;
         $("#profile_file").on("change", function() {
             let file = this.files[0];
@@ -71,6 +74,18 @@ export default class extends Controller {
             verify.firstname($("#profile_firstname"), true);
             verify.surname($("#profile_surname"), true);
         });
+        $("#section-measurement-checkbox").on("input", function() {
+            verify.weight($("#profile_weight"), true);
+            verify.height($("#profile_height"), true);
+        });
+        $("#section-height").on("input", function() {
+            verify.weight($("#profile_weight"), true);
+            verify.height($("#profile_height"), true);
+        });
+        $("#section-weight").on("input", function() {
+            verify.height($("#profile_height"), true);
+            verify.weight($("#profile_weight"), true);
+        });
         $("#form-profile").on("input change click", function() {
             let fullname = false;
                 if (verify.firstname($("#profile_firstname")) && verify.surname($("#profile_surname"))) {
@@ -92,8 +107,42 @@ export default class extends Controller {
                     $("#section-confirmation").prop("hidden", true);
                     $("#profile_confirmation").val("");
                 }
+            let measurement = false;
+                if ((verify.height($("#profile_height")) && verify.weight($("#profile_weight"))) || ($("#profile_height").val() === "" && $("#profile_weight").val() === "" && $("#profile_measurement").prop('checked') == false)) {
+                    $("#help-measurement").html("");
+                    if (($("#profile_height").val() === "" && $("#profile_weight").val() === "")) {
+                        input.setNeutral($("#profile_height"));
+                        input.setNeutral($("#profile_weight"));
+                    }
+                    measurement = true;
+                }
             let submit = $("#profile_submit");
-            picture && fullname && email && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
+            picture && fullname && email && password && measurement ? submit.prop("disabled", false) : submit.prop("disabled", true);
         });
+        $("#range-height").on("input", function() {
+            $("#profile_height").val($("#range-height").val());
+        });
+        $("#range-weight").on("input", function() {
+            $("#profile_weight").val($("#range-weight").val());
+        });
+        $("#profile_height").on("input", function() {
+            $("#range-height").val($("#profile_height").val());
+        });
+        $("#profile_weight").on("input", function() {
+            $("#range-weight").val($("#profile_weight").val());
+        });
+        $("#delete_measurement").on("click", function() {
+            $("#profile_height").val("");
+            $("#profile_weight").val("");
+            $("#range-height").val($("#profile_height").val());
+            $("#range-weight").val($("#profile_weight").val());
+            $("#profile_measurement").prop('checked', false);
+            $("#help-measurement").html("");
+            input.setNeutral($("#profile_height"));
+            input.setNeutral($("#profile_weight"));
+        });
+        if ($("#profile_height").val() === "" && $("#profile_weight").val() === "") {
+            $("#profile_measurement").prop('checked', false);
+        }
     }
 }

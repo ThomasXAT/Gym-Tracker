@@ -32,7 +32,7 @@ export var verify = {
         }
         if (firstname.val() != "") {
             if (help) {input.setInvalid(firstname);}
-            firstname.val(firstname.val().split(/(\s|-)+/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(""));
+            firstname.val(firstname.val().split(new RegExp(/(\s|-)+/)).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(""));
             if (!new RegExp(/^[a-zA-Zà-üÀ-Ü-\s]+$/).test(firstname.val())) {
                 if (help) {$("#help-fullname").html("Prénom incorrect. Caractères autorisés : espaces, tirets et lettres (majuscules, minuscules et accentuées).");}  
                 return false;
@@ -57,7 +57,7 @@ export var verify = {
         }
         if (surname.val() != "") {
             if (help) {input.setInvalid(surname);}
-            surname.val(surname.val().split(/(\s|-)+/).map(word => word.toUpperCase()).join(""));
+            surname.val(surname.val().split(new RegExp(/(\s|-)+/)).map(word => word.toUpperCase()).join(""));
             if (!new RegExp(/^[a-zA-Zà-üÀ-Ü-\s]+$/).test(surname.val())) {
                 if (help) {$("#help-fullname").html("Nom incorrect. Caractères autorisés : espaces, tirets et lettres (majuscules, minuscules et accentuées).");}  
                 return false;
@@ -156,5 +156,33 @@ export var verify = {
             }
         }
         return false;
+    },
+    height: function(height, help = false) {
+        if (help) {
+            input.setNeutral(height);
+        }
+        if (help) {input.setInvalid(height);}
+        if (!new RegExp(/^[0-9]{3}(\.\d)?$/).test(height.val())) {
+            if (help) {$("#help-measurement").html("Taille incorrecte. Toutes les mesures doivent être renseignées.");}  
+            return false;
+        }
+        else {
+            if (help) {input.setValid(height);}
+        }
+        return true;
+    },
+    weight: function(weight, help = false) {
+        if (help) {
+            input.setNeutral(weight);
+        }
+        if (help) {input.setInvalid(weight);}
+        if (!new RegExp(/^[0-9]{2,3}(\.\d)?$/).test(weight.val())) {
+            if (help) {$("#help-measurement").html("Poids incorrect. Toutes les mesures doivent être renseignées.");}  
+            return false;
+        }
+        else {
+            if (help) {input.setValid(weight);}
+        }
+        return true;
     },
 };

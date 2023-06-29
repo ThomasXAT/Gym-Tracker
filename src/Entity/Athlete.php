@@ -60,9 +60,19 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(inversedBy: 'athletes')]
     private ?Quotation $quotation = null;
 
+    #[ORM\OneToMany(mappedBy: 'athlete', targetEntity: Measurement::class, orphanRemoval: true)]
+    private Collection $measurements;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $registration = null;
+
+    #[ORM\Column]
+    private ?bool $measurement = null;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
+        $this->measurements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -257,6 +267,60 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     public function setQuotation(?Quotation $quotation): self
     {
         $this->quotation = $quotation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Measurement>
+     */
+    public function getMeasurements(): Collection
+    {
+        return $this->measurements;
+    }
+
+    public function addMeasurement(Measurement $measurement): self
+    {
+        if (!$this->measurements->contains($measurement)) {
+            $this->measurements->add($measurement);
+            $measurement->setAthlete($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeasurement(Measurement $measurement): self
+    {
+        if ($this->measurements->removeElement($measurement)) {
+            // set the owning side to null (unless already changed)
+            if ($measurement->getAthlete() === $this) {
+                $measurement->setAthlete(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getRegistration(): ?\DateTimeInterface
+    {
+        return $this->registration;
+    }
+
+    public function setRegistration(\DateTimeInterface $registration): self
+    {
+        $this->registration = $registration;
+
+        return $this;
+    }
+
+    public function isMeasurement(): ?bool
+    {
+        return $this->measurement;
+    }
+
+    public function setMeasurement(bool $measurement): self
+    {
+        $this->measurement = $measurement;
 
         return $this;
     }

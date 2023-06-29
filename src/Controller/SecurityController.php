@@ -6,7 +6,7 @@ use App\Entity\Athlete;
 use App\Form\LoginType;
 use App\Form\RegisterType;
 use App\Repository\AthleteRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,6 +66,7 @@ class SecurityController extends AbstractController
                         $form->get('password')->getData()
                     )
                 );
+                $athlete->setRegistration(new DateTime);
                 $athleteRepository->save($athlete, true);
                 // do anything else you need here, like send an email
                 return $this->redirectToRoute('home');

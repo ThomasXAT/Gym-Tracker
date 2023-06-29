@@ -50,8 +50,28 @@
                                     </section>
                                 </section>
                                 <br>
-                                <label for="section-caracteristics" class="form-label">Caractéristiques physiques</label>
-                                <section id="section-caracteristics" class="form-group mb-3">
+                                <label for="section-measurement" class="form-label">{{ 'main.profile.edit.measurement.label'|trans }}</label>
+                                <section id="section-measurement" class="mx-auto">
+                                    <section id="section-measurement-checkbox" class="form-check mb-3">
+                                        {{ form_widget(form.measurement) }}
+                                        {{ form_label(form.measurement) }}
+                                    </section>
+                                    <section id="section-height" class="form-group mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <input type="range" class="form-range pe-3" id="range-height" min="140" max="220" step="0.1">                                            
+                                            {{ form_widget(form.height, {'attr': {'value': (height is defined and height) or (weight is defined and weight) ? height : null}}) }}
+                                            <span class="ps-1">cm</span>
+                                        </div>
+                                    </section>
+                                    <section id="section-weight" class="form-group mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <input type="range" class="form-range pe-3" id="range-weight" min="40" max="120" step="0.1">                                    
+                                            {{ form_widget(form.weight, {'attr': {'value': (weight is defined and weight) or (weight is defined and weight) ? weight : null}}) }}
+                                            <span class="ps-1">kg</span>
+                                        </div>
+                                    </section>
+                                    <p id="help-measurement" class="form-text text-danger"></p>
+                                    <a id="delete_measurement" class="text-nowrap text-decoration-none pointer-only px-1">{{ 'main.profile.edit.delete_measurement'|trans }}</a>
                                 </section>
                                 <br>
                                 <section id="section-description" class="form-group mb-3">

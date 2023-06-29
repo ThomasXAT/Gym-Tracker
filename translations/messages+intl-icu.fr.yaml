@@ -27,8 +27,12 @@ main:
       confirmation: Confirmation du mot de passe
       description: Description
       quotation: Citation
-      height: Taille
-      weight: Poids
+      measurement:
+        label: Mesures anthropométriques
+        height: Taille
+        weight: Poids
+        checkbox: Afficher les mesures sur le profil
+      delete_measurement: Supprimer les mesures
       submit: Éditer le profil
     sessions:
       last: Dernières séances

@@ -1,6 +1,6 @@
 @import "~bootstrap/scss/bootstrap";
 
-.authentication > .content, #section-identity {
+.authentication > .content, #section-identity, #section-measurement {
     max-width: 420px !important;
 }
 
@@ -146,4 +146,12 @@ main.main {
 
 #section-search-mobile {
     max-width: 412px;
+}
+
+#section-measurement > section > div > .form-control {
+    width: 28% !important;
+}
+
+#section-measurement > section > div > .form-range {
+    width: 64% !important;
 }

@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Measurement;
 use App\Form\ProfileType;
 use App\Repository\AthleteRepository;
+use App\Repository\MeasurementRepository;
 use App\Repository\SessionRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use DateTime;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
@@ -54,11 +56,19 @@ class DefaultController extends AbstractController
     }
 
     #[Route('/@{username}', name: 'profile')]
-    public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, AthleteRepository $athleteRepository, SessionRepository $sessionRepository, String $username): Response
+    public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, AthleteRepository $athleteRepository, SessionRepository $sessionRepository, MeasurementRepository $measurementRepository, String $username): Response
     {
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
-            $sessions = $sessionRepository->findBy(['athlete' => $athlete], ['start' => 'desc'], 3);
+            $params = array();
+            $params['page'] = 'profile';
+            $params['athlete'] = $athlete;
+            $sessions = $sessionRepository->findBy(['athlete' => $athlete, 'current' => false], ['start' => 'desc'], 3);
+            $params['sessions'] = $sessions;
+            if ($oldMeasurement = $measurementRepository->findOneBy(['athlete' => $athlete], ['date' => 'desc'])) {
+                $params['height'] = $oldMeasurement->getHeight();
+                $params['weight'] = $oldMeasurement->getWeight();
+            }
             if ($this->getUser() == $athlete) {
                 $oldPassword = $athlete->getPassword();
                 $form = $this->createForm(ProfileType::class, $athlete);
@@ -113,25 +123,26 @@ class DefaultController extends AbstractController
                         $athlete->setPicture(null);
                     }
                     $athleteRepository->save($athlete, true);
+                    if (!$oldMeasurement || $form->get('height')->getData() !== $oldMeasurement->getHeight() || isset($oldWeight) && $form->get('weight')->getData() !== $oldMeasurement->getWeight()) {
+                        $newMeasurement = new Measurement();
+                        $newMeasurement
+                            ->setAthlete($athlete)
+                            ->setHeight($form->get('height')->getData())
+                            ->setWeight($form->get('weight')->getData())
+                            ->setDate(new DateTime)
+                        ;
+                        $measurementRepository->save($newMeasurement, true);
+                    }
                     if ($newPassword) {
                         return $this->redirectToRoute('authentication_logout');
                     }
                     return $this->redirectToRoute('profile', ['username' => $athlete->getUsername()]);
                 }
                 else {
-                    return $this->render('main/profile/index.html.twig', [
-                        'page' => 'profile',
-                        'athlete' => $athlete,
-                        'sessions' => $sessions,
-                        'form' => $form,
-                    ]);
+                    $params['form'] = $form;
                 }
             }
-            return $this->render('main/profile/index.html.twig', [
-                'page' => 'profile',
-                'athlete' => $athlete,
-                'sessions' => $sessions,
-            ]);
+            return $this->render('main/profile/index.html.twig', $params);
         }
         throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }

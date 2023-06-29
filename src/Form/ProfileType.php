@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -95,9 +96,29 @@ class ProfileType extends AbstractType
                 'attr' => ['class' => 'form-select'],
                 'label_attr' => ['class' => 'form-label'],
             ])
+            ->add('height', NumberType::class, [
+                'mapped' => false,
+                'label' => $this->translator->trans('main.profile.edit.measurement.height'),
+                'required' => false,
+                'attr' => ['class' => 'form-control text-end'],
+                'label_attr' => ['class' => 'form-label'],
+            ])
+            ->add('weight', NumberType::class, [
+                'mapped' => false,
+                'label' => $this->translator->trans('main.profile.edit.measurement.weight'),
+                'required' => false,
+                'attr' => ['class' => 'form-control text-end'],
+                'label_attr' => ['class' => 'form-label'],
+            ])
+            ->add('measurement', CheckboxType::class, [
+                'label' => $this->translator->trans('main.profile.edit.measurement.checkbox'),
+                'required' => false,
+                'attr' => ['class' => 'form-check-input'],
+                'label_attr' => ['class' => 'form-check-label'],
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => $this->translator->trans('main.profile.edit.submit'),
-                'attr' => ['class' => 'btn btn-success'],
+                'attr' => ['class' => 'btn btn-success', 'disabled' => 'disabled'],
             ])
         ;
     }

@@ -5,7 +5,9 @@
             <div class="row justify-content-center">
                 {# Information #}<section id="information" class="pe-md-2 p-2 mx-auto{% if athlete.description or athlete.quotation %} me-lg-0{% endif %}">
                     {# Recto #}<div id="recto" class="d-flex justify-content-center align-items-center">
+{% if athlete.measurement and ((height is defined and height) or (weight is defined and weight)) %}
                         <span data-action="click->profile#verso" class="pointer d-lg-none"><i class="fa-solid fa-arrow-left fa-lg"></i></span>
+{% endif %}
                         <div class="card mx-3 mx-lg-0">
                             <header class="card-header">
                                 <section id="section-picture" class="text-center py-1">
@@ -35,14 +37,18 @@
                                 </section>
                             </main>
                             <footer class="card-footer">
+{% if athlete.measurement and ((height is defined and height) or (weight is defined and weight)) %}
                                 <section id="section-verso" class="d-flex justify-content-between align-items-center">
                                     <span data-action="click->profile#verso" class="pointer d-none d-lg-block"><i class="fa-solid fa-arrow-left"></i></span>
                                     <span data-action="click->profile#verso" class="m-auto  pointer">1 / 2</span>
                                     <span data-action="click->profile#verso" class="pointer d-none d-lg-block"><i class="fa-solid fa-arrow-right"></i></span>
                                 </section>
+{% endif %}
                             </footer>
                         </div>
+{% if athlete.measurement and ((height is defined and height) or (weight is defined and weight)) %}
                         <span data-action="click->profile#verso" class="pointer d-lg-none"><i class="fa-solid fa-arrow-right fa-lg"></i></span>
+{% endif %}                    
                     </div>
                     {# Verso #}<div id="verso" class="justify-content-center align-items-center d-none">
                         <span data-action="click->profile#recto" class="pointer d-lg-none"><i class="fa-solid fa-arrow-left fa-lg"></i></span>
