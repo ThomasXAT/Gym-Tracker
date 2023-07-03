@@ -4,6 +4,7 @@ namespace App\Entity\Biomechanics;
 
 use App\Entity\Anatomy\Bundle;
 use App\Entity\Anatomy\Muscle;
+use App\Entity\Training\Exercice;
 use App\Repository\Biomechanics\MovementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,10 +27,14 @@ class Movement
     #[ORM\ManyToMany(targetEntity: Bundle::class, inversedBy: 'movements')]
     private Collection $Bundles;
 
+    #[ORM\ManyToMany(targetEntity: Exercice::class, mappedBy: 'movements')]
+    private Collection $exercices;
+
     public function __construct()
     {
         $this->Muscles = new ArrayCollection();
         $this->Bundles = new ArrayCollection();
+        $this->exercices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,6 +98,33 @@ class Movement
     public function removeBundle(Bundle $bundle): self
     {
         $this->Bundles->removeElement($bundle);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Exercice>
+     */
+    public function getExercices(): Collection
+    {
+        return $this->exercices;
+    }
+
+    public function addExercice(Exercice $exercice): self
+    {
+        if (!$this->exercices->contains($exercice)) {
+            $this->exercices->add($exercice);
+            $exercice->addMovement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExercice(Exercice $exercice): self
+    {
+        if ($this->exercices->removeElement($exercice)) {
+            $exercice->removeMovement($this);
+        }
 
         return $this;
     }

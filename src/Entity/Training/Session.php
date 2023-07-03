@@ -1,8 +1,12 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Training;
 
-use App\Repository\SessionRepository;
+use App\Entity\Athlete;
+use App\Entity\Training\Set;
+use App\Repository\Training\SessionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
@@ -32,6 +36,18 @@ class Session
 
     #[ORM\Column]
     private ?bool $current = true;
+
+    #[ORM\OneToMany(mappedBy: 'session', targetEntity: Set::class)]
+    private Collection $sets;
+
+    #[ORM\OneToMany(mappedBy: 'session', targetEntity: Sequence::class)]
+    private Collection $sequences;
+
+    public function __construct()
+    {
+        $this->sets = new ArrayCollection();
+        $this->sequences = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,6 +122,66 @@ class Session
     public function setCurrent(bool $current): self
     {
         $this->current = $current;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Set>
+     */
+    public function getSets(): Collection
+    {
+        return $this->sets;
+    }
+
+    public function addSet(Set $set): self
+    {
+        if (!$this->sets->contains($set)) {
+            $this->sets->add($set);
+            $set->setSession($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSet(Set $set): self
+    {
+        if ($this->sets->removeElement($set)) {
+            // set the owning side to null (unless already changed)
+            if ($set->getSession() === $this) {
+                $set->setSession(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sequence>
+     */
+    public function getSequences(): Collection
+    {
+        return $this->sequences;
+    }
+
+    public function addSequence(Sequence $sequence): self
+    {
+        if (!$this->sequences->contains($sequence)) {
+            $this->sequences->add($sequence);
+            $sequence->setSession($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSequence(Sequence $sequence): self
+    {
+        if ($this->sequences->removeElement($sequence)) {
+            // set the owning side to null (unless already changed)
+            if ($sequence->getSession() === $this) {
+                $sequence->setSession(null);
+            }
+        }
 
         return $this;
     }

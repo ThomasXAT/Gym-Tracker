@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Culture\Quotation;
+use App\Entity\Training\Session;
 use App\Repository\AthleteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -66,7 +67,7 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $registration = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $measurement = null;
 
     public function __construct()

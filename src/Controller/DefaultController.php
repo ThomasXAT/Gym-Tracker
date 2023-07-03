@@ -6,7 +6,7 @@ use App\Entity\Measurement;
 use App\Form\ProfileType;
 use App\Repository\AthleteRepository;
 use App\Repository\MeasurementRepository;
-use App\Repository\SessionRepository;
+use App\Repository\Training\SessionRepository;
 use DateTime;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;

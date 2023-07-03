@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\AthleteRepository;
-use App\Repository\SessionRepository;
+use App\Repository\Training\SessionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 

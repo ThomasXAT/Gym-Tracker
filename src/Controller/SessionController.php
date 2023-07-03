@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Athlete;
-use App\Entity\Session;
-use App\Repository\SessionRepository;
+use App\Entity\Training\Session;
+use App\Repository\Training\SessionRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
