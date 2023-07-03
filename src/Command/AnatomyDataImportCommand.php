@@ -22,7 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
     name: 'anatomy:data:import',
     description: 'Import anatomy data from a JSON file',
 )]
-class DataImportJsonCommand extends Command
+class AnatomyDataImportCommand extends Command
 {
     private BundleRepository $bundleRepository;
     private MuscleGroupRepository $muscleGroupRepository;

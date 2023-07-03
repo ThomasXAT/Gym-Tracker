@@ -2,6 +2,7 @@
 
 namespace App\Entity\Anatomy;
 
+use App\Entity\Biomechanics\Movement;
 use App\Repository\Anatomy\MuscleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,9 +25,13 @@ class Muscle
     #[ORM\ManyToOne(targetEntity: "MuscleGroup", cascade: ["persist"])]
     private ?MuscleGroup $muscleGroup = null;
 
+    #[ORM\ManyToMany(targetEntity: Movement::class, mappedBy: 'Muscles')]
+    private Collection $movements;
+
     public function __construct()
     {
         $this->bundles = new ArrayCollection();
+        $this->movements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -84,6 +89,33 @@ class Muscle
     public function setMuscleGroup(?MuscleGroup $muscleGroup): self
     {
         $this->muscleGroup = $muscleGroup;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Movement>
+     */
+    public function getMovements(): Collection
+    {
+        return $this->movements;
+    }
+
+    public function addMovement(Movement $movement): self
+    {
+        if (!$this->movements->contains($movement)) {
+            $this->movements->add($movement);
+            $movement->addMuscle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMovement(Movement $movement): self
+    {
+        if ($this->movements->removeElement($movement)) {
+            $movement->removeMuscle($this);
+        }
 
         return $this;
     }
