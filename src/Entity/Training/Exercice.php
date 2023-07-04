@@ -11,6 +11,21 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ExerciceRepository::class)]
 class Exercice
 {
+    const DECLINE = 'decline';
+    const FLAT = 'flat';
+    const INCLINE = 'incline';
+    const SEATED = 'seated';
+    const STANDING = 'standing';
+    const PREACHER = 'preacher';
+    const INCLINATIONS = [
+        'Décliné' => self::DECLINE,
+        'Couché' => self::FLAT,
+        'Incliné' => self::INCLINE,
+        'Assis' => self::SEATED,
+        'Debout' => self::STANDING,
+        'Pupitre' => self::PREACHER,
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

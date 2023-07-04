@@ -3,6 +3,7 @@
 namespace App\Controller\Administration;
 
 use App\Entity\Culture\Quotation;
+use App\Entity\Training\Exercice;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -35,6 +36,8 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToCrud('Citations', 'fas fa-quote-left', Quotation::class);
+        yield MenuItem::section('Gestion');
+        yield MenuItem::linkToCrud('Citations', 'fa-solid fa-quote-left', Quotation::class);
+        yield MenuItem::linkToCrud('Exercices', 'fa-solid fa-dumbbell', Exercice::class);
     }
 }
