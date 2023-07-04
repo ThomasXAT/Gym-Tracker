@@ -27,6 +27,11 @@ class Measurement
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
+    public function __toString()
+    {
+        return $this->getHeight() . 'cm, ' . $this->getWeight() . 'kg';
+    }
+
     public function getId(): ?int
     {
         return $this->id;

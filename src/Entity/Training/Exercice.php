@@ -33,6 +33,11 @@ class Exercice
         $this->movements = new ArrayCollection();
         $this->sets = new ArrayCollection();
     }
+    
+    public function __toString()
+    {
+        return $this->getName() . ' ' . $this->getInclination();
+    }
 
     public function getId(): ?int
     {

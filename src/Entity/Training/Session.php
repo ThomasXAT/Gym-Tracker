@@ -49,6 +49,11 @@ class Session
         $this->sequences = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->getTitle() . ' (' . $this->getSubtitle() . ')';
+    }
+
     public function getId(): ?int
     {
         return $this->id;

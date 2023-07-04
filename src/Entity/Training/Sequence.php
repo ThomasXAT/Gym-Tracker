@@ -26,6 +26,26 @@ class Sequence
         $this->sets = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        $exercices = array();
+        foreach ($this->getSets() as $set) {
+            if (!in_array($set->getExercice()->__toString(), $exercices)) {
+                array_push($exercices, $set->getExercice()->__toString());
+            }
+        }
+        $string = '';
+        foreach ($exercices as $exercice) {
+            if ($exercice != end($exercices)) {
+                $string .= $exercice . ', ';
+            }
+            else {
+                $string .= $exercice;
+            }
+        }
+        return $string;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

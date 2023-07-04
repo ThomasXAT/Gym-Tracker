@@ -50,6 +50,11 @@ class Set
     #[ORM\ManyToOne(inversedBy: 'sets')]
     private ?Sequence $sequence = null;
 
+    public function __toString()
+    {
+        return $this->getExercice()->__toString() . ' ' . $this->getEquipment() . ' ' . $this->getSymmetry() . ' (' . $this->getRepetitions() . 'x' . $this->getWeight() . ')';
+    }
+
     public function getId(): ?int
     {
         return $this->id;

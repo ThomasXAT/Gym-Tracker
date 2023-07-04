@@ -31,6 +31,11 @@ class Quotation
         $this->athletes = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return '« ' . $this->getText() . ' » - ' . $this->getAuthor();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

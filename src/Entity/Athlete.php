@@ -76,6 +76,25 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
         $this->measurements = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        $string = $this->getUsername();
+        if ($this->getFirstname() || $this->getSurname()) {
+            $string .= ' (';
+            if ($this->getFirstname()) {
+                $string .= $this->getFirstname();
+                if ($this->getSurname()) {
+                    $string .= ' ';
+                }
+            }
+            if ($this->getSurname()) {
+                $string .= $this->getSurname();
+            }
+            $string .= ')';
+        }
+        return $string;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -30,6 +30,11 @@ class Bundle
         $this->movements = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->getMuscle()->__toString() . ' ' . $this->getName();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
