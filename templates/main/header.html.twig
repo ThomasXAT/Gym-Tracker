@@ -8,6 +8,7 @@
                         </picture>
                     </a>
                 </section>
+{% if app.user.workingOut == false %}
                 {# Search #}<section id="section-search" class="d-none d-md-flex">
                     <form method="get" action="/">
                         <div class="input-group">
@@ -17,8 +18,15 @@
                     </form>
                     <a class="ps-2 d-none d-md-block" href="{{ path('profile', { 'username': app.user.username }) }}"><img id="picture" width="38px" height="38px" class="profile-picture pointer border p-picture-little{% if page is defined and page == 'profile' and athlete is defined and athlete == app.user %} border-white{% endif %}" src="{% if app.user.picture %}{{ asset(app.user.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}"></a>
                 </section>
+{% endif %}
                 {# New session #}<section>
+{% if app.user.workingOut %}
+                    <form method="post" action="{{ path('session_stop') }}">
+                        <button id="session-stop" type="submit" class="btn btn-danger text-nowrap">{{ 'main.session.stop'|trans }}</button>
+                    </form>
+{% else %}
                     <button class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_session">{{ 'main.session.new'|trans }}</button>
+{% endif %}
                 </section>
             </nav>
         </section>

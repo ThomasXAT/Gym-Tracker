@@ -10,19 +10,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route(path: '/session', name: 'session_')]
 class SessionController extends AbstractController
 {
-    #[Route('session/start/{title}', name: 'session_start')]
-    public function start(string $title, SessionRepository $sessionRepository): Response
+    #[Route(path:'/start', name: 'start')]
+    public function start(SessionRepository $sessionRepository): Response
     {
         /**
          * @var Athlete $user
          */
         $user = $this->getUser();
-        if (!$sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
+        if (isset($_POST['title']) && !$sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
             $session = new Session();
             $session
-                ->setTitle($title)
+                ->setTitle($_POST['title'])
                 ->setAthlete($user)
                 ->setStart(new DateTime)
             ;
@@ -31,7 +32,7 @@ class SessionController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-    #[Route('session/stop', name: 'session_stop')]
+    #[Route(path:'/stop', name: 'stop')]
     public function stop(SessionRepository $sessionRepository): Response
     {
         /**
@@ -43,7 +44,9 @@ class SessionController extends AbstractController
                 ->setCurrent(false)
                 ->setEnd(new DateTime)
             ;
-            $sessionRepository->save($session, true);
+            $session->getSets() || $session->getSequences() ?
+            $sessionRepository->save($session, true) :
+            $sessionRepository->remove($session, true);
         }
         return $this->redirectToRoute('home');
     }

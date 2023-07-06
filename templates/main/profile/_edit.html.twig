@@ -1,13 +1,103 @@
             <aside id="_edit" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <header class="modal-header">
-                            <p class="modal-title fs-5">{{ 'main.profile.edit.form'|trans }}</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </header>
-                        <main class="modal-body">
-{{ include('main/profile/_form.html.twig') }}
-                        </main>
+                        {{ form_start(form) }}
+                            <header class="modal-header">
+                                <p class="modal-title fs-5">{{ 'main.profile.edit.form'|trans }}</p>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </header>
+                            <main class="modal-body">
+                                <label for="section-picture" class="form-label">{{ 'main.profile.edit.picture'|trans }}</label>
+                                <section id="section-picture" class="row mb-3">
+                                    <div class="col-4 pe-1">
+                                        <section id="section-view">
+                                            <img id="profile_picture" width="100%" height="100%" class="profile-picture border p-1" src="{% if athlete.picture %}{{ asset(athlete.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}">
+                                        </section>
+                                    </div>
+                                    <div class="col-8 ps-1 d-flex align-items-center">
+                                        <div>
+                                            <section id="section-file">
+                                                {{ form_widget(form.file) }}
+                                            </section>
+                                            <p id="help-file" class="form-text text-danger"></p>
+                                            <a id="delete_picture" class="text-nowrap text-decoration-none pointer-only px-1">{{ 'main.profile.edit.delete_picture'|trans }}</a>
+                                        </div>
+                                    </div>
+                                </section> 
+                                {{ form_widget(form._delete_picture) }}
+                                <br>
+                                <label for="section-identity" class="form-label">{{ 'main.profile.edit.identity'|trans }}</label>
+                                <section id="section-identity" class="mx-auto">
+                                    <section id="section-fullname" class="mb-3">
+                                        <div class="d-flex">
+                                            <section id="section-firstname" class="form-floating col-6 pe-1">
+                                                {{ form_widget(form.firstname) }}
+                                                {{ form_label(form.firstname) }}
+                                            </section>
+                                            <section id="section-surname" class="form-floating col-6 ms-1 pe-1">
+                                                {{ form_widget(form.surname) }}
+                                                {{ form_label(form.surname) }}
+                                            </section>
+                                        </div>
+                                        <p id="help-fullname" class="form-text text-danger"></p>
+                                    </section>
+                                    <section id="section-email" class="form-floating mb-3">
+                                        {{ form_widget(form.email) }}
+                                        {{ form_label(form.email) }}
+                                        <p id="help-email" class="form-text text-danger"></p>
+                                    </section>
+                                    <section id="section-password" class="form-floating mb-3">
+                                        {{ form_widget(form.password) }}
+                                        {{ form_label(form.password) }}
+                                        <p id="help-password" class="form-text text-danger"></p>
+                                    </section>
+                                    <section id="section-confirmation" class="form-floating mb-3" hidden>
+                                        {{ form_widget(form.confirmation) }}
+                                        {{ form_label(form.confirmation) }}
+                                        <p id="help-confirmation" class="form-text text-danger"></p>
+                                    </section>
+                                </section>
+                                <br>
+                                <label for="section-measurement" class="form-label">{{ 'main.profile.edit.measurement.label'|trans }}</label>
+                                <section id="section-measurement" class="mx-auto">
+                                    <section id="section-measurement-checkbox" class="form-check mb-3">
+                                        {{ form_widget(form.measurement) }}
+                                        {{ form_label(form.measurement) }}
+                                    </section>
+                                    <section id="section-height" class="form-group mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <input type="range" class="form-range pe-3" id="range-height" min="140" max="220" step="0.1">                                            
+                                            {{ form_widget(form.height, {'attr': {'value': (height is defined and height) or (weight is defined and weight) ? height : null}}) }}
+                                            <span class="ps-1">cm</span>
+                                        </div>
+                                    </section>
+                                    <section id="section-weight" class="form-group mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <input type="range" class="form-range pe-3" id="range-weight" min="40" max="120" step="0.1">                                    
+                                            {{ form_widget(form.weight, {'attr': {'value': (weight is defined and weight) or (weight is defined and weight) ? weight : null}}) }}
+                                            <span class="ps-1">kg</span>
+                                        </div>
+                                    </section>
+                                    <p id="help-measurement" class="form-text text-danger"></p>
+                                    <a id="delete_measurement" class="text-nowrap text-decoration-none pointer-only px-1">{{ 'main.profile.edit.delete_measurement'|trans }}</a>
+                                </section>
+                                <br>
+                                <section id="section-description" class="form-group mb-3">
+                                    {{ form_label(form.description) }}
+                                    {{ form_widget(form.description) }}
+                                </section>
+                                 <section id="section-quotation" class="form-group mb-3">
+                                    {{ form_label(form.quotation) }}
+                                    {{ form_widget(form.quotation) }}
+                                </section>
+                                {{ form_widget(form._token) }}
+                            </main>
+                            <footer class="modal-footer justify-content-center">
+                                <section id="section-submit" class="w-100 d-grid gap-2">
+                                    {{ form_widget(form.submit) }}
+                                </section>
+                            </footer>
+                        {{ form_end(form) }}
                     </div>
                 </div>
             </aside>

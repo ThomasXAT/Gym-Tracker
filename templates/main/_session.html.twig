@@ -1,21 +1,21 @@
-    <aside id="_session" class="modal fade">
+    <aside id="_session" class="modal fade" {{ stimulus_controller('session') }}>
         <div class="modal-dialog">
             <div class="modal-content">
-                <header class="modal-header">
-                    <p class="modal-title fs-5">{{ 'main.session.new'|trans }}</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </header>
-                <main class="modal-body">
-                    <form>
+                <form method="post" action="{{ path('session_start') }}">
+                    <header class="modal-header">
+                        <p class="modal-title fs-5">{{ 'main.session.new'|trans }}</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </header>
+                    <main class="modal-body">
                         <div class="mb-3">
-                            <label for="session_label" class="form-label">{{ 'main.session.label'|trans }}</label>
-                            <input type="text" id="session_label" name="session[label]" class="form-control" value="Ma séance du {{ 'now'|date('d/m/Y') }}">
+                            <label for="session-title" class="form-label">{{ 'main.session.label'|trans }}</label>
+                            <input type="text" id="session-title" name="title" class="form-control" value="Ma séance du {{ 'now'|date('d/m/Y') }}">
                         </div>
-                    </form>
-                </main>
-                <footer class="modal-footer">
-                    <button type="button" class="btn btn-success text-nowrap">{{ 'main.session.start'|trans }}</button>
-                </footer>
+                    </main>
+                    <footer class="modal-footer">
+                        <button id="session-start" type="submit" class="btn btn-success text-nowrap">{{ 'main.session.start'|trans }}</button>
+                    </footer>
+                </form>
             </div>
         </div>
     </aside>

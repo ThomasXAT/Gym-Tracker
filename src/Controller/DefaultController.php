@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Athlete;
 use App\Entity\Measurement;
 use App\Form\ProfileType;
 use App\Repository\AthleteRepository;
@@ -23,9 +24,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
-    #[Route('/', name: 'home')]
-    public function home(AthleteRepository $athleteRepository): Response
+    #[Route(path:'/', name: 'home')]
+    public function home(AthleteRepository $athleteRepository, SessionRepository $sessionRepository): Response
     {
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
+        if ($user->isWorkingOut()) {
+            return $this->render('main/session/index.html.twig', [
+                'session' => $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]),
+            ]);
+        }
         if (isset($_GET["search"])) {
             $search = $_GET["search"];
             $results = array();
@@ -55,9 +65,16 @@ class DefaultController extends AbstractController
         ]);
     }
 
-    #[Route('/@{username}', name: 'profile')]
+    #[Route(path:'/@{username}', name: 'profile')]
     public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, AthleteRepository $athleteRepository, SessionRepository $sessionRepository, MeasurementRepository $measurementRepository, String $username): Response
     {
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
+        if ($user->isWorkingOut()) {
+            return $this->redirectToRoute('home');
+        }
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
             $params = array();
@@ -147,9 +164,16 @@ class DefaultController extends AbstractController
         throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }
 
-    #[Route('/@{username}/sessions', name: 'sessions')]
+    #[Route(path:'/@{username}/sessions', name: 'sessions')]
     public function sessions(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, String $username): Response
     {
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
+        if ($user->isWorkingOut()) {
+            return $this->redirectToRoute('home');
+        }
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
             $sessions = $sessionRepository->findBy(['athlete' => $athlete], ['start' => 'desc']);

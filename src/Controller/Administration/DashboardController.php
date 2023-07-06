@@ -13,13 +13,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
-    #[Route('/admin', name: 'admin')]
+    #[Route(path:'/admin', name: 'admin')]
     public function shortcut(): Response
     {
         return $this->redirectToRoute('administration');
     }
 
-    #[Route('/administration', name: 'administration')]
+    #[Route(path:'/administration', name: 'administration')]
     public function index(): Response
     {
         $routeBuilder = $this->container->get(AdminUrlGenerator::class);

@@ -49,12 +49,6 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $height = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $weight = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $picture = null;
 
@@ -243,30 +237,6 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getHeight(): ?int
-    {
-        return $this->height;
-    }
-
-    public function setHeight(?int $height): self
-    {
-        $this->height = $height;
-
-        return $this;
-    }
-
-    public function getWeight(): ?int
-    {
-        return $this->weight;
-    }
-
-    public function setWeight(?int $weight): self
-    {
-        $this->weight = $weight;
-
-        return $this;
-    }
-
     public function getPicture(): ?string
     {
         return $this->picture;
@@ -343,5 +313,13 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
         $this->measurement = $measurement;
 
         return $this;
+    }
+
+    public function isWorkingOut(): bool
+    {
+        if ($session = $this->getSessions()[$this->getSessions()->count()-1]) {
+            return $session->isCurrent();
+        }
+        return false;
     }
 }

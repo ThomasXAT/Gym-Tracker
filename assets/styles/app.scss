@@ -115,6 +115,7 @@ main.main, footer.main, .modal-body, .accordion-collapse {
     left: 0;
     z-index: 1030;
     margin: 10px;
+    max-width: 90px;
     @media screen and (max-width: 767px) {
         margin-bottom: 65px;
     }
@@ -130,10 +131,6 @@ footer.main {
 
 .session-date {
     background-color: #262A2E;
-}
-
-#button-edit {
-    max-width: 90px;
 }
 
 main.main {

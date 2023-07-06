@@ -51,7 +51,7 @@ class SecurityController extends AbstractController
     public function logout(): void
     {}
     
-    #[Route('/register', name: 'register')]
+    #[Route(path:'/register', name: 'register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, AthleteRepository $athleteRepository): Response
     {
         if (!$this->getUser()) {
@@ -67,6 +67,7 @@ class SecurityController extends AbstractController
                     )
                 );
                 $athlete->setRegistration(new DateTime);
+                $athlete->setMeasurement(false);
                 $athleteRepository->save($athlete, true);
                 // do anything else you need here, like send an email
                 return $this->redirectToRoute('home');

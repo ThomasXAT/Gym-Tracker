@@ -4,11 +4,6 @@ import { input } from "./common";
 
 export default class extends Controller {
     connect() {
-        const FORBIDDEN = [
-            "authentication",
-            "administration",
-            "api",
-        ];
         $.ajax({
             url: "/api/athlete",
             type: "GET",
