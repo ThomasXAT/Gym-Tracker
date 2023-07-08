@@ -51,7 +51,7 @@ class Exercice
     
     public function __toString()
     {
-        return $this->getName() . ' ' . $this->getInclination();
+        return $this->getName();
     }
 
     public function getId(): ?int

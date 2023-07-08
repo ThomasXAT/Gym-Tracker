@@ -32,13 +32,13 @@ class Set
     #[ORM\Column]
     private ?float $weight = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $concentric = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $isometric = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $eccentric = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

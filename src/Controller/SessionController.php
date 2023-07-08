@@ -40,13 +40,16 @@ class SessionController extends AbstractController
          */
         $user = $this->getUser();
         if ($session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
-            $session
-                ->setCurrent(false)
-                ->setEnd(new DateTime)
-            ;
-            $session->getSets() || $session->getSequences() ?
-            $sessionRepository->save($session, true) :
-            $sessionRepository->remove($session, true);
+            if ($session->getStart()) {
+                $session
+                    ->setCurrent(false)
+                    ->setEnd(new DateTime)
+                ;
+                $sessionRepository->save($session, true);
+            }
+            else {
+                $sessionRepository->remove($session, true);
+            }
         }
         return $this->redirectToRoute('home');
     }
