@@ -35,33 +35,32 @@ class DefaultController extends AbstractController
         if ($user->isWorkingOut()) {
             $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
             $sets = $setRepository->findBy(['session' => $session], ['date' => 'asc']);
+
             $exercices = array();
             for ($i = 0; $i < sizeof($sets); $i++) {
                 if (sizeof($exercices) > 0) {
                     $exercice = sizeof($exercices) - 1;
                     $previous = $sets[$i - 1];
                     $current = $sets[$i];
-                    if ($current->getSequence()) {
-                        if ($previous->getSequence() && $current->getSequence() === $previous->getSequence()) {
-                            array_push($exercices[$exercice]['sets'], $current);
-                        }
-                        else {
-                            $exercice++;
-                            $exercices[$exercice]['name'] = $sets[$i]->getSequence()->__toString();
-                            $exercices[$exercice]['sequence'] = true;
-                            $exercices[$exercice]['sets'] = array();
-                            array_push($exercices[$exercice]['sets'], $current);
-                        }
-                    }
-                    else if ($previous->getExercice() === $current->getExercice() && $previous->getEquipment() === $current->getEquipment() && $previous->getSymmetry() === $current->getSymmetry()) {
-                        array_push($exercices[$exercice]['sets'], $current);
-                    }
+                    if ($current->isDropping()) {
+                        array_push($exercices[$exercice]['sets'][sizeof($exercices[$exercice]['sets']) - 1], $current);
+                    } 
                     else {
-                        $exercice++;
-                        $exercices[$exercice]['name'] = $sets[$i]->getExercice()->__toString();
-                        $exercices[$exercice]['sequence'] = false;
-                        $exercices[$exercice]['sets'] = array();
-                        array_push($exercices[$exercice]['sets'], $current);
+                        if ($current->getSequence()) {
+                            if (!$previous->getSequence() || $current->getSequence() !== $previous->getSequence()) {
+                                $exercice++;
+                                $exercices[$exercice]['name'] = $sets[$i]->getSequence()->__toString();
+                                $exercices[$exercice]['sequence'] = true;
+                                $exercices[$exercice]['sets'] = array();
+                            }
+                        }
+                        else if ($previous->getExercice() !== $current->getExercice() || $previous->getEquipment() !== $current->getEquipment()) {
+                            $exercice++;
+                            $exercices[$exercice]['name'] = $sets[$i]->getExercice()->__toString();
+                            $exercices[$exercice]['sequence'] = false;
+                            $exercices[$exercice]['sets'] = array();
+                        }
+                        array_push($exercices[$exercice]['sets'], [$current]);
                     }
                 }
                 else {
@@ -74,34 +73,32 @@ class DefaultController extends AbstractController
                         $exercices[0]['sequence'] = false;
                     }
                     $exercices[0]['sets'] = array();
-                    array_push($exercices[0]['sets'], $sets[$i]);
+                    array_push($exercices[0]['sets'], [$sets[$i]]);
                 }
             }
             for ($i = 0; $i < sizeof($exercices); $i++) {
                 if ($exercices[$i]['sequence']) {
                     $exercices[$i]['rounds'] = array();
+                    $round = 0;
                     for ($j = 0; $j < sizeof($exercices[$i]['sets']); $j++) {
                         if (sizeof($exercices[$i]['rounds'])) {
                             $round = sizeof($exercices[$i]['rounds']) - 1;
-                            $first = $exercices[$i]['sets'][0];
-                            $current = $exercices[$i]['sets'][$j];
-                            if ($first->getExercice() === $current->getExercice() && $first->getEquipment() === $current->getEquipment() && $first->getSymmetry() === $current->getSymmetry()) {
+                            $first = $exercices[$i]['sets'][0][0];
+                            $current = $exercices[$i]['sets'][$j][0];
+                            if ($first->getExercice() === $current->getExercice() && $first->getEquipment() === $current->getEquipment()) {
                                 $round++;
-                                $exercices[$i]['rounds'][$round] = array();
-                                array_push($exercices[$i]['rounds'][$round], $exercices[$i]['sets'][$j]);
-                            }
-                            else {
-                                array_push($exercices[$i]['rounds'][$round], $exercices[$i]['sets'][$j]);
+                                $exercices[$i]['rounds'][$round] = ['sets' => array()];
                             }
                         }
                         else {
-                            $exercices[$i]['rounds'][0] = array();
-                            array_push($exercices[$i]['rounds'][0], $exercices[$i]['sets'][$j]);
+                            $exercices[$i]['rounds'][0] = ['sets' => array()];
                         }
+                        array_push($exercices[$i]['rounds'][$round]['sets'], $exercices[$i]['sets'][$j]);
                     }
                     unset($exercices[$i]['sets']);
                 }
             }
+            dd($exercices);
             return $this->render('main/session/index.html.twig', [
                 'session' => $session,
                 'exercices' => $exercices,

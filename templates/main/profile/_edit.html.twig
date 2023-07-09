@@ -1,12 +1,12 @@
             <aside id="_edit" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        {{ form_start(form) }}
-                            <header class="modal-header">
-                                <p class="modal-title fs-5">{{ 'main.profile.edit.form'|trans }}</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </header>
-                            <main class="modal-body">
+                        <header class="modal-header">
+                            <p class="modal-title fs-5">{{ 'main.profile.edit.form'|trans }}</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </header>
+                        <main class="modal-body">
+                            {{ form_start(form) }}
                                 <label for="section-picture" class="form-label">{{ 'main.profile.edit.picture'|trans }}</label>
                                 <section id="section-picture" class="row mb-3">
                                     <div class="col-4 pe-1">
@@ -86,18 +86,16 @@
                                     {{ form_label(form.description) }}
                                     {{ form_widget(form.description) }}
                                 </section>
-                                 <section id="section-quotation" class="form-group mb-3">
+                                <section id="section-quotation" class="form-group mb-3">
                                     {{ form_label(form.quotation) }}
                                     {{ form_widget(form.quotation) }}
                                 </section>
-                                {{ form_widget(form._token) }}
-                            </main>
-                            <footer class="modal-footer justify-content-center">
-                                <section id="section-submit" class="w-100 d-grid gap-2">
+                                <section id="section-submit" class="d-grid gap-2">
                                     {{ form_widget(form.submit) }}
                                 </section>
-                            </footer>
-                        {{ form_end(form) }}
+                                {{ form_widget(form._token) }}
+                            {{ form_end(form) }}
+                        </main>
                     </div>
                 </div>
             </aside>

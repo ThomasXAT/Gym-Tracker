@@ -50,6 +50,9 @@ class Set
     #[ORM\ManyToOne(inversedBy: 'sets')]
     private ?Sequence $sequence = null;
 
+    #[ORM\Column]
+    private ?bool $dropping = null;
+
     public function __toString()
     {
         return $this->getExercice()->__toString() . ' ' . $this->getEquipment() . ' ' . $this->getSymmetry() . ' (' . $this->getRepetitions() . 'x' . $this->getWeight() . ')';
@@ -188,6 +191,18 @@ class Set
     public function setSequence(?Sequence $sequence): self
     {
         $this->sequence = $sequence;
+
+        return $this;
+    }
+
+    public function isDropping(): ?bool
+    {
+        return $this->dropping;
+    }
+
+    public function setDropping(bool $dropping): self
+    {
+        $this->dropping = $dropping;
 
         return $this;
     }
