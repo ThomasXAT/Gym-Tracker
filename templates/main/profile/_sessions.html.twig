@@ -19,6 +19,22 @@
                                 </div>
                                 <div id="collapse-session-{{ session.id }}" class="accordion-collapse collapse" data-bs-parent="#sessions-accordion">
                                     <div class="accordion-body">
+                                        <section id="section-muscles">
+                                            <h4>Muscles sollicités</h4>
+                                        </section>
+                                        <section id="section-exercices" class="my-3">
+                                            <h4>Exercices</h4>
+                                            <ul class="list-group">
+{% for exercice in session.exercices %}
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    {{ exercice.name }}
+                                                </li>
+{% endfor %}
+                                            </ul>
+                                        </section>
+                                        <section id="section-show" class="d-flex justify-content-center">
+                                            <a class="btn btn-outline-secondary">Consulter la séance</a>
+                                        </section>
                                     </div>
                                 </div>
                             </div>

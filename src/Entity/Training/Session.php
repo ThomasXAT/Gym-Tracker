@@ -40,13 +40,10 @@ class Session
     #[ORM\OneToMany(mappedBy: 'session', targetEntity: Set::class)]
     private Collection $sets;
 
-    #[ORM\OneToMany(mappedBy: 'session', targetEntity: Sequence::class)]
-    private Collection $sequences;
 
     public function __construct()
     {
         $this->sets = new ArrayCollection();
-        $this->sequences = new ArrayCollection();
     }
 
     public function __toString()
@@ -161,33 +158,61 @@ class Session
         return $this;
     }
 
-    /**
-     * @return Collection<int, Sequence>
-     */
-    public function getSequences(): Collection
+    public function getExercices(): array
     {
-        return $this->sequences;
-    }
-
-    public function addSequence(Sequence $sequence): self
-    {
-        if (!$this->sequences->contains($sequence)) {
-            $this->sequences->add($sequence);
-            $sequence->setSession($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSequence(Sequence $sequence): self
-    {
-        if ($this->sequences->removeElement($sequence)) {
-            // set the owning side to null (unless already changed)
-            if ($sequence->getSession() === $this) {
-                $sequence->setSession(null);
+        $exercices = array();
+        // Algorithme de tri des séries
+        foreach ($this->getSets() as $current) {
+            $exercice = sizeof($exercices) - 1;
+            if ($current->getSequence()) {
+                if (isset($previous) && $current->getSequence() === $previous->getSequence()) {
+                    if (!$current->isDropping()) {
+                        array_push($exercices[$exercice]['sets'], array());
+                    }
+                }
+                else {
+                    $exercice++;
+                    $exercices[$exercice] = [
+                        'name' => $current->getSequence()->__toString(),
+                        'sequence' => true,
+                        'sets' => [array()],
+                    ];
+                }
             }
+            else {
+                if (isset($previous) && $current->getExercice() === $previous->getExercice() && $current->getEquipment() === $previous->getEquipment()) {
+                    if (!$current->isDropping()) {
+                        array_push($exercices[$exercice]['sets'], array());
+                    }
+                }
+                else {
+                    $exercice++;
+                    $exercices[$exercice] = [
+                        'name' => $current->getExercice()->__toString(),
+                        'sequence' => false,
+                        'sets' => [array()],
+                    ];
+                }
+            }
+            $set = sizeof($exercices[$exercice]['sets']) - 1;
+            array_push($exercices[$exercice]['sets'][$set], $current);
+            $previous = $current;
         }
-
-        return $this;
+        foreach ($exercices as &$exercice) {
+            if ($exercice['sequence']) {
+                $first = $exercice['sets'][0];
+                $exercice['rounds'][0]['sets'] = [$first];
+                foreach (array_slice($exercice['sets'], 1) as $current) {
+                    $round = sizeof($exercice['rounds']) - 1;
+                    if ($current[0]->getExercice() === $first[0]->getExercice() && $current[0]->getEquipment() === $first[0]->getEquipment()) {
+                        $round++;
+                        $exercice['rounds'][$round]['sets'] = array();
+                    }
+                    array_push($exercice['rounds'][$round]['sets'], $current);
+                }
+                unset($exercice['sets']);
+            }
+        }    
+        return $exercices;
     }
 }

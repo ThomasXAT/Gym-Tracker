@@ -15,7 +15,7 @@ class ApiController extends AbstractController
     public function athlete(AthleteRepository $athleteRepository) {
         $athletes = $athleteRepository->findBy($_GET);
         $result = array();
-        for($i = 0; $i < sizeof($athletes); $i++) {
+        for ($i = 0; $i < sizeof($athletes); $i++) {
             $result[$athletes[$i]->getId()]['username'] = $athletes[$i]->getUsername();
             $result[$athletes[$i]->getId()]['firstname'] = $athletes[$i]->getFirstname();
             $result[$athletes[$i]->getId()]['surname'] = $athletes[$i]->getSurname();
@@ -37,7 +37,7 @@ class ApiController extends AbstractController
     public function session(SessionRepository $sessionRepository) {
         $sessions = $sessionRepository->findBy($_GET);
         $result = array();
-        for($i = 0; $i < sizeof($sessions); $i++) {
+        for ($i = 0; $i < sizeof($sessions); $i++) {
             $result[$sessions[$i]->getId()]['title'] = $sessions[$i]->getTitle();
             $result[$sessions[$i]->getId()]['subtitle'] = $sessions[$i]->getSubtitle();
             $result[$sessions[$i]->getId()]['athlete'] = $sessions[$i]->getAthlete()->getId();
@@ -52,7 +52,7 @@ class ApiController extends AbstractController
     public function quotation(QuotationRepository $quotationRepository) {
         $quotations = $quotationRepository->findBy($_GET);
         $result = array();
-        for($i = 0; $i < sizeof($quotations); $i++) {
+        for ($i = 0; $i < sizeof($quotations); $i++) {
             $result[$quotations[$i]->getId()]['text'] = $quotations[$i]->getText();
             $result[$quotations[$i]->getId()]['author'] = $quotations[$i]->getAuthor();
         }

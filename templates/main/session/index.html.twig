@@ -1,6 +1,14 @@
 {% extends 'base.html.twig' %}
 {% block body %}
         <section class="content">
-            <h2 class="text-center">{{ session.title }}</h2>
+            <div id="new-session" class="mx-auto">
+                <section id="title">
+                    <form>
+                        <input id="new-session-title" class="form-control-plaintext text-center fs-4" type="text" value="{{ session.title }}">
+                    </form>
+                </section>
+                <section id="display">
+                </section>
+            </div>
         </section>
 {% endblock %}

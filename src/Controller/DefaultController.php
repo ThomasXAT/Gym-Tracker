@@ -34,60 +34,7 @@ class DefaultController extends AbstractController
         $user = $this->getUser();
         if ($user->isWorkingOut()) {
             $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
-            $exercices = array();
-            // Algorithme de tri des séries
-            foreach ($setRepository->findBy(['session' => $session], ['date' => 'asc']) as $current) {
-                $exercice = sizeof($exercices) - 1;
-                if ($current->getSequence()) {
-                    if (isset($previous) && $current->getSequence() === $previous->getSequence()) {
-                        if (!$current->isDropping()) {
-                            array_push($exercices[$exercice]['sets'], array());
-                        }
-                    }
-                    else {
-                        $exercice++;
-                        $exercices[$exercice] = [
-                            'name' => $current->getSequence()->__toString(),
-                            'sequence' => true,
-                            'sets' => [array()],
-                        ];
-                    }
-                }
-                else {
-                    if (isset($previous) && $current->getExercice() === $previous->getExercice() && $current->getEquipment() === $previous->getEquipment()) {
-                        if (!$current->isDropping()) {
-                            array_push($exercices[$exercice]['sets'], array());
-                        }
-                    }
-                    else {
-                        $exercice++;
-                        $exercices[$exercice] = [
-                            'name' => $current->getExercice()->__toString(),
-                            'sequence' => false,
-                            'sets' => [array()],
-                        ];
-                    }
-                }
-                $set = sizeof($exercices[$exercice]['sets']) - 1;
-                array_push($exercices[$exercice]['sets'][$set], $current);
-                $previous = $current;
-            }
-            foreach ($exercices as &$exercice) {
-                if ($exercice['sequence']) {
-                    $first = $exercice['sets'][0];
-                    $exercice['rounds'][0]['sets'] = [$first];
-                    foreach (array_slice($exercice['sets'], 1) as $current) {
-                        $round = sizeof($exercice['rounds']) - 1;
-                        if ($current[0]->getExercice() === $first[0]->getExercice() && $current[0]->getEquipment() === $first[0]->getEquipment()) {
-                            $round++;
-                            $exercice['rounds'][$round]['sets'] = array();
-                        }
-                        array_push($exercice['rounds'][$round]['sets'], $current);
-                    }
-                    unset($exercice['sets']);
-                }
-            }            
-            //dd($exercices);
+            $exercices = $session->getExercices();        
             return $this->render('main/session/index.html.twig', [
                 'session' => $session,
                 'exercices' => $exercices,
