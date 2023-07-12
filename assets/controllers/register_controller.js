@@ -13,7 +13,6 @@ export default class extends Controller {
                     verify.surname($("#register_surname"), true);
                     verify.firstname($("#register_firstname"), true);
                 });
-        
                 $("#section-surname").on("input", function() {
                     verify.firstname($("#register_firstname"), true);
                     verify.surname($("#register_surname"), true);
@@ -26,7 +25,7 @@ export default class extends Controller {
                         }
                     let username = false;
                         let available = true;
-                        $.each(response, function(i, athlete) {
+                        $.each(response, function(id, athlete) {
                             if ($("#register_username").val().toLowerCase() === athlete.username.toLowerCase()) {
                                 available = false;
                             }

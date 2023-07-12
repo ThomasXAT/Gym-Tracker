@@ -9,12 +9,13 @@ use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route(path: '/session', name: 'session_')]
 class SessionController extends AbstractController
 {
     #[Route(path:'/start', name: 'start')]
-    public function start(SessionRepository $sessionRepository): Response
+    public function start(SessionRepository $sessionRepository, SluggerInterface $sluggerInterface): Response
     {
         /**
          * @var Athlete $user
@@ -24,6 +25,7 @@ class SessionController extends AbstractController
             $session = new Session();
             $session
                 ->setTitle($_POST['title'])
+                ->setSlug(strtolower($sluggerInterface->slug($_POST['title'])))
                 ->setAthlete($user)
                 ->setStart(new DateTime)
             ;

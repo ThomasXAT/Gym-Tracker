@@ -3,6 +3,18 @@
         <h2 hidden>{{ athlete.username }}</h2>
         <section class="content container">
             <div class="row">
+                <section id="breadcrumb" class="mb-1 mb-md-2 p-2 mx-auto d-flex justify-content-between align-items-center">
+                    <div class="col-3 col-md-4 text-white fw-bold fs-3">
+                        <span class="d-md-none">{{ 'main.profile.sessions.title'|trans }}</span>
+                        <span class="d-none d-md-block">{{ 'main.profile.sessions.list'|trans }}</span>
+                    </div>
+                    <div class="col-9 col-md-8 text-end text-truncate" aria-label="breadcrumb">
+                        <span class="identifier">@{{ athlete.username }}</a></span>
+                        <span class="mx-1"><i class="fa-solid fa-chevron-right"></i></span>
+                        <span class="d-md-none fw-bold">{{ 'main.profile.sessions.title'|trans }}</span>
+                        <span class="d-none d-md-inline fw-bold">{{ 'main.profile.sessions.list'|trans }}</span>
+                    </div>
+                </section>
                 {# Sessions #}<section id="sessions" class="p-2 mx-auto">
 {{ include('main/profile/_sessions.html.twig') }}
                 </section>
