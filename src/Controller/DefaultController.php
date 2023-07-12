@@ -36,6 +36,7 @@ class DefaultController extends AbstractController
             $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
             $exercices = $session->getExercices();        
             return $this->render('main/session/index.html.twig', [
+                'page' => 'session',
                 'session' => $session,
                 'exercices' => $exercices,
             ]);
@@ -183,7 +184,7 @@ class DefaultController extends AbstractController
             $sessions = $sessionRepository->findBy(['athlete' => $athlete], ['start' => 'desc']);
             if ($sessions) {
                 return $this->render('main/profile/sessions/index.html.twig', [
-                    'page' => 'sessions',
+                    'page' => 'profile.sessions',
                     'athlete' => $athlete,
                     'sessions' => $sessions,
                 ]);
@@ -191,6 +192,22 @@ class DefaultController extends AbstractController
             else {
                 return $this->redirectToRoute('profile', ['username' => $athlete->getUsername()]);
             }
+        }
+        throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
+    }
+
+    #[Route(path:'/@{username}/sessions/{slug}/{date}', name: 'session_show')]
+    public function show(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, string $username, string $slug, string $date) {
+        $athlete = $athleteRepository->findOneBy(['username' => $username]);
+        if ($athlete) {
+            $session = $sessionRepository->findOneBy(['athlete' => $athlete, 'slug' => $slug, 'start' => DateTime::createFromFormat('YmdHis', $date)]);
+            if ($session) {
+                return $this->render('main/session/index.html.twig', [
+                    'page' => 'session',
+                    'session' => $session,
+                ]);
+            }
+            throw new NotFoundHttpException('Session not found. The requested session does not exist.');
         }
         throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }

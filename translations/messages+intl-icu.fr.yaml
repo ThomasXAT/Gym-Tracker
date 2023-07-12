@@ -1,6 +1,7 @@
 
 placeholder: "#"
 title: Gym-Tracker
+return: Retour
 main:  
   home:
     title: Accueil
@@ -18,7 +19,7 @@ main:
       required: Champs obligatoires
       picture: Photo de profil
       delete_picture: Supprimer la photo de profil
-      identity: Informations personnelles
+      identity: Informations générales
       firstname: Prénom
       surname: Nom
       username: Nom d'utilisateur
@@ -35,15 +36,16 @@ main:
       delete_measurement: Supprimer les mesures
       submit: Éditer le profil
     sessions:
+      title: Séances
       last: Dernières séances
       list: Liste des séances
       full: Consulter la liste complète
-  sessions:
-    title: Séances
+      muscles: Muscles sollicités
+      exercices: Exercices
+      show: Consulter la séance
   session:
     new:  Nouvelle séance
     start: Débuter la séance
-    continue: Continuer la séance
     stop: Terminer la séance
     label: Intitulé de la séance
 authentication:

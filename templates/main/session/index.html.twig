@@ -1,13 +1,29 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-        <section class="content">
-            <div id="new-session" class="mx-auto">
-                <section id="title">
-                    <form>
-                        <input id="new-session-title" class="form-control-plaintext text-center fs-4" type="text" value="{{ session.title }}">
-                    </form>
+        <section class="content container">
+            <div class="row">
+                <section id="breadcrumb" class="mb-1 mb-md-2 p-2 mx-auto d-flex justify-content-end align-items-center">
+                    <div class="col-3 text-white fw-bold fs-3">
+                        <span class="badge rounded-pill bg-success">{{ session.id }}</span>
+                    </div>
+                    <div class="col-9 text-end text-truncate" aria-label="breadcrumb">
+                        <span class="identifier">@{{ session.athlete.username }}</a></span>
+                        <span class="mx-1"><i class="fa-solid fa-chevron-right"></i></span>
+                        <span class="d-md-none"><a class="text-decoration-none" href="{{ path('sessions', { 'username': session.athlete.username }) }}">{{ 'main.profile.sessions.title'|trans }}</a></span>
+                        <span class="d-none d-md-inline"><a class="text-decoration-none" href="{{ path('sessions', { 'username': session.athlete.username }) }}">{{ 'main.profile.sessions.list'|trans }}</a></span>                        
+                        <span class="mx-1"><i class="fa-solid fa-chevron-right"></i></span>
+                        <span class="d-md-none fw-bold">#{{ session.id }}</span>
+                        <span class="d-none d-md-inline fw-bold">{{ session.title }}</span>
+                    </div>
                 </section>
-                <section id="display">
+                <section id="session" class="p-2 mx-auto">
+                    <div class="text-center">
+                        <h3 class="text-white">{{ session.title }}</h3>
+                        <span class="text-center">{{ session.start|date('d/m/Y H:i') }}</span>
+                    </div>
+                    <div>
+
+                    </div>
                 </section>
             </div>
         </section>

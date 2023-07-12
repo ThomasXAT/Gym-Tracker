@@ -24,10 +24,10 @@
                         <section class="text-start">
                             <img id="picture" width="96px" height="96px" class="profile-picture border p-picture-repertory" src="{% if athlete.picture %}{{ asset(athlete.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}">
                         </section>
-                        <section class="text-center w-100 ms-auto overflow-auto px-3">
+                        <section class="text-center w-100 ms-auto text-truncate px-3">
 {% if athlete.firstname or athlete.surname %}
-                            <section class="fs-3 overflow-auto">
-                                <span class="text-truncate">
+                            <section class="fs-3">
+                                <span class="text-overflow ellipsis">
 {% if athlete.firstname %}
                                     <span>{{ athlete.firstname }}</span>
 {% if athlete.surname %}
@@ -40,8 +40,8 @@
                                 </span>
                             </section>
 {% endif %}
-                            <section class="overflow-auto">
-                                <span class="text-truncate identifier">@{{ athlete.username }}</span>
+                            <section>
+                                <span class="text-overflow ellipsis identifier">@{{ athlete.username }}</span>
                             </section>
                         </section>
                     </main>
