@@ -1,3 +1,13 @@
+let translations_array = [];
+translations_array["bilateral"] = "bilatéral";
+translations_array["unilateral"] = "unilatéral";
+translations_array["barbell"] = "barre";
+translations_array["dumbbell"] = "haltères";
+translations_array["machine"] = "machine";
+translations_array["cable"] = "poulie";
+
+export var translations = translations_array;
+
 export var input = {
     setValid: function(input) {
         if (input.hasClass("is-invalid")) {

@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-        <h2 hidden>{{ athlete.username }}</h2>
-        <span hidden id="identifier">{{ athlete.id }}</span>
         <section class="content container" {{ stimulus_controller('profile') }}>
+            <h2 hidden>{{ athlete.username }}</h2>
+            <span hidden id="athlete-identifier">{{ athlete.id }}</span>
             <div class="row justify-content-center">
                 {# Information #}<section id="information" class="pe-md-2 p-2 mx-auto{% if athlete.description or athlete.quotation %} me-lg-0{% endif %}">
                     {# Recto #}<div id="recto" class="d-flex justify-content-center align-items-center">
@@ -19,7 +19,7 @@
                                 <section id="section-identity" class="text-center w-100 text-truncate">
 {% if athlete.firstname or athlete.surname %}
                                     <section id="section-fullname" class="fs-3">
-                                        <span id="fullname" class="text-overflow ellipsis">
+                                        <span id="fullname">
 {% if athlete.firstname %}
                                             <span id="firstname">{{ athlete.firstname }}</span>
 {% if athlete.surname %}
@@ -33,7 +33,7 @@
                                     </section>
 {% endif %}
                                     <section id="section-username">
-                                        <span id="username" class="text-overflow ellipsis identifier">@{{ athlete.username }}</span>
+                                        <span id="username" class="identifier">@{{ athlete.username }}</span>
                                     </section>
                                 </section>
                             </main>

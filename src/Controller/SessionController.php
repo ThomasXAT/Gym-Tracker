@@ -9,6 +9,10 @@ use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route(path: '/session', name: 'session_')]
@@ -25,7 +29,7 @@ class SessionController extends AbstractController
             $session = new Session();
             $session
                 ->setTitle($_POST['title'])
-                ->setSlug(strtolower($sluggerInterface->slug($_POST['title'])))
+                ->setSlug(strtolower($sluggerInterface->slug($_POST['title'])) . '-' . uniqid())
                 ->setAthlete($user)
                 ->setStart(new DateTime)
             ;
@@ -54,5 +58,13 @@ class SessionController extends AbstractController
             }
         }
         return $this->redirectToRoute('home');
+    }
+
+    #[Route(path:'/{id}/exercices', name: 'exercices')]
+    public function exercices(Session $session): Response
+    {
+        dd($session->getExercices());
+        
+        return $this->json("t");
     }
 }

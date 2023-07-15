@@ -196,16 +196,22 @@ class DefaultController extends AbstractController
         throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }
 
-    #[Route(path:'/@{username}/sessions/{slug}/{date}', name: 'session_show')]
-    public function show(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, string $username, string $slug, string $date) {
+    #[Route(path:'/@{username}/sessions/{slug}', name: 'session_display')]
+    public function session_display(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, string $username, string $slug) {
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
-            $session = $sessionRepository->findOneBy(['athlete' => $athlete, 'slug' => $slug, 'start' => DateTime::createFromFormat('YmdHis', $date)]);
+            $session = $sessionRepository->findOneBy(['athlete' => $athlete, 'slug' => $slug]);
             if ($session) {
-                return $this->render('main/session/index.html.twig', [
-                    'page' => 'session',
-                    'session' => $session,
-                ]);
+                $sessions = $sessionRepository->findBy(['athlete' => $athlete]);
+                for ($i = 0; $i < sizeof($sessions); $i++) {
+                    if ($session->getSlug() == $sessions[$i]->getSlug()) {
+                        return $this->render('main/session/index.html.twig', [
+                            'page' => 'session',
+                            'session' => $session,
+                            'position' => $i + 1,
+                        ]);
+                    }
+                }
             }
             throw new NotFoundHttpException('Session not found. The requested session does not exist.');
         }

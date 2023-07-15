@@ -40,6 +40,9 @@ class Session
     #[ORM\OneToMany(mappedBy: 'session', targetEntity: Set::class)]
     private Collection $sets;
 
+    #[ORM\OneToMany(mappedBy: 'session', targetEntity: Sequence::class)]
+    private Collection $sequences;
+
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
@@ -47,6 +50,7 @@ class Session
     public function __construct()
     {
         $this->sets = new ArrayCollection();
+        $this->sequences = new ArrayCollection();
     }
 
     public function __toString()
@@ -161,6 +165,36 @@ class Session
         return $this;
     }
 
+    /**
+     * @return Collection<int, Sequence>
+     */
+    public function getSequences(): Collection
+    {
+        return $this->sequences;
+    }
+
+    public function addSequence(Sequence $sequence): self
+    {
+        if (!$this->sequences->contains($sequence)) {
+            $this->sequences->add($sequence);
+            $sequence->setSession($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSequence(Sequence $sequence): self
+    {
+        if ($this->sequences->removeElement($sequence)) {
+            // set the owning side to null (unless already changed)
+            if ($sequence->getSession() === $this) {
+                $sequence->setSession(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function getExercices(): array
     {
         $exercices = array();
@@ -176,8 +210,8 @@ class Session
                 else {
                     $exercice++;
                     $exercices[$exercice] = [
-                        'name' => $current->getSequence()->__toString(),
                         'sequence' => true,
+                        'exercices' => $current->getSequence()->getExercices(),
                         'sets' => [array()],
                     ];
                 }
@@ -191,8 +225,9 @@ class Session
                 else {
                     $exercice++;
                     $exercices[$exercice] = [
-                        'name' => $current->getExercice()->__toString(),
                         'sequence' => false,
+                        'name' => $current->getExercice()->getName(),
+                        'equipment' => $current->getEquipment(),
                         'sets' => [array()],
                     ];
                 }
@@ -215,7 +250,7 @@ class Session
                 }
                 unset($exercice['sets']);
             }
-        }    
+        }
         return $exercices;
     }
 

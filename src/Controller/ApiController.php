@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Repository\AthleteRepository;
 use App\Repository\Culture\QuotationRepository;
+use App\Repository\Training\SequenceRepository;
 use App\Repository\Training\SessionRepository;
+use App\Repository\Training\SetRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -44,6 +46,41 @@ class ApiController extends AbstractController
             $result[$sessions[$i]->getId()]['current'] = $sessions[$i]->isCurrent();
             $result[$sessions[$i]->getId()]['start'] = $sessions[$i]->getStart();
             $result[$sessions[$i]->getId()]['end'] = $sessions[$i]->getEnd();
+            $result[$sessions[$i]->getId()]['slug'] = $sessions[$i]->getSlug();
+            $exercices = $sessions[$i]->getExercices();
+            foreach ($exercices as &$exercice) {
+                if ($exercice['sequence']) {
+                    foreach ($exercice['rounds'] as &$round) {
+                        foreach ($round['sets'] as &$set) {
+                            for ($j = 0; $j < sizeof($set); $j++) {
+                                $set[$j] = [
+                                    'symmetry' => $set[$j]->getSymmetry(),
+                                    'repetitions' => $set[$j]->getRepetitions(),
+                                    'weight' => $set[$j]->getWeight(),
+                                    'concentric' => $set[$j]->getConcentric(),
+                                    'isometric' => $set[$j]->getIsometric(),
+                                    'eccentric' => $set[$j]->getEccentric(),
+                                ];
+                            }
+                        }
+                    }
+                }
+                else {
+                    foreach ($exercice['sets'] as &$set) {
+                        for ($j = 0; $j < sizeof($set); $j++) {
+                            $set[$j] = [
+                                'symmetry' => $set[$j]->getSymmetry(),
+                                'repetitions' => $set[$j]->getRepetitions(),
+                                'weight' => $set[$j]->getWeight(),
+                                'concentric' => $set[$j]->getConcentric(),
+                                'isometric' => $set[$j]->getIsometric(),
+                                'eccentric' => $set[$j]->getEccentric(),
+                            ];
+                        }
+                    }
+                }
+            }
+            $result[$sessions[$i]->getId()]['exercices'] = $exercices;
         }
         return $this->json($result);
     }

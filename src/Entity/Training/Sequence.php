@@ -92,4 +92,15 @@ class Sequence
 
         return $this;
     }
+
+    public function getExercices()
+    {
+        $exercices = array();
+        foreach ($this->getSets() as $set) {
+            if (!in_array(['name' => $set->getExercice()->getName(), 'equipment' => $set->getEquipment()], $exercices)) {
+                array_push($exercices, ['name' => $set->getExercice()->getName(), 'equipment' => $set->getEquipment()]);
+            }
+        }
+        return $exercices;
+    }
 }

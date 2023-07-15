@@ -25,16 +25,9 @@ export default class extends Controller {
                         }
                     let username = false;
                         let available = true;
-                        $.each(response, function(id, athlete) {
+                        $.each(response, function(i, athlete) {
                             if ($("#register_username").val().toLowerCase() === athlete.username.toLowerCase()) {
                                 available = false;
-                            }
-                            else {
-                                $.each(FORBIDDEN, function(i, word) {
-                                    if ($("#register_username").val().toLowerCase() === word) {
-                                        available = false;
-                                    }
-                                });
                             }
                         }); 
                         if (!available) {
