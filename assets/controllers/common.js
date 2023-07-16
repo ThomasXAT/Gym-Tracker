@@ -1,12 +1,23 @@
-let translations_array = [];
-translations_array["bilateral"] = "bilatéral";
-translations_array["unilateral"] = "unilatéral";
-translations_array["barbell"] = "barre";
-translations_array["dumbbell"] = "haltères";
-translations_array["machine"] = "machine";
-translations_array["cable"] = "poulie";
-
-export var translations = translations_array;
+export var translations = {
+    getTranslations: function() {
+        let translations_array = [];
+        translations_array["set"] = "#";
+        translations_array["symmetry"] = "Symétrie";
+        translations_array["repetitions"] = "Répts";
+        translations_array["weight"] = "Poids";
+        translations_array["tempo"] = "Tempo";
+        translations_array["bilateral"] = "bilatéral";
+        translations_array["unilateral"] = "unilatéral";
+        translations_array["barbell"] = "barre";
+        translations_array["dumbbell"] = "haltères";
+        translations_array["machine"] = "machine";
+        translations_array["cable"] = "poulie";
+        return translations_array;
+    },
+    translate: function(string) {
+        return this.getTranslations()[string] ? this.getTranslations()[string]: null;
+    }
+};
 
 export var input = {
     setValid: function(input) {
