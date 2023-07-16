@@ -238,15 +238,15 @@ class Session
         }
         foreach ($exercices as &$exercice) {
             if ($exercice['sequence']) {
-                $first = $exercice['sets'][0];
-                $exercice['rounds'][0]['sets'] = [$first];
-                foreach (array_slice($exercice['sets'], 1) as $current) {
-                    $round = sizeof($exercice['rounds']) - 1;
-                    if ($current[0]->getExercice() === $first[0]->getExercice() && $current[0]->getEquipment() === $first[0]->getEquipment()) {
-                        $round++;
-                        $exercice['rounds'][$round]['sets'] = array();
-                    }
-                    array_push($exercice['rounds'][$round]['sets'], $current);
+                foreach ($exercice['exercices'] as &$part) {
+                    $part['sets'] = array();
+                }
+                $nbExercices = sizeof($exercice['exercices']);
+                $currentExercice = 0;
+                
+                foreach ($exercice['sets'] as $current) {
+                    array_push($exercice['exercices'][$currentExercice % $nbExercices]['sets'], $current);
+                    $currentExercice++;
                 }
                 unset($exercice['sets']);
             }

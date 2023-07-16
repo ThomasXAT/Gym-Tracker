@@ -50,10 +50,11 @@ class ApiController extends AbstractController
             $exercices = $sessions[$i]->getExercices();
             foreach ($exercices as &$exercice) {
                 if ($exercice['sequence']) {
-                    foreach ($exercice['rounds'] as &$round) {
-                        foreach ($round['sets'] as &$set) {
+                    foreach ($exercice['exercices'] as &$part) {
+                        foreach ($part['sets'] as &$set) {
                             for ($j = 0; $j < sizeof($set); $j++) {
                                 $set[$j] = [
+                                    'id' => $set[$j]->getId(),
                                     'symmetry' => $set[$j]->getSymmetry(),
                                     'repetitions' => $set[$j]->getRepetitions(),
                                     'weight' => $set[$j]->getWeight(),
@@ -69,6 +70,7 @@ class ApiController extends AbstractController
                     foreach ($exercice['sets'] as &$set) {
                         for ($j = 0; $j < sizeof($set); $j++) {
                             $set[$j] = [
+                                'id' => $set[$j]->getId(),
                                 'symmetry' => $set[$j]->getSymmetry(),
                                 'repetitions' => $set[$j]->getRepetitions(),
                                 'weight' => $set[$j]->getWeight(),
