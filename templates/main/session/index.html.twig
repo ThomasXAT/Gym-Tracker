@@ -3,8 +3,8 @@
         <section class="content container" {{ stimulus_controller('session') }}>
             <h2 hidden>{{ session.athlete.username }}</h2>
             <span hidden id="athlete-identifier">{{ session.athlete.id }}</span>
-            <span hidden id="athlete-isWorkingOut">{{ session.athlete.isWorkingOut ? 1: 0 }}</span>
             <span hidden id="session-slug">{{ session.slug }}</span>
+            <span hidden id="session-current">{{ session.current ? 1: 0 }}</span>
             <div class="row">
 {% if app.user.isWorkingOut == false %}
                 <section id="breadcrumb" class="mb-1 mb-md-2 p-2 mx-auto d-flex justify-content-end align-items-center">
@@ -33,8 +33,14 @@
                     </section>
                     <p id="loading" class="text-center"><i class="fa-solid fa-syringe"></i> {{ 'loading'|trans }}</p>
                     <section id="session-muscles" class="py-1"></section>
-                    <section id="session-exercices" class="py-1"></section>
+                    <section id="session-exercices" class="{{ session.current ? 'pt-1': 'py-1' }}"></section>
+{% if session.current %}
+                    <section id="session-new" class="pb-1"></section>
+{% endif %}
                 </section>
             </div>
+{% if session.current %}
+            <button id="button-new-set" class="d-none d-md-block btn btn-success text-nowrap"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button>
+{% endif %}
         </section>
 {% endblock %}

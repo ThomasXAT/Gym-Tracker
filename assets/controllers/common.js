@@ -12,6 +12,7 @@ export var translations = {
         translations_array["dumbbell"] = "haltères";
         translations_array["machine"] = "machine";
         translations_array["cable"] = "poulie";
+        translations_array["add_exercice"] = "Ajouter un exercice";
         return translations_array;
     },
     translate: function(string) {

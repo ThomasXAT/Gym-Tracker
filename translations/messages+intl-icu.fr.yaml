@@ -3,6 +3,12 @@ placeholder: "#"
 title: Gym-Tracker
 return: Retour
 loading: Chargement...
+bilateral: bilatéral
+unilateral: unilatéral
+barbell: barre
+dumbbell: haltères
+machine: machine
+cable: poulie
 main:  
   home:
     title: Accueil
@@ -49,6 +55,8 @@ main:
     start: Débuter la séance
     stop: Terminer la séance
     label: Intitulé de la séance
+    set:
+      new: Nouvelle série
 authentication:
   login:
     title: Connexion

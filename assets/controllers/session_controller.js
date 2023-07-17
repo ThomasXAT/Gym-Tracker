@@ -31,9 +31,10 @@ export default class extends Controller {
                                     .addClass("text-white")
                                 )
                             )
+                            .append($("<br>"))
                         ;
                         if (!exercice.sequence) {
-                            $("#exercice-" + (j + 1) + "-title").html("<span class='fw-bold'>" + exercice.name + "</span>" + " (" + translations.translate(exercice.equipment) + ")");
+                            $("#exercice-" + (j + 1) + "-title").html("<span class='fw-bold'>" + exercice.name + "</span>" + " <span>(" + translations.translate(exercice.equipment) + ")</span>");
                             $("#exercice-" + (j + 1))
                                 .append($("<table></table>")
                                     .addClass("table table-dark table-striped")
@@ -76,11 +77,19 @@ export default class extends Controller {
                                 $("#exercice-" + (j + 1) + "-body")
                                     .append($("<tr></tr>")
                                         .attr("id", "exercice-" + (j + 1) + "-set-" + (k + 1))
+                                        .addClass("pointer-only")
+                                        .on("click", function() {
+                                            let ids = [];
+                                            $.each(set, function(l, element) {
+                                                ids.push(element.id);
+                                            })
+                                            console.log(ids);
+                                        })
                                         .append($("<th></th>")
                                             .attr("scope", "row")
                                             .addClass("align-middle text-center")
                                             .append($("<p></p>")
-                                                .addClass("mb-0 text-body")
+                                                .addClass("mb-0 text-white")
                                                 .text(k + 1)
                                             )
                                         )
@@ -105,32 +114,32 @@ export default class extends Controller {
                                 for (let l = 0; l < set.length; l++) {
                                     $("#exercice-" + (j + 1) + "-set-" + (k + 1) + "-symmetry")
                                         .append($("<p></p>")
-                                            .addClass("mb-0 text-body")
+                                            .addClass("mb-0 text-white")
                                             .text(translations.translate(set[l].symmetry))
                                         )
-                                        ;
+                                    ;
                                     $("#exercice-" + (j + 1) + "-set-" + (k + 1) + "-repetitions")
                                         .append($("<p></p>")
-                                            .addClass("mb-0 text-body")
+                                            .addClass("mb-0 text-white")
                                             .text(set[l].repetitions)
                                         )
-                                        ;
+                                    ;
                                     $("#exercice-" + (j + 1) + "-set-" + (k + 1) + "-weight")
                                         .append($("<p></p>")
-                                            .addClass("mb-0 text-body")
+                                            .addClass("mb-0 text-white")
                                             .text(set[l].weight)
                                         )
-                                        ;
+                                    ;
                                     if (set[l].concentric || set[l].isometric || set[l].eccentric) {
                                         let concentric = set[l].concentric ? set[l].concentric : 0;
                                         let isometric = set[l].isometric ? set[l].isometric : 0;
                                         let eccentric = set[l].eccentric ? set[l].eccentric : 0;
                                         $("#exercice-" + (j + 1) + "-set-" + (k + 1) + "-tempo")
                                             .append($("<p></p>")
-                                                .addClass("mb-0 text-body")
+                                                .addClass("mb-0 text-white")
                                                 .text(concentric + ":" + isometric + ":" + eccentric)
                                             )
-                                            ;
+                                        ;
                                     }
                                 }
                             });
@@ -138,9 +147,9 @@ export default class extends Controller {
                         else {
                             let name = "";
                             for (let k = 0; k < exercice.exercices.length; k++) {
-                                name += "<span class='fw-bold'>" + exercice.exercices[k].name + "</span>" + " (" + translations.translate(exercice.exercices[k].equipment) + ")";
+                                name += "<span class='fw-bold'>" + exercice.exercices[k].name + "</span>" + " <span>(" + translations.translate(exercice.exercices[k].equipment) + ")</span>";
                                 if (k + 1 < exercice.exercices.length) {
-                                    name += ", ";
+                                    name += "<span class='text-body'>, </span>";
                                 }
                             }
                             $("#exercice-" + (j + 1) + "-title").html(name);
@@ -151,7 +160,7 @@ export default class extends Controller {
                                         .addClass("px-2 mx-md-3")
                                         .append($("<h6></h6>")
                                             .attr("id", "exercice-" + (j + 1) + "-part-" + (k + 1) + "-title")
-                                            .html("<span class='fw-bold'>" + part.name + "</span>" + " (" + translations.translate(part.equipment) + ")")
+                                            .html("<span class='fw-bold'>" + part.name + "</span>" + " <span>(" + translations.translate(part.equipment) + ")</span>")
                                         )
                                     )
                                 ;
@@ -193,15 +202,23 @@ export default class extends Controller {
                                         )
                                     )
                                 ;
-                                $.each(part.sets, function (l, set) {
+                                $.each(part.sets, function(l, set) {
                                     $("#exercice-" + (j + 1) + "-part-" + (k + 1) + "-body")
                                         .append($("<tr></tr>")
                                             .attr("id", "exercice-" + (j + 1) + "-part-" + (k + 1) + "-set-" + (l + 1))
+                                            .addClass("pointer-only")
+                                            .on("click", function() {
+                                                let ids = [];
+                                                $.each(set, function(m, element) {
+                                                    ids.push(element.id);
+                                                })
+                                                console.log(ids);
+                                            })
                                             .append($("<th></th>")
                                                 .attr("scope", "row")
                                                 .addClass("align-middle text-center")
                                                 .append($("<p></p>")
-                                                    .addClass("mb-0 text-body")
+                                                    .addClass("mb-0 text-white")
                                                     .text(l + 1)
                                                 )
                                             )
@@ -226,19 +243,19 @@ export default class extends Controller {
                                     for (let m = 0; m < set.length; m++) {
                                         $("#exercice-" + (j + 1) + "-part-" + (k + 1) + "-set-" + (l + 1) + "-symmetry")
                                             .append($("<p></p>")
-                                                .addClass("mb-0 text-body")
+                                                .addClass("mb-0 text-white")
                                                 .text(translations.translate(set[m].symmetry))
                                             )
                                             ;
                                         $("#exercice-" + (j + 1) + "-part-" + (k + 1) + "-set-" + (l + 1) + "-repetitions")
                                             .append($("<p></p>")
-                                                .addClass("mb-0 text-body")
+                                                .addClass("mb-0 text-white")
                                                 .text(set[m].repetitions)
                                             )
                                             ;
                                         $("#exercice-" + (j + 1) + "-part-" + (k + 1) + "-set-" + (l + 1) + "-weight")
                                             .append($("<p></p>")
-                                                .addClass("mb-0 text-body")
+                                                .addClass("mb-0 text-white")
                                                 .text(set[m].weight)
                                             )
                                             ;
@@ -248,7 +265,7 @@ export default class extends Controller {
                                             let eccentric = set[m].eccentric ? set[m].eccentric : 0;
                                             $("#exercice-" + (j + 1) + "-part-" + (k + 1) + "-set-" + (l + 1) + "-tempo")
                                                 .append($("<p></p>")
-                                                    .addClass("mb-0 text-body")
+                                                    .addClass("mb-0 text-white")
                                                     .text(concentric + ":" + isometric + ":" + eccentric)
                                                 )
                                                 ;
@@ -258,12 +275,22 @@ export default class extends Controller {
                             });
                         }
                     });
+                    if ($("#session-current").text() === "1") {
+                        if ($("#session-new").is(":empty")) {
+                            $("#session-exercices").find(":last").remove();
+                        } else {
+                            $("#session-new").find(":last").remove();
+                          }
+                    }
+                    else {
+                        $("#session-exercices").find(":last").remove();
+                    }
                 });
             }
         });
     }
     connect() {
         $("#loading").remove();
-        this.display()
+        this.display();
     }
 }

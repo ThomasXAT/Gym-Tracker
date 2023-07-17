@@ -31,9 +31,7 @@
     </footer>
 {% if section == 'main' %}
     <div id="nav-mobile" class="{{ section }} d-md-none {% if section == 'main' %}bg-dark border-top {% endif %}d-flex align-items-center">
-{% if app.user.isWorkingOut == false %}
 {{ include('main/nav-mobile.html.twig') }}
-{% endif %}
     </div>
 {% endif %}
 </body>

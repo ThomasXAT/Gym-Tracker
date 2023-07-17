@@ -198,9 +198,16 @@ class DefaultController extends AbstractController
 
     #[Route(path:'/@{username}/sessions/{slug}', name: 'session_display')]
     public function session_display(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, string $username, string $slug) {
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
+        if ($user->isWorkingOut()) {
+            return $this->redirectToRoute('home');
+        }
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
-            $session = $sessionRepository->findOneBy(['athlete' => $athlete, 'slug' => $slug]);
+            $session = $sessionRepository->findOneBy(['athlete' => $athlete, 'slug' => $slug, 'current' => false]);
             if ($session) {
                 $sessions = $sessionRepository->findBy(['athlete' => $athlete]);
                 for ($i = 0; $i < sizeof($sessions); $i++) {
