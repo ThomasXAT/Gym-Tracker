@@ -1,6 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-import { verify } from "./common";
-import { input } from "./common";
+import { validator } from "./common";
 
 export default class extends Controller {
     connect() {
@@ -16,12 +15,12 @@ export default class extends Controller {
     edit() {
         $("#range-height").val($("#profile_height").val());
         $("#range-weight").val($("#profile_weight").val());
-        verify.firstname($("#profile_firstname"), true);
-        verify.surname($("#profile_surname"), true);
-        verify.email($("#profile_email"), true);
+        validator.verify.firstname($("#profile_firstname"), true);
+        validator.verify.surname($("#profile_surname"), true);
+        validator.verify.email($("#profile_email"), true);
         if ($("#profile_height").val() !== "" || $("#profile_weight").val() !== "" ) {
-            verify.height($("#profile_height"), true);
-            verify.weight($("#profile_weight"), true);
+            validator.verify.height($("#profile_height"), true);
+            validator.verify.weight($("#profile_weight"), true);
         }
         let picture = true;
         $("#profile_file").on("change", function() {
@@ -29,13 +28,13 @@ export default class extends Controller {
             if (file) {
                 $("#profile__delete_picture").prop('checked', false);
                 if (file.size > 2 * 1024 * 1024) {
-                    input.setInvalid($("#profile_file"));
+                    validator.setInvalid($("#profile_file"));
                     $("#profile_picture").attr("src", "images/dirtybulk-jaycutler.jpg");
                     $("#help-file").text("Fichier trop lourd. Taille maximale : 2 Mo.");
                     picture = false;
                 }
                 else {
-                    input.setValid($("#profile_file"));
+                    validator.setValid($("#profile_file"));
                     $("#help-file").text("");
                     picture = true;
                     let img = new Image();
@@ -61,45 +60,45 @@ export default class extends Controller {
         $("#delete_picture").on("click", function() {
             picture = true;
             $("#profile_picture").attr("src", "images/placeholder-athlete.jpg");
-            input.setNeutral($("#profile_file"));
+            validator.setNeutral($("#profile_file"));
             $("#profile_file").val("");
             $("#help-file").text("");
             $("#profile__delete_picture").prop('checked', true);
         })
         $("#section-firstname").on("input", function() {
-            verify.surname($("#profile_surname"), true);
-            verify.firstname($("#profile_firstname"), true);
+            validator.verify.surname($("#profile_surname"), true);
+            validator.verify.firstname($("#profile_firstname"), true);
         });
         $("#section-surname").on("input", function() {
-            verify.firstname($("#profile_firstname"), true);
-            verify.surname($("#profile_surname"), true);
+            validator.verify.firstname($("#profile_firstname"), true);
+            validator.verify.surname($("#profile_surname"), true);
         });
         $("#section-measurement-checkbox").on("input", function() {
-            verify.weight($("#profile_weight"), true);
-            verify.height($("#profile_height"), true);
+            validator.verify.weight($("#profile_weight"), true);
+            validator.verify.height($("#profile_height"), true);
         });
         $("#section-height").on("input", function() {
-            verify.weight($("#profile_weight"), true);
-            verify.height($("#profile_height"), true);
+            validator.verify.weight($("#profile_weight"), true);
+            validator.verify.height($("#profile_height"), true);
         });
         $("#section-weight").on("input", function() {
-            verify.height($("#profile_height"), true);
-            verify.weight($("#profile_weight"), true);
+            validator.verify.height($("#profile_height"), true);
+            validator.verify.weight($("#profile_weight"), true);
         });
         $("#form-profile").on("input change click", function() {
             let fullname = false;
-                if (verify.firstname($("#profile_firstname")) && verify.surname($("#profile_surname"))) {
+                if (validator.verify.firstname($("#profile_firstname")) && validator.verify.surname($("#profile_surname"))) {
                     $("#help-fullname").html("");
                     fullname = true;
                 }
-            let email = verify.email($("#profile_email"), true);
+            let email = validator.verify.email($("#profile_email"), true);
             let password = true;
             if ($("#profile_password").val()) {
                 password = false;
             }
-                if (verify.password($("#profile_password"), true)) {
+                if (validator.verify.password($("#profile_password"), true)) {
                     $("#section-confirmation").prop("hidden", false);
-                    if (verify.confirmation($("#profile_confirmation"), $("#profile_password"), true)) {
+                    if (validator.verify.confirmation($("#profile_confirmation"), $("#profile_password"), true)) {
                         password = true;
                     }
                 }
@@ -108,11 +107,11 @@ export default class extends Controller {
                     $("#profile_confirmation").val("");
                 }
             let measurement = false;
-                if ((verify.height($("#profile_height")) && verify.weight($("#profile_weight"))) || ($("#profile_height").val() === "" && $("#profile_weight").val() === "" && $("#profile_measurement").prop('checked') == false)) {
+                if ((validator.verify.height($("#profile_height")) && validator.verify.weight($("#profile_weight"))) || ($("#profile_height").val() === "" && $("#profile_weight").val() === "" && $("#profile_measurement").prop('checked') == false)) {
                     $("#help-measurement").html("");
                     if (($("#profile_height").val() === "" && $("#profile_weight").val() === "")) {
-                        input.setNeutral($("#profile_height"));
-                        input.setNeutral($("#profile_weight"));
+                        validator.setNeutral($("#profile_height"));
+                        validator.setNeutral($("#profile_weight"));
                     }
                     measurement = true;
                 }
@@ -138,8 +137,8 @@ export default class extends Controller {
             $("#range-weight").val($("#profile_weight").val());
             $("#profile_measurement").prop('checked', false);
             $("#help-measurement").html("");
-            input.setNeutral($("#profile_height"));
-            input.setNeutral($("#profile_weight"));
+            validator.setNeutral($("#profile_height"));
+            validator.setNeutral($("#profile_weight"));
         });
         if ($("#profile_height").val() === "" && $("#profile_weight").val() === "") {
             $("#profile_measurement").prop('checked', false);

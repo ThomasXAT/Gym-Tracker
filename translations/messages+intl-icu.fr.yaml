@@ -57,6 +57,7 @@ main:
     label: Intitulé de la séance
     set:
       new: Nouvelle série
+      edit: Édition d'une série
 authentication:
   login:
     title: Connexion

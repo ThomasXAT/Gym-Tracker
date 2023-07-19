@@ -5,7 +5,9 @@
                 <h2>{{ 'authentication.register.form'|trans }}</h2>
                 <p class="required">{{ 'authentication.register.required'|trans }}</p>
             </div>
-{{ include('authentication/register/_form.html.twig') }}        
-            <p class="text-center py-3"><a href="{{ path('authentication_login') }}">{{ 'authentication.register.link'|trans }}</a></p>
+{{ include('authentication/register/_form.html.twig') }} 
+            <div class="py-2 text-center">
+                <a class="btn btn-link" href="{{ path('authentication_login') }}">{{ 'authentication.register.link'|trans }}</a>
+            </div>
         </section>
 {% endblock %}

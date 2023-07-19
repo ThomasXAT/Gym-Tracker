@@ -1,6 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-import { verify } from "./common";
-import { input } from "./common";
+import { validator } from "./common";
 
 export default class extends Controller {
     connect() {
@@ -10,16 +9,16 @@ export default class extends Controller {
             dataType: "json",
             success: function(response) {  
                 $("#section-firstname").on("input", function() {
-                    verify.surname($("#register_surname"), true);
-                    verify.firstname($("#register_firstname"), true);
+                    validator.verify.surname($("#register_surname"), true);
+                    validator.verify.firstname($("#register_firstname"), true);
                 });
                 $("#section-surname").on("input", function() {
-                    verify.firstname($("#register_firstname"), true);
-                    verify.surname($("#register_surname"), true);
+                    validator.verify.firstname($("#register_firstname"), true);
+                    validator.verify.surname($("#register_surname"), true);
                 });
                 $("#form-register").on("input", function() {
                     let fullname = false;
-                        if (verify.firstname($("#register_firstname")) && verify.surname($("#register_surname"))) {
+                        if (validator.verify.firstname($("#register_firstname")) && validator.verify.surname($("#register_surname"))) {
                             $("#help-fullname").html("");
                             fullname = true;
                         }
@@ -32,16 +31,16 @@ export default class extends Controller {
                         }); 
                         if (!available) {
                             $("#help-username").html("Cet identifiant n'est pas disponible.");
-                            input.setInvalid($("#register_username"));
+                            validator.setInvalid($("#register_username"));
                         }
                         else {
-                            username = verify.username($("#register_username"), true);
+                            username = validator.verify.username($("#register_username"), true);
                         }
-                    let email = verify.email($("#register_email"), true);
+                    let email = validator.verify.email($("#register_email"), true);
                     let password = false;
-                        if (verify.password($("#register_password"), true)) {
+                        if (validator.verify.password($("#register_password"), true)) {
                             $("#section-confirmation").prop("hidden", false);
-                            if (verify.confirmation($("#register_confirmation"), $("#register_password"), true)) {
+                            if (validator.verify.confirmation($("#register_confirmation"), $("#register_password"), true)) {
                                 password = true;
                             }
                         }

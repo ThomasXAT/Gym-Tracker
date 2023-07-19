@@ -33,9 +33,9 @@
                     </section>
                     <p id="loading" class="text-center"><i class="fa-solid fa-syringe"></i> {{ 'loading'|trans }}</p>
                     <section id="session-muscles" class="py-1"></section>
-                    <section id="session-exercices" class="{{ session.current ? 'pt-1': 'py-1' }}"></section>
+                    <section id="session-exercices" class="py-1"></section>
 {% if session.current %}
-                    <section id="session-new" class="pb-1"></section>
+                    {{ include('main/session/_edit.html.twig') }}
 {% endif %}
                 </section>
             </div>
