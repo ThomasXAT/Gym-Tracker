@@ -1,0 +1,16 @@
+                    <aside id="_add" class="modal fade">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <header id="_add-header" class="modal-header">
+                                    <p class="modal-title fs-5">{{ 'main.session.set.add.title'|trans }}</p>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </header>
+                                <main id="_add-body" class="modal-body">
+                                    <form id="_add-form"></form>
+                                </main>
+                                <footer id="_add-footer" class="modal-footer">
+                                    <button id="session-start" data-action="click->session#add" data-bs-dismiss="modal" class="btn btn-success text-nowrap">{{ 'main.session.set.add.submit'|trans }}</button>
+                                </footer>
+                            </div>
+                        </div>
+                    </aside>

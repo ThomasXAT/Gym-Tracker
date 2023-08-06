@@ -3,8 +3,7 @@
         <section class="content container" {{ stimulus_controller('session') }}>
             <h2 hidden>{{ session.athlete.username }}</h2>
             <span hidden id="athlete-identifier">{{ session.athlete.id }}</span>
-            <span hidden id="session-slug">{{ session.slug }}</span>
-            <span hidden id="session-current">{{ session.current ? 1: 0 }}</span>
+            <span hidden id="session-identifier">{{ session.id }}</span>
             <div class="row">
 {% if app.user.isWorkingOut == false %}
                 <section id="breadcrumb" class="mb-1 mb-md-2 p-2 mx-auto d-flex justify-content-end align-items-center">
@@ -32,15 +31,18 @@
                         </div>
                     </section>
                     <p id="loading" class="text-center"><i class="fa-solid fa-syringe"></i> {{ 'loading'|trans }}</p>
-                    <section id="session-muscles" class="py-1"></section>
-                    <section id="session-exercices" class="py-1"></section>
+                    <section id="session-muscles"></section>
+                    <section id="session-exercices"></section>
+{% if session.current or session.athlete == app.user %}
+{{ include('main/session/_edit.html.twig') }}
 {% if session.current %}
-                    {{ include('main/session/_edit.html.twig') }}
+{{ include('main/session/_add.html.twig') }}
+{% endif %}
 {% endif %}
                 </section>
             </div>
 {% if session.current %}
-            <button id="button-new-set" class="d-none d-md-block btn btn-success text-nowrap"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button>
+            <button id="button-new-set" class="d-none d-md-block btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_add"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button>
 {% endif %}
         </section>
 {% endblock %}

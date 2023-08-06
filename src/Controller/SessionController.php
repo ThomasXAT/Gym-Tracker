@@ -5,17 +5,14 @@ namespace App\Controller;
 use App\Entity\Athlete;
 use App\Entity\Training\Session;
 use App\Repository\Training\SessionRepository;
+use App\Repository\Training\SetRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-#[Route(path: '/session', name: 'session_')]
+#[Route(path: '/session', name: 'session_', methods: ['POST'])]
 class SessionController extends AbstractController
 {
     #[Route(path:'/start', name: 'start')]
@@ -60,11 +57,16 @@ class SessionController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-    #[Route(path:'/{id}/exercices', name: 'exercices')]
-    public function exercices(Session $session): Response
+    #[Route(path:'/edit', name: 'edit')]
+    public function edit(SetRepository $setRepository): Response
     {
-        dd($session->getExercices());
-        
-        return $this->json("t");
+        foreach ($_POST as $id => $edited) {
+            $set = $setRepository->findOneBy(["id" => $id]);
+            $set->setSymmetry($edited["symmetry"]);
+            $set->setRepetitions($edited["repetitions"]);
+            $set->setWeight($edited["weight"]);
+            $setRepository->save($set, true);
+        }
+        return $this->json($_POST);
     }
 }

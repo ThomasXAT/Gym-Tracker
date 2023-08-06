@@ -53,11 +53,16 @@ main:
   session:
     new:  Nouvelle séance
     start: Débuter la séance
-    stop: Terminer la séance
+    stop: Conclure la séance
     label: Intitulé de la séance
     set:
       new: Nouvelle série
-      edit: Édition d'une série
+      add:
+        title: Ajout d'une série
+        submit: Ajouter la série
+      edit:
+        title: Édition d'une série
+        submit: Éditer la série
 authentication:
   login:
     title: Connexion

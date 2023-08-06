@@ -18,6 +18,7 @@ class ApiController extends AbstractController
         $athletes = $athleteRepository->findBy($_GET);
         $result = array();
         for ($i = 0; $i < sizeof($athletes); $i++) {
+            $result[$athletes[$i]->getId()]['id'] = $athletes[$i]->getId();
             $result[$athletes[$i]->getId()]['username'] = $athletes[$i]->getUsername();
             $result[$athletes[$i]->getId()]['firstname'] = $athletes[$i]->getFirstname();
             $result[$athletes[$i]->getId()]['surname'] = $athletes[$i]->getSurname();
@@ -40,6 +41,7 @@ class ApiController extends AbstractController
         $sessions = $sessionRepository->findBy($_GET);
         $result = array();
         for ($i = 0; $i < sizeof($sessions); $i++) {
+            $result[$sessions[$i]->getId()]['id'] = $sessions[$i]->getId();
             $result[$sessions[$i]->getId()]['title'] = $sessions[$i]->getTitle();
             $result[$sessions[$i]->getId()]['subtitle'] = $sessions[$i]->getSubtitle();
             $result[$sessions[$i]->getId()]['athlete'] = $sessions[$i]->getAthlete()->getId();
@@ -53,15 +55,7 @@ class ApiController extends AbstractController
                     foreach ($exercice['exercices'] as &$part) {
                         foreach ($part['sets'] as &$set) {
                             for ($j = 0; $j < sizeof($set); $j++) {
-                                $set[$j] = [
-                                    'id' => $set[$j]->getId(),
-                                    'symmetry' => $set[$j]->getSymmetry(),
-                                    'repetitions' => $set[$j]->getRepetitions(),
-                                    'weight' => $set[$j]->getWeight(),
-                                    'concentric' => $set[$j]->getConcentric(),
-                                    'isometric' => $set[$j]->getIsometric(),
-                                    'eccentric' => $set[$j]->getEccentric(),
-                                ];
+                                $set[$j] = $set[$j]->getId();
                             }
                         }
                     }
@@ -69,15 +63,7 @@ class ApiController extends AbstractController
                 else {
                     foreach ($exercice['sets'] as &$set) {
                         for ($j = 0; $j < sizeof($set); $j++) {
-                            $set[$j] = [
-                                'id' => $set[$j]->getId(),
-                                'symmetry' => $set[$j]->getSymmetry(),
-                                'repetitions' => $set[$j]->getRepetitions(),
-                                'weight' => $set[$j]->getWeight(),
-                                'concentric' => $set[$j]->getConcentric(),
-                                'isometric' => $set[$j]->getIsometric(),
-                                'eccentric' => $set[$j]->getEccentric(),
-                            ];
+                            $set[$j] = $set[$j]->getId();
                         }
                     }
                 }
@@ -87,11 +73,31 @@ class ApiController extends AbstractController
         return $this->json($result);
     }
 
+    #[Route(path:'/set', name: 'set')]
+    public function set(SetRepository $setRepository) {
+        $sets = $setRepository->findBy($_GET);
+        $result = array();
+        for ($i = 0; $i < sizeof($sets); $i++) {
+            $result[$sets[$i]->getId()]['id'] = $sets[$i]->getId();
+            $result[$sets[$i]->getId()]['session'] = $sets[$i]->getSession()->getId();
+            $result[$sets[$i]->getId()]['equipment'] = $sets[$i]->getEquipment();
+            $result[$sets[$i]->getId()]['symmetry'] = $sets[$i]->getSymmetry();
+            $result[$sets[$i]->getId()]['repetitions'] = $sets[$i]->getRepetitions();
+            $result[$sets[$i]->getId()]['weight'] = $sets[$i]->getWeight();
+            $result[$sets[$i]->getId()]['concentric'] = $sets[$i]->getConcentric();
+            $result[$sets[$i]->getId()]['isometric'] = $sets[$i]->getIsometric();
+            $result[$sets[$i]->getId()]['eccentric'] = $sets[$i]->getEccentric();
+            $result[$sets[$i]->getId()]['dropping'] = $sets[$i]->isDropping();
+        }
+        return $this->json($result);
+    }
+
     #[Route(path:'/quotation', name: 'quotation')]
     public function quotation(QuotationRepository $quotationRepository) {
         $quotations = $quotationRepository->findBy($_GET);
         $result = array();
         for ($i = 0; $i < sizeof($quotations); $i++) {
+            $result[$quotations[$i]->getId()]['id'] = $quotations[$i]->getId();
             $result[$quotations[$i]->getId()]['text'] = $quotations[$i]->getText();
             $result[$quotations[$i]->getId()]['author'] = $quotations[$i]->getAuthor();
         }
