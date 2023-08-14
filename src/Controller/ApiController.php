@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Repository\AthleteRepository;
 use App\Repository\Culture\QuotationRepository;
-use App\Repository\Training\SequenceRepository;
 use App\Repository\Training\SessionRepository;
 use App\Repository\Training\SetRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -72,7 +72,7 @@ class AnatomyDataImportCommand extends Command
 
                 foreach ($data as $muscleGroupData) {
 
-                    if ($muscleGroupData == end($data)) {
+                    if ($muscleGroupData === end($data)) {
                         $current = '└── ';
                         $step1 = '    ';
                     }
@@ -88,7 +88,7 @@ class AnatomyDataImportCommand extends Command
                     if (isset($muscleGroupData['muscles'])) {
                         foreach ($muscleGroupData['muscles'] as $muscleData) {
 
-                            if ($muscleData == end($muscleGroupData['muscles'])) {
+                            if ($muscleData === end($muscleGroupData['muscles'])) {
                                 $current = '└── ';
                                 $step2 = '    ';
                             }
@@ -104,7 +104,7 @@ class AnatomyDataImportCommand extends Command
                             if (isset($muscleData['bundles'])) {
                                 foreach ($muscleData['bundles'] as $bundleData) {
 
-                                    if ($bundleData == end($muscleData['bundles'])) {
+                                    if ($bundleData === end($muscleData['bundles'])) {
                                         $current = '└── ';
                                     }
                                     else {

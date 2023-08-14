@@ -8,6 +8,7 @@ use App\Entity\Training\Exercice;
 use App\Repository\Biomechanics\MovementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MovementRepository::class)]
@@ -29,6 +30,12 @@ class Movement
 
     #[ORM\ManyToMany(targetEntity: Exercice::class, mappedBy: 'movements')]
     private Collection $exercices;
+
+    #[ORM\Column(length: 255)]
+    private ?string $joint = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
 
     public function __construct()
     {
@@ -130,6 +137,30 @@ class Movement
         if ($this->exercices->removeElement($exercice)) {
             $exercice->removeMovement($this);
         }
+
+        return $this;
+    }
+
+    public function getJoint(): ?string
+    {
+        return $this->joint;
+    }
+
+    public function setJoint(string $joint): self
+    {
+        $this->joint = $joint;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
