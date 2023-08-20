@@ -39,6 +39,31 @@ class ExerciceRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Exercice[] Returns an array of Exercice objects
+     */
+    public function findBySearch($search, $equipment = null): array
+    {
+        $exercices = $this->createQueryBuilder('e')
+            ->andWhere('e.name LIKE :search')
+            ->setParameter('search', '%' . $search . '%')
+            ->getQuery()
+            ->getResult()
+        ;
+        if ($equipment) {
+            $toDelete = array();
+            for ($i = 0; $i < sizeof($exercices); $i++) {
+                if (!in_array($equipment, $exercices[$i]->getEquipments())) {
+                    array_push($toDelete, $i);
+                }
+            }
+            foreach($toDelete as $key) {
+                unset($exercices[$key]);
+            }
+        }
+        return $exercices;
+    }
+
 //    /**
 //     * @return Exercice[] Returns an array of Exercice objects
 //     */

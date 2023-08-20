@@ -8,13 +8,16 @@ translations["weight"] = "Poids";
 translations["tempo"] = "Tempo";
 translations["bilateral"] = "bilatéral";
 translations["unilateral"] = "unilatéral";
-translations["barbell"] = "barre";
-translations["dumbbell"] = "haltères";
-translations["machine"] = "machine";
-translations["cable"] = "poulie";
 translations["concentric"] = "Concentrique";
 translations["isometric"] = "Isométrique";
 translations["eccentric"] = "Excentrique";
+translations["bodyweight"] = "PDC";
+translations["band"] = "Élastique";
+translations["barbell"] = "Barre";
+translations["dumbbell"] = "Haltères";
+translations["cable"] = "Poulie";
+translations["smith"] = "Barre guidée";
+translations["machine"] = "Machine";
 
 export var translator = {
     translations: translations,
@@ -304,7 +307,9 @@ let display = {
                         generator.display.exercice(exercice_id, exercice, sets)
                     }
                 });
-                $("#session-exercices").find(":last").remove();
+                if (session.exercices.length > 0) {
+                    $("#session-exercices").find(":last").remove();
+                }
             }
         });
     },
@@ -389,6 +394,10 @@ let display = {
                         .attr("id", set_id + "-id")
                         .attr("hidden", "")
                     )
+                    .append($("<td></td>")
+                        .attr("id", set_id + "-dropping")
+                        .attr("hidden", "")
+                    )
                 )
             ;
             $.each(set, function(j, set_part_id) {
@@ -399,14 +408,14 @@ let display = {
                         .addClass("mb-0 text-white")
                         .text(translator.translate(set_part.symmetry))
                     )
-                    ;
+                ;
                 $("#" + set_id + "-repetitions")
                     .append($("<p></p>")
                         .attr("id", set_part_id + "-repetitions")
                         .addClass("mb-0 text-white")
                         .text(set_part.repetitions)
                     )
-                    ;
+                ;
                 $("#" + set_id + "-weight")
                     .append($("<p></p>")
                         .attr("id", set_part_id + "-weight")
@@ -437,9 +446,16 @@ let display = {
                         .text(set_part.id)
                     )
                 ;
+                $("#" + set_id + "-dropping")
+                    .append($("<p></p>")
+                        .attr("id", set_part_id + "-dropping")
+                        .addClass("mb-0 text-white")
+                        .text(set_part.dropping)
+                    )
+                ;
             });
             // Current
-            if ($("#_edit-form").length) {
+            if ($("#_edit").length) {
                 $("#" + set_id)
                     .attr("data-bs-toggle", "modal")
                     .attr("data-bs-target", "#_edit")
@@ -488,28 +504,175 @@ let display = {
                 )
             ;
         }
-        $("#" + edit_set_id)
-            .append($("<div></div>")
-                .addClass("d-flex")
-                /*
-                .append($("<span></span>")
-                    .addClass("d-flex justify-content-center align-items-center text-white fw-bold me-2")
-                    .text(set_index)
-                )
-                */
-                .append($("<div></div>")
-                    .attr("id", edit_set_id + "-parts")
-                )
-            )
-        ;
         $.each($("#" + prefix + "-set-" + set_index + "-id").children(), function(i, set_part) {
             let set_part_id = set_part.innerText;
             let edit_set_part_id = "_edit-" + set_part_id;
-            $("#" + edit_set_id + "-parts")
+            $("#" + edit_set_id)
                 .append($("<div></div>")
                     .attr("id", edit_set_part_id)
                     .append($("<section></section>")
-                        .addClass("d-flex py-1")
+                        .addClass("d-flex justify-content-center py-1")
+                        .append($("<div></div>")
+                            .addClass("col-6 pe-2")
+                            .append($("<select></select>")
+                                .attr("id", edit_set_part_id + "-symmetry")
+                                .attr("name", set_part_id + "[symmetry]")
+                                .addClass("form-select")
+                                .append($("<option></option>")
+                                    .val("unilateral")
+                                    .text(translator.translate("unilateral"))
+                                )
+                                .append($("<option></option>")
+                                    .val("bilateral")
+                                    .text(translator.translate("bilateral"))
+                                )
+                                .val($("#" + set_part_id + "-symmetry").text() === translator.translate("unilateral") ? "unilateral": "bilateral")
+                            )
+                        )
+                        .append($("<div></div>")
+                            .addClass("col-3 pe-1")
+                            .append($("<input>")
+                                .attr("id", edit_set_part_id + "-repetitions")
+                                .attr("name", set_part_id + "[repetitions]")
+                                .addClass("form-control text-center")
+                                .attr("placeholder", translator.translate("repetitions"))
+                                .val($("#" + set_part_id + "-repetitions").text())
+                            )
+                        )
+                        .append($("<div></div>")
+                            .addClass("col-3 ps-1")
+                            .append($("<input>")
+                                .attr("id", edit_set_part_id + "-weight")
+                                .attr("name", set_part_id + "[weight]")
+                                .addClass("form-control text-center")
+                                .attr("placeholder", translator.translate("weight"))
+                                .val($("#" + set_part_id + "-weight").text())
+                            )
+                        )
+                        /*
+                        .append($("#" + set_part_id + "-dropping").text() === "true" ? $("<div></div>")
+                            .addClass("col-1 d-flex justify-content-center align-items-center")
+                            .append($("<i></i>")
+                                .addClass("fa-solid fa-xmark pointer")
+                            ): null
+                        )*/
+                    )
+                )
+            ;
+        });
+    },
+    searchOutput: function(search = null, equipment = null) {
+        $.ajax({
+            type: "POST",
+            url: "/session/search",
+            data: {
+                search: search,
+                equipment: equipment,
+            },
+            success: function(response) {
+                $("#exercice-list").empty();
+                $.each(response, function(id, exercice) {
+                    $("#exercice-list")
+                        .append($("<option></option>")
+                            .val(id)
+                            .text(exercice.name)
+                            .on("click", function() {
+                                if (!$("#minimum-message").hasClass("d-none")) {
+                                    $("#minimum-message").addClass("d-none");
+                                    $("#button-choose").attr("disabled", false);
+                                }
+                                let uniqueId = Date.now();
+                                $("#section-selected-exercices")
+                                    .append($("<article></article>")
+                                        .attr("id", "selected-" + uniqueId)
+                                        .addClass("d-flex align-items-center text-truncate py-1")
+                                        .append($("<div></div>")
+                                            .attr("id", "selected-" + uniqueId + "-title")
+                                            .addClass("col-7 fs-6 text-white")
+                                            .text(exercice.name)
+                                        )
+                                        .append($("<div></div>")
+                                            .addClass("col-4")
+                                            .append($("<select></select>")
+                                                .attr("id", "selected-" + uniqueId + "-equipment")
+                                                .addClass("form-select")
+                                            )
+                                        )
+                                        .append($("<div></div>")
+                                            .addClass("col-1 text-center")
+                                            .append($("<i></i>")
+                                                .addClass("fa-solid fa-xmark pointer")
+                                            )
+                                            .on("click", function() {
+                                                $("#selected-" + uniqueId).remove();
+                                                if ($("#section-selected-exercices").children().length < 1) {
+                                                    if ($("#minimum-message").hasClass("d-none")) {
+                                                        $("#minimum-message").removeClass("d-none");
+                                                        $("#button-choose").attr("disabled", true);
+                                                    }
+                                                }
+                                            })
+                                        )
+                                    )
+                                ;
+                                $.each(exercice.equipments, function(index, value) {
+                                    $("#selected-" + uniqueId + "-equipment")
+                                        .append($("<option></option>")
+                                            .val(value)
+                                            .text(translator.translate(value))
+                                        )
+                                    ;
+                                });
+                            })
+                        )
+                    ;
+                });
+            },
+        });
+    },
+    addForm: function() {
+        let sequence = $("#section-selected-exercices").children().length > 1;
+        let title = "";
+        if (sequence) {
+            $.each($("#section-selected-exercices").children(), function(index, exercice) {
+                title += $("#" + exercice.id + "-title").text() + " (" + translator.translate($("#" + exercice.id + "-equipment").val()).toLowerCase() + "), ";
+            })
+            title = title.slice(0, -2);
+        }
+        else {
+            let exercice = $("#section-selected-exercices").children()[0];
+            title = $("#" + exercice.id + "-title").text() + " (" + translator.translate($("#" + exercice.id + "-equipment").val()).toLowerCase() + ")";
+        }
+        $("#_add-form")
+            .empty()
+            .append($("<h5></h5>")
+                .addClass("text-white")
+                .text(title)
+            )
+            .append($("<article></article>")
+                .addClass("mb-1")
+                .attr("id", "new-set")
+            )
+        ;
+        /*
+        if (sequence) {
+            $("#new-set")
+                .addClass("px-1 px-md-2")
+                .append($("<h6></h6>")
+                    .addClass("mt-2 mb-1")
+                    .attr("id", "new-set-title")
+                    .text(title)
+                )
+            ;
+        }
+        $.each($("#" + prefix + "-set-" + set_index + "-id").children(), function(i, set_part) {
+            let set_part_id = set_part.innerText;
+            let edit_set_part_id = "_edit-" + set_part_id;
+            $("#" + edit_set_id)
+                .append($("<div></div>")
+                    .attr("id", edit_set_part_id)
+                    .append($("<section></section>")
+                        .addClass("d-flex justify-content-center py-1")
                         .append($("<div></div>")
                             .addClass("col-6 pe-2")
                             .append($("<select></select>")
@@ -551,6 +714,7 @@ let display = {
                 )
             ;
         });
+        */
     },
 }
 

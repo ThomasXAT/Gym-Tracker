@@ -46,7 +46,7 @@ class Movement
 
     public function __toString()
     {
-        return $this->getName();
+        return $this->getJoint() . " - " . $this->getDescription();
     }
 
     public function getId(): ?int

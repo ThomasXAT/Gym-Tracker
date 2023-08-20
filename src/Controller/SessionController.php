@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Athlete;
 use App\Entity\Training\Session;
+use App\Repository\Training\ExerciceRepository;
 use App\Repository\Training\SessionRepository;
 use App\Repository\Training\SetRepository;
 use DateTime;
@@ -68,5 +69,17 @@ class SessionController extends AbstractController
             $setRepository->save($set, true);
         }
         return $this->json($_POST);
+    }
+    
+    #[Route(path:'/search', name: 'search')]
+    public function search(ExerciceRepository $exerciceRepository): Response
+    {
+        $search = isset($_POST['search']) ? $_POST['search']: null;
+        $equipment = isset($_POST['equipment']) ? $_POST['equipment']: null;
+        $result = array();
+        foreach ($exerciceRepository->findBySearch($search, $equipment) as $exercice) {
+            $result[$exercice->getId()] = ['id' => $exercice->getId(), 'name' => $exercice->getName(), 'equipments' => $exercice->getEquipments()];
+        }
+        return $this->json($result);
     }
 }

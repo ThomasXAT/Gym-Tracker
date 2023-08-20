@@ -1,0 +1,40 @@
+                    <aside id="_exercice" class="modal fade">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <header id="_exercice-header" class="modal-header">
+                                    <p class="modal-title fs-5">{{ 'main.session.exercice.choose.title'|trans }}</p>
+                                    <button type="button" class="btn-close" data-bs-target="#_add" data-bs-toggle="modal"></button>
+                                </header>
+                                <main id="_exercice-body" class="modal-body">
+                                    <section id="section-search-input" class="d-flex flex-wrap">
+                                        <div class="col-12 col-md-8 pe-0 pe-md-1 mb-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                                <input id="exercice-search" name="search" type="text" class="form-control" placeholder="{{ 'main.session.exercice.search'|trans }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4 ps-0 ps-md-1 mb-3">
+                                            <select id="exercice-equipment" class="form-select">
+                                                <option value="">{{ 'main.session.exercice.equipment.all'|trans }}</option>                
+{% for name, equipment in equipments %}    
+                                                <option value="{{ equipment }}">{{ name }}</option>                
+{% endfor %}                      
+                                            </select>
+                                        </div>
+                                    </section>
+                                    <section id="section-search-output" class="mb-3">
+                                        <div>
+                                            <select id="exercice-list" class="form-select" multiple></select>
+                                        </div>
+                                    </section>
+                                    <section id="section-selected-exercices"></section>
+                                    <div id="minimum-message" class="text-center text-danger">
+                                        {{ "main.session.exercice.choose.minimum"|trans }}
+                                    </div>
+                                </main>
+                                <footer id="_exercice-footer" class="modal-footer">
+                                    <button id="button-choose" data-action="click->session#choose" data-bs-target="#_add" data-bs-toggle="modal" class="btn btn-success text-nowrap" disabled>{{ 'main.session.exercice.choose.submit'|trans }}</button>
+                                </footer>
+                            </div>
+                        </div>
+                    </aside>

@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Athlete;
 use App\Entity\Measurement;
+use App\Entity\Training\Exercice;
 use App\Form\ProfileType;
 use App\Repository\AthleteRepository;
 use App\Repository\MeasurementRepository;
+use App\Repository\Training\ExerciceRepository;
 use App\Repository\Training\SessionRepository;
 use App\Repository\Training\SetRepository;
 use DateTime;
@@ -26,7 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     #[Route(path:'/', name: 'home')]
-    public function home(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, SetRepository $setRepository): Response
+    public function home(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, SetRepository $setRepository, ExerciceRepository $exerciceRepository): Response
     {
         /**
          * @var Athlete $user
@@ -38,7 +40,8 @@ class DefaultController extends AbstractController
             return $this->render('main/session/index.html.twig', [
                 'page' => 'session',
                 'session' => $session,
-                'exercices' => $exercices,
+                'equipments' => Exercice::EQUIPMENTS,
+                'exercices' => $exerciceRepository->findAll(),
             ]);
         }
         if (isset($_GET["search"])) {

@@ -5,6 +5,12 @@ export default class extends Controller {
     connect() {
         $("#loading").remove();
         generator.display.session($("#session-identifier").text());
+        if ($("#_exercice").length) {
+            $("#section-search-input").on("input", function() {
+                generator.display.searchOutput($("#exercice-search").val(), $("#exercice-equipment").val());
+            });
+        }
+        generator.display.searchOutput();
     }
     edit() {
         $.ajax({
@@ -19,6 +25,9 @@ export default class extends Controller {
                 });
             },
         });
+    }
+    choose() {
+        generator.display.addForm();
     }
     add() {
         $.ajax({

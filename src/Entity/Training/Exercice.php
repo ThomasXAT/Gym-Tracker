@@ -6,6 +6,7 @@ use App\Entity\Biomechanics\Movement;
 use App\Repository\Training\ExerciceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ExerciceRepository::class)]
@@ -26,6 +27,23 @@ class Exercice
         'Pupitre' => self::PREACHER,
     ];
 
+    const BODYWEIGHT = 'bodyweight';
+    const BAND = 'band';
+    const BARBELL = 'barbell';
+    const DUMBBELL = 'dumbbell';
+    const CABLE = 'cable';
+    const SMITH = 'smith';
+    const MACHINE = 'machine';
+    const EQUIPMENTS = [
+        'PDC' => self::BODYWEIGHT,
+        'Élastique' => self::BAND,
+        'Barre' => self::BARBELL,
+        'Haltères' => self::DUMBBELL,
+        'Poulie' => self::CABLE,
+        'Barre guidée' => self::SMITH,
+        'Machine' => self::MACHINE,
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,14 +52,14 @@ class Exercice
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $inclination = null;
-
     #[ORM\ManyToMany(targetEntity: Movement::class, inversedBy: 'exercices')]
     private Collection $movements;
 
     #[ORM\OneToMany(mappedBy: 'exercice', targetEntity: Set::class)]
     private Collection $sets;
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $equipments = [];
 
     public function __construct()
     {
@@ -67,18 +85,6 @@ class Exercice
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getInclination(): ?string
-    {
-        return $this->inclination;
-    }
-
-    public function setInclination(string $inclination): self
-    {
-        $this->inclination = $inclination;
 
         return $this;
     }
@@ -133,6 +139,18 @@ class Exercice
                 $set->setExercice(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEquipments(): array
+    {
+        return $this->equipments;
+    }
+
+    public function setEquipments(?array $equipments): self
+    {
+        $this->equipments = $equipments;
 
         return $this;
     }

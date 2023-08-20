@@ -20,7 +20,7 @@ class ExerciceCrudController extends AbstractCrudController
     {
         return [
             TextField::new('name', 'Nom'),
-            ChoiceField::new('inclination', "Inclinaison")->setChoices(Exercice::INCLINATIONS),
+            ChoiceField::new('equipments', "Équipements")->allowMultipleChoices()->setChoices(Exercice::EQUIPMENTS),
             AssociationField::new('movements', 'Mouvements'),
         ];
     }

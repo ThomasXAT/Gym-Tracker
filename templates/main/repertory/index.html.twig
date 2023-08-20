@@ -5,7 +5,7 @@
                 <form method="get" action="/">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input id="search" name="search" type="text" class="form-control" placeholder="Rechercher un athlète" {% if search is defined %}value="{{ search }}"{% endif %}>
+                        <input id="search" name="search" type="text" class="form-control" placeholder="{{ 'main.repertory.search'|trans }}" {% if search is defined %}value="{{ search }}"{% endif %}>
                     </div>
                 </form>
             </section>
