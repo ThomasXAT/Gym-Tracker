@@ -92,17 +92,20 @@ class Sequence
         $index = 0;
         $sets = $this->getSets();
         while ($index === 0 || $index % $size !== 0) {
-            $set = $sets[$index];
-            if (!$set->isDropping()) {
-                $name = $set->getExercice()->getName();
-                $equipment = $set->getEquipment();
-                array_push($exercices, [
-                    'fullname' => $name . ' (' . strtolower(array_search($equipment, Exercice::EQUIPMENTS)) . ')', 
-                    'name' => $name, 
-                    'equipment' => $equipment, 
-                    'sets' => array()
-                ]);
-                $index++;
+            if (isset($sets[$index])) {
+                $set = $sets[$index];
+                if (!$set->isDropping()) {
+                    $name = $set->getExercice()->getName();
+                    $equipment = $set->getEquipment();
+                    array_push($exercices, [
+                        'fullname' => $name . ' (' . strtolower(array_search($equipment, Exercice::EQUIPMENTS)) . ')', 
+                        'name' => $name, 
+                        'equipment' => $equipment, 
+                        'sets' => array()
+                    ]);
+                    $index++;
+                }
+
             }
         }
         $exercice_index = 0;
