@@ -57,7 +57,7 @@ class ExerciceRepository extends ServiceEntityRepository
                     array_push($toDelete, $i);
                 }
             }
-            foreach($toDelete as $key) {
+            foreach ($toDelete as $key) {
                 unset($exercices[$key]);
             }
         }

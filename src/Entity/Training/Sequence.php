@@ -21,6 +21,9 @@ class Sequence
     #[ORM\OneToMany(mappedBy: 'sequence', targetEntity: Set::class)]
     private Collection $sets;
 
+    #[ORM\Column]
+    private ?int $size = null;
+
     public function __construct()
     {
         $this->sets = new ArrayCollection();
@@ -28,22 +31,11 @@ class Sequence
 
     public function __toString()
     {
-        $exercices = array();
-        foreach ($this->getSets() as $set) {
-            if (!in_array($set->getExercice()->__toString(), $exercices)) {
-                array_push($exercices, $set->getExercice()->__toString());
-            }
-        }
         $string = '';
-        foreach ($exercices as $exercice) {
-            if ($exercice != end($exercices)) {
-                $string .= $exercice . ', ';
-            }
-            else {
-                $string .= $exercice;
-            }
+        foreach ($this->getExercices() as $exercice) {
+            $string .= $exercice['fullname'] . ', ';
         }
-        return $string;
+        return substr($string, 0, -2);
     }
 
     public function getId(): ?int
@@ -96,11 +88,46 @@ class Sequence
     public function getExercices()
     {
         $exercices = array();
-        foreach ($this->getSets() as $set) {
-            if (!in_array(['name' => $set->getExercice()->getName(), 'equipment' => $set->getEquipment()], $exercices)) {
-                array_push($exercices, ['name' => $set->getExercice()->getName(), 'equipment' => $set->getEquipment()]);
+        $size = $this->getSize();
+        $index = 0;
+        $sets = $this->getSets();
+        while ($index === 0 || $index % $size !== 0) {
+            $set = $sets[$index];
+            if (!$set->isDropping()) {
+                $name = $set->getExercice()->getName();
+                $equipment = $set->getEquipment();
+                array_push($exercices, [
+                    'fullname' => $name . ' (' . strtolower(array_search($equipment, Exercice::EQUIPMENTS)) . ')', 
+                    'name' => $name, 
+                    'equipment' => $equipment, 
+                    'sets' => array()
+                ]);
+                $index++;
+            }
+        }
+        $exercice_index = 0;
+        foreach ($sets as $set) {
+            if (!$set->isDropping()) {
+                array_push($exercices[$exercice_index]['sets'], array());
+            }
+            $set_index = sizeof($exercices[$exercice_index]['sets']) - 1;
+            array_push($exercices[$exercice_index]['sets'][$set_index], $set);
+            if (!$set->isDropping()) {
+                $exercice_index = ($exercice_index + 1) % $size;
             }
         }
         return $exercices;
+    }
+
+    public function getSize(): ?int
+    {
+        return $this->size;
+    }
+
+    public function setSize(int $size): self
+    {
+        $this->size = $size;
+
+        return $this;
     }
 }

@@ -53,24 +53,26 @@ main:
     stop: Conclure la séance
     label: Intitulé de la séance
     exercice:
-      search: Rechercher par nom ou par muscle
+      search: Saisissez un nom ou un muscle
       equipment:
         all: Tous
-        bodyweight: poids de corps
+        bodyweight: poids du corps 
+        band: élastique
         barbell: barre
         dumbbell: haltères
         cable: poulie
+        smith: barre guidée
         machine: machine
       choose:
-        title: Création d'un enchaînement
-        submit: Sélectionner l'enchaînement
-        action: Exercice
-        minimum: Veuillez sélectionner au moins un exercice.
+        title: Création d'un exercice
+        submit: Valider l'exercice
+        action: Sélection de l'exercice
+        minimum: Un exercice au minimum est requis.
     set:
       new: Nouvelle série
       add:
         title: Ajout d'une série
-        submit: Ajouter la série
+        submit: Ajouter
         action: Ajouter une série
       edit:
         title: Édition d'une série

@@ -198,21 +198,16 @@ class Session
     public function getExercices(): array
     {
         $exercices = array();
-        // Algorithme de tri des séries
         foreach ($this->getSets() as $current) {
             $exercice = sizeof($exercices) - 1;
             if ($current->getSequence()) {
-                if (isset($previous) && $current->getSequence() === $previous->getSequence()) {
-                    if (!$current->isDropping()) {
-                        array_push($exercices[$exercice]['sets'], array());
-                    }
-                }
-                else {
+                if (!isset($previous) || $current->getSequence() !== $previous->getSequence()) {
                     $exercice++;
                     $exercices[$exercice] = [
                         'sequence' => true,
+                        'id' => $current->getSequence()->getId(),
+                        'fullname' => $current->getSequence()->__toString(),
                         'exercices' => $current->getSequence()->getExercices(),
-                        'sets' => [array()],
                     ];
                 }
             }
@@ -224,32 +219,20 @@ class Session
                 }
                 else {
                     $exercice++;
+                    $name = $current->getExercice()->getName();
+                    $equipment = $current->getEquipment();
                     $exercices[$exercice] = [
                         'sequence' => false,
-                        'name' => $current->getExercice()->getName(),
-                        'equipment' => $current->getEquipment(),
+                        'fullname' => $name . ' (' . strtolower(array_search($equipment, Exercice::EQUIPMENTS)) . ')',
+                        'name' => $name,
+                        'equipment' => $equipment,
                         'sets' => [array()],
                     ];
                 }
+                $set = sizeof($exercices[$exercice]['sets']) - 1;
+                array_push($exercices[$exercice]['sets'][$set], $current);
             }
-            $set = sizeof($exercices[$exercice]['sets']) - 1;
-            array_push($exercices[$exercice]['sets'][$set], $current);
             $previous = $current;
-        }
-        foreach ($exercices as &$exercice) {
-            if ($exercice['sequence']) {
-                foreach ($exercice['exercices'] as &$part) {
-                    $part['sets'] = array();
-                }
-                $nbExercices = sizeof($exercice['exercices']);
-                $currentExercice = 0;
-                
-                foreach ($exercice['sets'] as $current) {
-                    array_push($exercice['exercices'][$currentExercice % $nbExercices]['sets'], $current);
-                    $currentExercice++;
-                }
-                unset($exercice['sets']);
-            }
         }
         return $exercices;
     }

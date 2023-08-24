@@ -1,7 +1,7 @@
         <section class="content container">
 {% if app.user.isWorkingOut %}
             <div class="text-center">
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#_add"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button>
+                <button id="button-new-set-mobile" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#_add"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button>
             </div>
 {% else %}
             <ul class="nav text-center">

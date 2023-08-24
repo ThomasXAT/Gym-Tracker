@@ -35,7 +35,7 @@ class Exercice
     const SMITH = 'smith';
     const MACHINE = 'machine';
     const EQUIPMENTS = [
-        'PDC' => self::BODYWEIGHT,
+        'Poids du corps' => self::BODYWEIGHT,
         'Élastique' => self::BAND,
         'Barre' => self::BARBELL,
         'Haltères' => self::DUMBBELL,

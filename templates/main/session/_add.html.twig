@@ -1,5 +1,5 @@
                     <aside id="_add" class="modal fade">
-                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-dialog">
                             <div class="modal-content">
                                 <header id="_add-header" class="modal-header">
                                     <p class="modal-title fs-5">{{ 'main.session.set.add.title'|trans }}</p>
@@ -9,8 +9,14 @@
                                     <form id="_add-form"></form>
                                 </main>
                                 <footer id="_add-footer" class="modal-footer">
-                                    <button class="btn btn-outline-light text-nowrap" data-bs-target="#_exercice" data-bs-toggle="modal">{{ 'main.session.exercice.choose.action'|trans }}</button>
-                                    <button data-action="click->session#add" data-bs-dismiss="modal" class="btn btn-success text-nowrap">{{ 'main.session.set.add.submit'|trans }}</button>
+                                    <div class="d-flex w-100 align-items-center">
+                                        <div class="col-6 text-start">
+                                            <a class="text-decoration-none text-nowrap pointer-only" data-bs-target="#_exercice" data-bs-toggle="modal">{{ 'main.session.exercice.choose.action'|trans }}</a>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <button data-action="click->session#add" data-bs-dismiss="modal" class="btn btn-success text-nowrap"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.add.submit'|trans }}</button>
+                                        </div>
+                                    </div>
                                 </footer>
                             </div>
                         </div>

@@ -1,9 +1,9 @@
                     <aside id="_exercice" class="modal fade">
-                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-dialog">
                             <div class="modal-content">
                                 <header id="_exercice-header" class="modal-header">
                                     <p class="modal-title fs-5">{{ 'main.session.exercice.choose.title'|trans }}</p>
-                                    <button type="button" class="btn-close" data-bs-target="#_add" data-bs-toggle="modal"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </header>
                                 <main id="_exercice-body" class="modal-body">
                                     <section id="section-search-input" class="d-flex flex-wrap">
@@ -33,7 +33,7 @@
                                     </div>
                                 </main>
                                 <footer id="_exercice-footer" class="modal-footer">
-                                    <button id="button-choose" data-action="click->session#choose" data-bs-target="#_add" data-bs-toggle="modal" class="btn btn-success text-nowrap" disabled>{{ 'main.session.exercice.choose.submit'|trans }}</button>
+                                    <button id="button-choose" data-action="click->session#choose" data-bs-target="#_add" data-bs-toggle="modal" class="btn btn-success text-nowrap">{{ 'main.session.exercice.choose.submit'|trans }}</button>
                                 </footer>
                             </div>
                         </div>

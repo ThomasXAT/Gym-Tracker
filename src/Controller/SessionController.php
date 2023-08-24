@@ -3,12 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Athlete;
+use App\Entity\Training\Sequence;
 use App\Entity\Training\Session;
+use App\Entity\Training\Set;
 use App\Repository\Training\ExerciceRepository;
+use App\Repository\Training\SequenceRepository;
 use App\Repository\Training\SessionRepository;
 use App\Repository\Training\SetRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -16,6 +20,11 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route(path: '/session', name: 'session_', methods: ['POST'])]
 class SessionController extends AbstractController
 {
+    private RequestStack $requestStack;
+    function __construct(RequestStack $requestStack) {
+        $this->requestStack = $requestStack;
+    }
+
     #[Route(path:'/start', name: 'start')]
     public function start(SessionRepository $sessionRepository, SluggerInterface $sluggerInterface): Response
     {
@@ -23,11 +32,12 @@ class SessionController extends AbstractController
          * @var Athlete $user
          */
         $user = $this->getUser();
-        if (isset($_POST['title']) && !$sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
+        $data = $_POST;
+        if (isset($data['title']) && !$sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
             $session = new Session();
             $session
-                ->setTitle($_POST['title'])
-                ->setSlug(strtolower($sluggerInterface->slug($_POST['title'])) . '-' . uniqid())
+                ->setTitle($data['title'])
+                ->setSlug(strtolower($sluggerInterface->slug($data['title'])) . '-' . uniqid())
                 ->setAthlete($user)
                 ->setStart(new DateTime)
             ;
@@ -61,25 +71,76 @@ class SessionController extends AbstractController
     #[Route(path:'/edit', name: 'edit')]
     public function edit(SetRepository $setRepository): Response
     {
-        foreach ($_POST as $id => $edited) {
+        $data = $_POST;
+        foreach ($data as $id => $edited) {
             $set = $setRepository->findOneBy(["id" => $id]);
             $set->setSymmetry($edited["symmetry"]);
             $set->setRepetitions($edited["repetitions"]);
             $set->setWeight($edited["weight"]);
             $setRepository->save($set, true);
         }
-        return $this->json($_POST);
+        return $this->json($data);
     }
     
     #[Route(path:'/search', name: 'search')]
     public function search(ExerciceRepository $exerciceRepository): Response
     {
-        $search = isset($_POST['search']) ? $_POST['search']: null;
-        $equipment = isset($_POST['equipment']) ? $_POST['equipment']: null;
+        $data = $_POST;
+        $search = isset($data['search']) ? $data['search']: null;
+        $equipment = isset($data['equipment']) ? $data['equipment']: null;
         $result = array();
         foreach ($exerciceRepository->findBySearch($search, $equipment) as $exercice) {
             $result[$exercice->getId()] = ['id' => $exercice->getId(), 'name' => $exercice->getName(), 'equipments' => $exercice->getEquipments()];
         }
         return $this->json($result);
+    }
+
+    #[Route(path:'/add', name: 'add')]
+    public function add(SessionRepository $sessionRepository, SequenceRepository $sequenceRepository, ExerciceRepository $exerciceRepository, SetRepository $setRepository): Response
+    {
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
+        $data = $_POST;
+        if ($user->isWorkingOut()) {
+            $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
+            $exercices = $session->getExercices();
+            $lastExercice = sizeof($exercices) ? end($exercices): false;
+            if ($data['size'] > 1) {
+                if ($lastExercice && $data['fullname'] === $lastExercice['fullname']) {
+                    $sequences = $sequenceRepository->findBy(['session' => $session]);
+                    $sequence = end($sequences);
+                }
+                else {
+                    $sequence = new Sequence();
+                    $sequence->setSession($session);
+                    $sequence->setSize($data['size']);
+                    $sequenceRepository->save($sequence, true);
+                }
+            }
+            foreach ($data['sets'] as $setData) {
+                $exercice = $exerciceRepository->findOneBy(['id' => $setData['exercice']]);
+                $newSet = new Set();
+                $newSet
+                    ->setSession($session)
+                    ->setSequence(isset($sequence) ? $sequence: null)
+                    ->setExercice($exercice)
+                    ->setEquipment($setData['equipment'])
+                    ->setSymmetry($setData['symmetry'])
+                    ->setRepetitions($setData['repetitions'])
+                    ->setWeight($setData['weight'])
+                    ->setDate(new DateTime())
+                    ->setDropping(false)
+                ;
+                $setRepository->save($newSet, true);
+            }
+        }
+        $exercices = json_decode(file_get_contents($this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() . '/api/session'), true)[$session->getId()]['exercices'];
+        $sets = json_decode(file_get_contents($this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() . '/api/set?session=' . $session->getId()), true);
+        $data['new'] = !$lastExercice || $data['fullname'] !== $lastExercice['fullname'] ? true: false;
+        $data['last'] = end($exercices);
+        $data['sets'] = $sets;
+        return $this->json($data);
     }
 }

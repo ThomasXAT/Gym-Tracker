@@ -5,7 +5,7 @@ export default class extends Controller {
         let cards = document.querySelectorAll(".athlete");
         cards.forEach(function(card) {
             let username = card.dataset.username;
-            card.addEventListener("click", function() {
+            card.addEventListener("click", function () {
                 window.location.href = "/@" + username;
             });
         })
