@@ -68,8 +68,8 @@ class SessionController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-    #[Route(path:'/edit', name: 'edit')]
-    public function edit(SetRepository $setRepository): Response
+    #[Route(path:'/set/edit', name: 'set_edit')]
+    public function set_edit(SetRepository $setRepository): Response
     {
         $data = $_POST;
         foreach ($data as $id => $edited) {
@@ -82,8 +82,8 @@ class SessionController extends AbstractController
         return $this->json($data);
     }
     
-    #[Route(path:'/search', name: 'search')]
-    public function search(ExerciceRepository $exerciceRepository): Response
+    #[Route(path:'/exercice/search', name: 'exercice_search')]
+    public function exercice_search(ExerciceRepository $exerciceRepository): Response
     {
         $data = $_POST;
         $search = isset($data['search']) ? $data['search']: null;
@@ -95,8 +95,8 @@ class SessionController extends AbstractController
         return $this->json($result);
     }
 
-    #[Route(path:'/add', name: 'add')]
-    public function add(SessionRepository $sessionRepository, SequenceRepository $sequenceRepository, ExerciceRepository $exerciceRepository, SetRepository $setRepository): Response
+    #[Route(path:'/set/add', name: 'set_add')]
+    public function set_add(SessionRepository $sessionRepository, SequenceRepository $sequenceRepository, ExerciceRepository $exerciceRepository, SetRepository $setRepository): Response
     {
         /**
          * @var Athlete $user
@@ -141,6 +141,17 @@ class SessionController extends AbstractController
         $data['new'] = !$lastExercice || $data['fullname'] !== $lastExercice['fullname'] ? true: false;
         $data['last'] = end($exercices);
         $data['sets'] = $sets;
+        return $this->json($data);
+    }
+
+    #[Route(path:'/set/delete', name: 'set_delete')]
+    public function set_delete(SetRepository $setRepository): Response
+    {
+        $data = $_POST;
+        foreach (array_keys($data) as $id) {
+            $set = $setRepository->findOneBy(['id' => $id]);
+            $setRepository->remove($set, true);
+        }
         return $this->json($data);
     }
 }

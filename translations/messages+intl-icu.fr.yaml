@@ -76,8 +76,12 @@ main:
         action: Ajouter une série
       edit:
         title: Édition d'une série
-        submit: Éditer la série
+        submit: Éditer
         action: Éditer une série
+      delete:
+        title: Suppression d'une série
+        submit: Supprimer
+        action: Supprimer une série
 authentication:
   login:
     title: Connexion

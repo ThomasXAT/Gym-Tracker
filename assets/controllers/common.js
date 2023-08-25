@@ -242,6 +242,7 @@ let display = {
                     .empty()
                     .addClass("py-1")
                     .append($("<h4></h4>")
+                        .attr("id", "session-exercices-title")
                         .text("Exercices")
                     )
                     .append($("<p></p>")
@@ -565,7 +566,7 @@ let display = {
     searchOutput: function(search = null, equipment = null) {
         $.ajax({
             type: "POST",
-            url: "/session/search",
+            url: "/session/exercice/search",
             data: {
                 search: search,
                 equipment: equipment,

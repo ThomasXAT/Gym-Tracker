@@ -9,7 +9,8 @@
                                     <form id="_edit-form"></form>
                                 </main>
                                 <footer id="_edit-footer" class="modal-footer">
-                                    <button data-action="click->session#edit" data-bs-dismiss="modal" class="btn btn-success text-nowrap">{{ 'main.session.set.edit.submit'|trans }}</button>
+                                    <button data-action="click->session#delete" data-bs-dismiss="modal" class="btn btn-outline-danger text-nowrap"><i class="fa-solid fa-trash"></i> {{ 'main.session.set.delete.submit'|trans }}</button>
+                                    <button data-action="click->session#edit" data-bs-dismiss="modal" class="btn btn-success text-nowrap"><i class="fa-solid fa-pen-to-square"></i> {{ 'main.session.set.edit.submit'|trans }}</button>
                                 </footer>
                             </div>
                         </div>

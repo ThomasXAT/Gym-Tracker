@@ -16,7 +16,7 @@ export default class extends Controller {
     edit() {
         $.ajax({
             type: "POST",
-            url: "/session/edit",
+            url: "/session/set/edit",
             data: $("#_edit-form").serialize(),
             success: (response) => {
                 $.each(response, function(id, set) {
@@ -33,7 +33,7 @@ export default class extends Controller {
     add() {
         $.ajax({
             type: "POST",
-            url: "/session/add",
+            url: "/session/set/add",
             data: $("#_add-form").serialize(),
             success: (response) => {
                 let exercice_index = 0;
@@ -49,23 +49,44 @@ export default class extends Controller {
                     $("#session-exercices").find(":last").remove();
                 }
                 else {
-                    if (response.last.sequence) {
-                        $.each(response.last.exercices, function(i, exercice) {
-                            let part_index = i + 1;
-                            let prefix = "exercice-" + exercice_index + "-part-" + part_index;
-                            let set_index = parseInt($("#" + prefix + "-body").children().last().attr("id").replace(prefix + "-set-", "")) + 1;
-                            let set = exercice.sets[set_index - 1];
-                            generator.display.set(prefix, set_index, set, response.sets);
-                        });
-                    }
-                    else {
-                        let prefix = "exercice-" + exercice_index;
+                    let sequence = response.last.sequence;
+                    $.each(sequence ? response.last.exercices: [response.last], function(i, exercice) {
+                        let prefix = sequence ? "exercice-" + exercice_index + "-part-" + (i + 1): "exercice-" + exercice_index;
                         let set_index = parseInt($("#" + prefix + "-body").children().last().attr("id").replace(prefix + "-set-", "")) + 1;
-                        let set = response.last.sets[set_index - 1];
+                        let set = exercice.sets[set_index - 1];
                         generator.display.set(prefix, set_index, set, response.sets);
+                    });
+                }
+            },
+        });
+    }
+    delete() {
+        $.ajax({
+            type: "POST",
+            url: "/session/set/delete",
+            data: $("#_edit-form").serialize(),
+            success: (response) => {
+                let sets = $("#_edit-form").children().slice(1);
+                let splitted_first_set_id = sets.first().attr("id").replace("_edit-", "").split("-");
+                let exercice_id = splitted_first_set_id[0] + "-" + splitted_first_set_id[1];
+                let exercice = $("#" + exercice_id);
+                let sequence = splitted_first_set_id.length === 6 ? true: false;
+                $.each(sets, function(i, set) {
+                    let set_id = set.id.replace("_edit-", "");
+                    $("#" + set_id).remove();
+                });
+                let prefix = sequence ? exercice.children().last().attr("id"): exercice_id;
+                if (!$("#" + prefix + "-body").children().length) {
+                    if (exercice.prev('br').length) {
+                        exercice.prev('br').remove();
+                    }
+                    exercice.remove();
+                    if ($("#session-exercices-title").next('br').length) {
+                        $("#session-exercices-title").next('br').remove();
                     }
                 }
             },
         });
+
     }
 }
