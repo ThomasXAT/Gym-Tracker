@@ -36,7 +36,10 @@ export default class extends Controller {
             url: "/session/add",
             data: $("#_add-form").serialize(),
             success: (response) => {
-                let exercice_index = Math.floor(($("#session-exercices").children().length) / 2);
+                let exercice_index = 0;
+                if ($("#session-exercices").children().length > 1) {
+                    exercice_index = parseInt($("#session-exercices").children().last().attr("id").replace("exercice-", ""));
+                }
                 if (response.new) {
                     if (exercice_index) {
                         $("#session-exercices").append($("<br>"));
@@ -50,14 +53,14 @@ export default class extends Controller {
                         $.each(response.last.exercices, function(i, exercice) {
                             let part_index = i + 1;
                             let prefix = "exercice-" + exercice_index + "-part-" + part_index;
-                            let set_index = exercice.sets.length;
+                            let set_index = parseInt($("#" + prefix + "-body").children().last().attr("id").replace(prefix + "-set-", "")) + 1;
                             let set = exercice.sets[set_index - 1];
                             generator.display.set(prefix, set_index, set, response.sets);
                         });
                     }
                     else {
                         let prefix = "exercice-" + exercice_index;
-                        let set_index = response.last.sets.length;
+                        let set_index = parseInt($("#" + prefix + "-body").children().last().attr("id").replace(prefix + "-set-", "")) + 1;
                         let set = response.last.sets[set_index - 1];
                         generator.display.set(prefix, set_index, set, response.sets);
                     }
