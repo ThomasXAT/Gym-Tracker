@@ -54,7 +54,7 @@ class SessionController extends AbstractController
          */
         $user = $this->getUser();
         if ($session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
-            if ($session->getStart()) {
+            if (sizeof($session->getExercices())) {
                 $session
                     ->setCurrent(false)
                     ->setEnd(new DateTime)

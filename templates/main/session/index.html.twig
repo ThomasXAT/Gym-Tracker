@@ -21,18 +21,14 @@
                     </div>
                 </section>
 {% endif %}
-                <section id="session" class="p-2 mx-auto">
-                    <!--<section class="text-center mb-4">
-                        <div class="card">
-                            <main class="card-body">
-                                <h3 class="text-white identifier">{{ session.title }}</h3>
-                                <span class="text-center">{{ session.start|date('d/m/Y H:i') }}</span>
-                            </main>
-                        </div>
-                    </section>-->
-                    <div id="loading" class="text-center my-5">
-                        <p><i class="fa-solid fa-syringe py-5"></i> {{ 'loading'|trans }}</p>
-                        <!--<img id="loading-image" class="py-5" src="images/dancing-ronnie.gif">-->
+                <section id="session" class="mx-auto{% if app.user.isWorkingOut %} mt-2 mt-md-3{% endif %}">
+                    <section class="mt-1 mt-md-2 mb-3 text-center">
+                        <h3 class="text-white identifier">{{ session.title }}</h3>
+                        <span>Séance du 26 août 2023 à 17:18</span>
+                    </section>
+                    <div id="loading" class="text-center">
+                        <p class="p-5"><i class="fa-solid fa-syringe"></i> {{ 'loading'|trans }}</p>
+                        <!--<img id="loading-image" class="mb-3" src="images/dancing-ronnie.gif">-->
                     </div>
                     <section id="session-muscles"></section>
                     <section id="session-exercices"></section>

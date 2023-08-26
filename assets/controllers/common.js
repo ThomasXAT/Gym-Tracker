@@ -267,7 +267,7 @@ let display = {
                 if (session.exercices.length > 0) {
                     $("#session-exercices").find(":last").remove();
                 }
-                if ($("#session-exercices").children().length > 1) {
+                if ($("#session-exercices").children().length > 1 && $("#_exercice").length) {
                     $.ajax({
                         type: "POST",
                         url: "/api/exercice",

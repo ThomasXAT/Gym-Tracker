@@ -30,14 +30,14 @@
 {% if exercice.sequence %}
 {% set name = '' %}
 {% for part in exercice.exercices %}
-{% set name = name ~ part.name ~ ' (' ~ part.equipment|trans ~ ')' %}
+{% set name = name ~ part.name ~ ' (' ~ ('main.session.exercice.equipment.' ~ part.equipment)|trans ~ ')' %}
 {% if loop.index < exercice.exercices|length %}
 {% set name = name ~ ', ' %}
 {% endif %}
 {% endfor %}
                                                     {{ name }}
 {% else %}
-                                                    {{ exercice.name ~ ' (' ~ exercice.equipment|trans ~ ')' }}
+                                                    {{ exercice.name ~ ' (' ~ ('main.session.exercice.equipment.' ~ exercice.equipment)|trans ~ ')' }}
 {% endif %}
                                                 </li>
 {% endfor %}
