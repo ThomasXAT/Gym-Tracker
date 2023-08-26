@@ -267,6 +267,31 @@ let display = {
                 if (session.exercices.length > 0) {
                     $("#session-exercices").find(":last").remove();
                 }
+                if ($("#session-exercices").children().length > 1) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/exercice",
+                        success: function(response) {
+                            let last_exercice = $("#session-exercices").children().last();
+                            let last_exercice_id = last_exercice.attr("id");
+                            let sequence = $("#" + last_exercice_id + "-sequence").val();
+                            if (sequence === "true") {
+                                let parts = $("#" + last_exercice_id).children().length - 2;
+                                for (let part = 1; part <= parts; part++) {
+                                    let id = $("#" + last_exercice_id + "-part-" + part + "-id").val();
+                                    let equipment = $("#" + last_exercice_id + "-part-" + part + "-equipment").val();
+                                    selector.select(response[id], equipment);
+                                }
+                            }
+                            else {
+                                let id = $("#" + last_exercice_id + "-id").val();
+                                let equipment = $("#" + last_exercice_id + "-equipment").val();
+                                selector.select(response[id], equipment);
+                            }
+                            generator.display.addForm();
+                        },
+                    });
+                }
             }
         });
     },
@@ -276,6 +301,21 @@ let display = {
             .append($("<article></article")
                 .attr("id", exercice_id)
                 .addClass("px-1 px-md-2")
+                .append($("<input>")
+                    .attr("id", "exercice-" + exercice_index + "-sequence")
+                    .val(exercice.sequence)
+                    .attr("hidden", true)
+                )
+                .append(!exercice.sequence ? $("<input>")
+                    .attr("id", "exercice-" + exercice_index + "-id")
+                    .val(exercice.id)
+                    .attr("hidden", true): null
+                )
+                .append(!exercice.sequence ? $("<input>")
+                    .attr("id", "exercice-" + exercice_index + "-equipment")
+                    .val(exercice.equipment)
+                    .attr("hidden", true): null
+                )
                 .append($("<h5></h5>")
                     .attr("id", "exercice-" + exercice_index + "-title")
                     .addClass("text-white")
@@ -290,9 +330,19 @@ let display = {
                 let exercice_part_id = exercice_id + "-part-" + exercice_part_index;
                 let exercice_part_title = exercice_part.fullname;
                 $("#exercice-" + exercice_index)
-                    .append($("<article></article")
+                    .append($("<article></article>")
                         .attr("id", exercice_part_id)
                         .addClass("px-2 mx-md-3")
+                        .append($("<input>")
+                            .attr("id", exercice_part_id + "-id")
+                            .val(exercice_part.id)
+                            .attr("hidden", true)
+                        )
+                        .append($("<input>")
+                            .attr("id", exercice_part_id + "-equipment")
+                            .val(exercice_part.equipment)
+                            .attr("hidden", true)
+                        )
                         .append($("<h6></h6>")
                             .attr("id", exercice_part_id + "-title")
                             .text(exercice_part_title)
@@ -579,60 +629,8 @@ let display = {
                             .val(id)
                             .text(exercice.name)
                             .on("click", function() {
-                                if (!$("#minimum-message").hasClass("d-none")) {
-                                    $("#minimum-message").addClass("d-none");
-                                    $("#button-choose").attr("disabled", false);
-                                }
-                                let uniqueId = Date.now();
-                                $("#section-selected-exercices")
-                                    .append($("<article></article>")
-                                        .attr("id", "selected-" + uniqueId)
-                                        .addClass("d-flex align-items-center text-truncate py-1")
-                                        .append($("<div></div>")
-                                            .attr("id", "selected-" + uniqueId + "-title")
-                                            .addClass("col-7 text-white text-end pe-2 pe-md-3")
-                                            .text(exercice.name)
-                                        )
-                                        .append($("<div></div>")
-                                            .addClass("col-4")
-                                            .append($("<select></select>")
-                                                .attr("id", "selected-" + uniqueId + "-equipment")
-                                                .addClass("form-select")
-                                            )
-                                        )
-                                        .append($("<div></div>")
-                                            .addClass("col-1 text-center")
-                                            .append($("<i></i>")
-                                                .addClass("fa-solid fa-xmark pointer")
-                                            )
-                                            .on("click", function() {
-                                                $("#selected-" + uniqueId).remove();
-                                                if ($("#section-selected-exercices").children().length < 1) {
-                                                    if ($("#minimum-message").hasClass("d-none")) {
-                                                        $("#minimum-message").removeClass("d-none");
-                                                        $("#button-choose").attr("disabled", true);
-                                                    }
-                                                }
-                                            })
-                                        )
-                                        .append($("<div></div>")
-                                            .attr("id", "selected-" + uniqueId + "-id")
-                                            .text(id)
-                                            .attr("hidden", true)
-                                        )
-                                    )
-                                ;
-                                $.each(exercice.equipments, function(index, value) {
-                                    $("#selected-" + uniqueId + "-equipment")
-                                        .append($("<option></option>")
-                                            .val(value)
-                                            .text(translator.translate(value).charAt(0).toUpperCase() + translator.translate(value).slice(1))
-                                        )
-                                    ;
-                                });
-                                if ($("#exercice-equipment").val() !== "") {
-                                    $("#selected-" + uniqueId + "-equipment").val($("#exercice-equipment").val());
-                                }
+                                let equipment = $("#exercice-equipment").val() !== "" ? $("#exercice-equipment").val(): null;
+                                selector.select(exercice, equipment);
                             })
                         )
                     ;
@@ -765,3 +763,62 @@ let display = {
 export var generator = {
     display: display,
 };
+
+export var selector = {
+    select: function(exercice, equipment = null) {
+        if (!$("#minimum-message").hasClass("d-none")) {
+            $("#minimum-message").addClass("d-none");
+            $("#button-choose").attr("disabled", false);
+        }
+        let uniqueId = Date.now();
+        $("#section-selected-exercices")
+            .append($("<article></article>")
+                .attr("id", "selected-" + uniqueId)
+                .addClass("d-flex align-items-center text-truncate py-1")
+                .append($("<div></div>")
+                    .attr("id", "selected-" + uniqueId + "-title")
+                    .addClass("col-7 text-white text-end pe-2 pe-md-3")
+                    .text(exercice.name)
+                )
+                .append($("<div></div>")
+                    .addClass("col-4")
+                    .append($("<select></select>")
+                        .attr("id", "selected-" + uniqueId + "-equipment")
+                        .addClass("form-select")
+                    )
+                )
+                .append($("<div></div>")
+                    .addClass("col-1 text-center")
+                    .append($("<i></i>")
+                        .addClass("fa-solid fa-xmark pointer")
+                    )
+                    .on("click", function() {
+                        $("#selected-" + uniqueId).remove();
+                        if ($("#section-selected-exercices").children().length < 1) {
+                            if ($("#minimum-message").hasClass("d-none")) {
+                                $("#minimum-message").removeClass("d-none");
+                                $("#button-choose").attr("disabled", true);
+                            }
+                        }
+                    })
+                )
+                .append($("<div></div>")
+                    .attr("id", "selected-" + uniqueId + "-id")
+                    .text(exercice.id)
+                    .attr("hidden", true)
+                )
+            )
+        ;
+        $.each(exercice.equipments, function(index, value) {
+            $("#selected-" + uniqueId + "-equipment")
+                .append($("<option></option>")
+                    .val(value)
+                    .text(translator.translate(value).charAt(0).toUpperCase() + translator.translate(value).slice(1))
+                )
+            ;
+        });
+        if (equipment) {
+            $("#selected-" + uniqueId + "-equipment").val(equipment);
+        }
+    }
+}

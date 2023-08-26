@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Controller\Administration\ExerciceCrudController;
 use App\Repository\AthleteRepository;
 use App\Repository\Culture\QuotationRepository;
+use App\Repository\Training\ExerciceRepository;
 use App\Repository\Training\SessionRepository;
 use App\Repository\Training\SetRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -99,6 +101,18 @@ class ApiController extends AbstractController
             $result[$quotations[$i]->getId()]['id'] = $quotations[$i]->getId();
             $result[$quotations[$i]->getId()]['text'] = $quotations[$i]->getText();
             $result[$quotations[$i]->getId()]['author'] = $quotations[$i]->getAuthor();
+        }
+        return $this->json($result);
+    }
+
+    #[Route(path:'/exercice', name: 'exercice')]
+    public function exercice(ExerciceRepository $exerciceRepository) {
+        $exercices = $exerciceRepository->findBy($_GET);
+        $result = array();
+        for ($i = 0; $i < sizeof($exercices); $i++) {
+            $result[$exercices[$i]->getId()]['id'] = $exercices[$i]->getId();
+            $result[$exercices[$i]->getId()]['name'] = $exercices[$i]->getName();
+            $result[$exercices[$i]->getId()]['equipments'] = $exercices[$i]->getEquipments();
         }
         return $this->json($result);
     }

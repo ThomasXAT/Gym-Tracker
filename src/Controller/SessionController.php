@@ -37,7 +37,7 @@ class SessionController extends AbstractController
             $session = new Session();
             $session
                 ->setTitle($data['title'])
-                ->setSlug(strtolower($sluggerInterface->slug($data['title'])) . '-' . uniqid())
+                ->setSlug($sluggerInterface->slug($data['title']) . '-' . uniqid())
                 ->setAthlete($user)
                 ->setStart(new DateTime)
             ;

@@ -29,7 +29,7 @@ export default class extends Controller {
                 $("#profile__delete_picture").prop('checked', false);
                 if (file.size > 2 * 1024 * 1024) {
                     validator.setInvalid($("#profile_file"));
-                    $("#profile_picture").attr("src", "images/dirtybulk-jaycutler.jpg");
+                    $("#profile_picture").attr("src", "images/bulking-jay.jpg");
                     $("#help-file").text("Fichier trop lourd. Taille maximale : 2 Mo.");
                     picture = false;
                 }

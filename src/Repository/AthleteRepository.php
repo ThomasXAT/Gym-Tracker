@@ -59,7 +59,7 @@ class AthleteRepository extends ServiceEntityRepository implements PasswordUpgra
     public function findByUsername(String $search) {
         return $this->createQueryBuilder('a')
             ->orWhere('a.username like :search')
-            ->setParameter('search', '%' . strtolower($search) . '%')
+            ->setParameter('search', '%' . mb_strtolower($search) . '%')
             ->getQuery()
             ->getResult()
         ;
@@ -68,7 +68,7 @@ class AthleteRepository extends ServiceEntityRepository implements PasswordUpgra
     public function findByFullname(String $search) {
         return $this->createQueryBuilder('a')
             ->orWhere('concat(a.firstname, \' \', a.surname) like :search')            
-            ->setParameter('search', '%' . strtolower($search) . '%')
+            ->setParameter('search', '%' . mb_strtolower($search) . '%')
             ->getQuery()
             ->getResult()
         ;
@@ -77,7 +77,7 @@ class AthleteRepository extends ServiceEntityRepository implements PasswordUpgra
     public function findByDescription(String $search) {
         return $this->createQueryBuilder('a')
             ->orWhere('a.description like :search')
-            ->setParameter('search', '%' . strtolower($search) . '%')
+            ->setParameter('search', '%' . mb_strtolower($search) . '%')
             ->getQuery()
             ->getResult()
         ;

@@ -98,7 +98,8 @@ class Sequence
                     $name = $set->getExercice()->getName();
                     $equipment = $set->getEquipment();
                     array_push($exercices, [
-                        'fullname' => $name . ' (' . strtolower(array_search($equipment, Exercice::EQUIPMENTS)) . ')', 
+                        'id' => $set->getExercice()->getId(),
+                        'fullname' => $name . ' (' . mb_strtolower(array_search($equipment, Exercice::EQUIPMENTS)) . ')', 
                         'name' => $name, 
                         'equipment' => $equipment, 
                         'sets' => array()

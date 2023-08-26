@@ -212,7 +212,7 @@ class Session
                 }
             }
             else {
-                if (isset($previous) && $current->getExercice() === $previous->getExercice() && $current->getEquipment() === $previous->getEquipment()) {
+                if (isset($previous) && !$previous->getSequence() && $current->getExercice() === $previous->getExercice() && $current->getEquipment() === $previous->getEquipment()) {
                     if (!$current->isDropping()) {
                         array_push($exercices[$exercice]['sets'], array());
                     }
@@ -223,7 +223,8 @@ class Session
                     $equipment = $current->getEquipment();
                     $exercices[$exercice] = [
                         'sequence' => false,
-                        'fullname' => $name . ' (' . strtolower(array_search($equipment, Exercice::EQUIPMENTS)) . ')',
+                        'id' => $current->getExercice()->getId(),
+                        'fullname' => $name . ' (' . mb_strtolower(array_search($equipment, Exercice::EQUIPMENTS)) . ')',
                         'name' => $name,
                         'equipment' => $equipment,
                         'sets' => [array()],

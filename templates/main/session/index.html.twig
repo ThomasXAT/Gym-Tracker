@@ -22,17 +22,18 @@
                 </section>
 {% endif %}
                 <section id="session" class="p-2 mx-auto">
-                    <!--
-                    <section class="text-center mb-4">
+                    <!--<section class="text-center mb-4">
                         <div class="card">
                             <main class="card-body">
                                 <h3 class="text-white identifier">{{ session.title }}</h3>
                                 <span class="text-center">{{ session.start|date('d/m/Y H:i') }}</span>
                             </main>
                         </div>
-                    </section>
-                    -->
-                    <p id="loading" class="text-center"><i class="fa-solid fa-syringe"></i> {{ 'loading'|trans }}</p>
+                    </section>-->
+                    <div id="loading" class="text-center my-5">
+                        <p><i class="fa-solid fa-syringe py-5"></i> {{ 'loading'|trans }}</p>
+                        <!--<img id="loading-image" class="py-5" src="images/dancing-ronnie.gif">-->
+                    </div>
                     <section id="session-muscles"></section>
                     <section id="session-exercices"></section>
 {% if session.current or session.athlete == app.user %}
@@ -44,8 +45,5 @@
 {% endif %}
                 </section>
             </div>
-{% if session.current %}
-            <button id="button-new-set" class="d-none d-md-block btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_add"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button>
-{% endif %}
         </section>
 {% endblock %}

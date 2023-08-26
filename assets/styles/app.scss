@@ -121,18 +121,6 @@ main.main, footer.main, .modal-body, .accordion-collapse {
     }
 }
 
-#button-new-set {
-    position: fixed;
-    bottom: 17px;
-    left: 50%;
-    transform: translate(-50%);
-    z-index: 1030;
-    max-width: 148px;
-    @media screen and (max-width: 767px) {
-        margin-bottom: 65px;
-    }
-}
-
 footer.main {
     background-color: #262A2E !important;
 }
@@ -143,10 +131,6 @@ footer.main {
 
 .session-date {
     background-color: #262A2E;
-}
-
-main.main {
-    min-height: 100vh;
 }
 
 .card.athlete {

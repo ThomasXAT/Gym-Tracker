@@ -53,7 +53,7 @@ export default class extends Controller {
                     $.each(sequence ? response.last.exercices: [response.last], function(i, exercice) {
                         let prefix = sequence ? "exercice-" + exercice_index + "-part-" + (i + 1): "exercice-" + exercice_index;
                         let set_index = parseInt($("#" + prefix + "-body").children().last().attr("id").replace(prefix + "-set-", "")) + 1;
-                        let set = exercice.sets[set_index - 1];
+                        let set = exercice.sets[exercice.sets.length - 1];
                         generator.display.set(prefix, set_index, set, response.sets);
                     });
                 }
