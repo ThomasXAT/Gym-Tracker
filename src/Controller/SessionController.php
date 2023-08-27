@@ -47,7 +47,7 @@ class SessionController extends AbstractController
     }
 
     #[Route(path:'/stop', name: 'stop')]
-    public function stop(SessionRepository $sessionRepository): Response
+    public function stop(SessionRepository $sessionRepository, SequenceRepository $sequenceRepository): Response
     {
         /**
          * @var Athlete $user
@@ -62,6 +62,10 @@ class SessionController extends AbstractController
                 $sessionRepository->save($session, true);
             }
             else {
+                $sequences = $sequenceRepository->findBy(['session' => $session]);
+                foreach ($sequences as $sequence) {
+                    $sequenceRepository->remove($sequence, true);
+                }
                 $sessionRepository->remove($session, true);
             }
         }
@@ -72,27 +76,19 @@ class SessionController extends AbstractController
     public function set_edit(SetRepository $setRepository): Response
     {
         $data = $_POST;
-        foreach ($data as $id => $edited) {
+        foreach ($data['sets'] as $id => $edited) {
             $set = $setRepository->findOneBy(["id" => $id]);
-            $set->setSymmetry($edited["symmetry"]);
-            $set->setRepetitions($edited["repetitions"]);
-            $set->setWeight($edited["weight"]);
+            $set
+                ->setSymmetry($edited["symmetry"])
+                ->setRepetitions($edited["repetitions"])
+                ->setWeight($edited["weight"])
+                ->setConcentric($edited["concentric"])
+                ->setIsometric($edited["isometric"])
+                ->setEccentric($edited["eccentric"])
+            ;
             $setRepository->save($set, true);
         }
         return $this->json($data);
-    }
-    
-    #[Route(path:'/exercice/search', name: 'exercice_search')]
-    public function exercice_search(ExerciceRepository $exerciceRepository): Response
-    {
-        $data = $_POST;
-        $search = isset($data['search']) ? $data['search']: null;
-        $equipment = isset($data['equipment']) ? $data['equipment']: null;
-        $result = array();
-        foreach ($exerciceRepository->findBySearch($search, $equipment) as $exercice) {
-            $result[$exercice->getId()] = ['id' => $exercice->getId(), 'name' => $exercice->getName(), 'equipments' => $exercice->getEquipments()];
-        }
-        return $this->json($result);
     }
 
     #[Route(path:'/set/add', name: 'set_add')]
@@ -119,17 +115,20 @@ class SessionController extends AbstractController
                     $sequenceRepository->save($sequence, true);
                 }
             }
-            foreach ($data['sets'] as $setData) {
-                $exercice = $exerciceRepository->findOneBy(['id' => $setData['exercice']]);
+            foreach ($data['sets'] as $created) {
+                $exercice = $exerciceRepository->findOneBy(['id' => $created['exercice']]);
                 $newSet = new Set();
                 $newSet
                     ->setSession($session)
                     ->setSequence(isset($sequence) ? $sequence: null)
                     ->setExercice($exercice)
-                    ->setEquipment($setData['equipment'])
-                    ->setSymmetry($setData['symmetry'])
-                    ->setRepetitions($setData['repetitions'])
-                    ->setWeight($setData['weight'])
+                    ->setEquipment($created['equipment'])
+                    ->setSymmetry($created['symmetry'])
+                    ->setRepetitions($created['repetitions'])
+                    ->setWeight($created['weight'])
+                    ->setConcentric($created["concentric"])
+                    ->setIsometric($created["isometric"])
+                    ->setEccentric($created["eccentric"])
                     ->setDate(new DateTime())
                     ->setDropping(false)
                 ;
@@ -148,10 +147,23 @@ class SessionController extends AbstractController
     public function set_delete(SetRepository $setRepository): Response
     {
         $data = $_POST;
-        foreach (array_keys($data) as $id) {
+        foreach (array_keys($data['sets']) as $id) {
             $set = $setRepository->findOneBy(['id' => $id]);
             $setRepository->remove($set, true);
         }
         return $this->json($data);
+    }
+    
+    #[Route(path:'/exercice/search', name: 'exercice_search')]
+    public function exercice_search(ExerciceRepository $exerciceRepository): Response
+    {
+        $data = $_POST;
+        $search = isset($data['search']) ? $data['search']: null;
+        $equipment = isset($data['equipment']) ? $data['equipment']: null;
+        $result = array();
+        foreach ($exerciceRepository->findBySearch($search, $equipment) as $exercice) {
+            $result[$exercice->getId()] = ['id' => $exercice->getId(), 'name' => $exercice->getName(), 'equipments' => $exercice->getEquipments()];
+        }
+        return $this->json($result);
     }
 }

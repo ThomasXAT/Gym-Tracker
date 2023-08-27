@@ -10,6 +10,11 @@ export default class extends Controller {
             $("#section-search-input").on("input", function() {
                 generator.display.searchOutput($("#exercice-search").val(), $("#exercice-equipment").val());
             });
+            $(document).on('click keyup', function(event) {
+                if (!$(event.target).closest($(".set-part")).length) {
+                    $(".form-tempo").addClass("d-none");
+                }
+            });
         }
         generator.display.searchOutput();
     }
@@ -19,16 +24,17 @@ export default class extends Controller {
             url: "/session/set/edit",
             data: $("#_edit-form").serialize(),
             success: (response) => {
-                $.each(response, function(id, set) {
+                $.each(response["sets"], function(id, set) {
                     $("#" + id + "-symmetry").text(set.symmetry);
                     $("#" + id + "-repetitions").text(set.repetitions);
                     $("#" + id + "-weight").text(set.weight);
+                    generator.display.tempo(id, set.concentric, set.isometric, set.eccentric);
                 });
             },
         });
     }
     choose() {
-        generator.display.addForm();
+        generator.display.add_form();
     }
     add() {
         $.ajax({
