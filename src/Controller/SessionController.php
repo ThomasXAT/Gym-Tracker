@@ -81,7 +81,7 @@ class SessionController extends AbstractController
             $set
                 ->setSymmetry($edited['symmetry'])
                 ->setRepetitions(isset($edited['repetitions']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
-                ->setWeight(isset($edited['weight']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
+                ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? $edited['weight']: 0)
                 ->setConcentric(isset($edited['concentric']) && $edited['concentric'] > 1 ? $edited['concentric']: 1)
                 ->setIsometric(isset($edited['isometric']) && $edited['isometric'] > 1 ? $edited['isometric']: 1)
                 ->setEccentric(isset($edited['eccentric']) && $edited['eccentric'] > 1 ? $edited['eccentric']: 1)

@@ -26,7 +26,7 @@ export default class extends Controller {
         $("#profile_file").on("change", function() {
             let file = this.files[0];
             if (file) {
-                $("#profile__delete_picture").prop('checked', false);
+                $("#profile__delete_picture").prop("checked", false);
                 if (file.size > 2 * 1024 * 1024) {
                     validator.setInvalid($("#profile_file"));
                     $("#profile_picture").attr("src", "images/bulking-jay.jpg");
@@ -63,7 +63,7 @@ export default class extends Controller {
             validator.setNeutral($("#profile_file"));
             $("#profile_file").val("");
             $("#help-file").text("");
-            $("#profile__delete_picture").prop('checked', true);
+            $("#profile__delete_picture").prop("checked", true);
         })
         $("#section-firstname").on("input", function() {
             validator.verify.surname($("#profile_surname"), true);
@@ -107,7 +107,7 @@ export default class extends Controller {
                     $("#profile_confirmation").val("");
                 }
             let measurement = false;
-                if ((validator.verify.height($("#profile_height")) && validator.verify.weight($("#profile_weight"))) || ($("#profile_height").val() === "" && $("#profile_weight").val() === "" && $("#profile_measurement").prop('checked') == false)) {
+                if ((validator.verify.height($("#profile_height")) && validator.verify.weight($("#profile_weight"))) || ($("#profile_height").val() === "" && $("#profile_weight").val() === "" && $("#profile_measurement").prop("checked") == false)) {
                     $("#help-measurement").html("");
                     if (($("#profile_height").val() === "" && $("#profile_weight").val() === "")) {
                         validator.setNeutral($("#profile_height"));
@@ -135,13 +135,13 @@ export default class extends Controller {
             $("#profile_weight").val("");
             $("#range-height").val($("#profile_height").val());
             $("#range-weight").val($("#profile_weight").val());
-            $("#profile_measurement").prop('checked', false);
+            $("#profile_measurement").prop("checked", false);
             $("#help-measurement").html("");
             validator.setNeutral($("#profile_height"));
             validator.setNeutral($("#profile_weight"));
         });
         if ($("#profile_height").val() === "" && $("#profile_weight").val() === "") {
-            $("#profile_measurement").prop('checked', false);
+            $("#profile_measurement").prop("checked", false);
         }
     }
 }

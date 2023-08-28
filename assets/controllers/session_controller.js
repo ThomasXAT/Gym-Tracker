@@ -6,7 +6,7 @@ export default class extends Controller {
         $("#loading").remove();
         generator.display.session($("#session-identifier").text());
         $("#button-choose").attr("disabled", $("#minimum-message").hasClass("d-none") ? false: true);
-        $(document).on('click keyup', function(event) {
+        $(document).on("click keyup", function(event) {
             if (!$(event.target).closest($(".set-part")).length) {
                 $(".form-tempo").addClass("d-none");
             }
@@ -23,7 +23,7 @@ export default class extends Controller {
             $("#_add").on("input click", function() {
                 let hide = false;
                 $.each($(".add-input-required"), function(index, input) {
-                    if ($(input).val() === "") {
+                    if ($(input).val() === "" || !$(input).val().match(/^(?=(?:\d,?){0,6}$)\d+(?:,\d{1,2})?$/)) {
                         hide = true;
                     }
                 });
@@ -34,7 +34,7 @@ export default class extends Controller {
             $("#_edit").on("input click", function() {
                 let hide = false;
                 $.each($(".edit-input-required"), function(index, input) {
-                    if ($(input).val() === "") {
+                    if ($(input).val() === "" || !$(input).val().match(/^(?=(?:\d,?){0,6}$)\d+(?:,\d{1,2})?$/)) {
                         hide = true;
                     }
                 });
@@ -47,15 +47,19 @@ export default class extends Controller {
         });
     }
     edit() {
+        $.each($(".edit-input-required"), function(index, input) {
+            $(input).val($(this).val().replace(",", "."));
+        });
         $.ajax({
             type: "POST",
             url: "/session/set/edit",
             data: $("#_edit-form").serialize(),
             success: (response) => {
+                console.log(response);
                 $.each(response["sets"], function(id, set) {
                     $("#" + id + "-symmetry").text(set.symmetry);
-                    $("#" + id + "-repetitions").text(set.repetitions ? parseInt(set.repetitions): 0);
-                    $("#" + id + "-weight").text(set.weight ? parseFloat(set.weight): 0);
+                    $("#" + id + "-repetitions").text(set.repetitions ? set.repetitions: 0);
+                    $("#" + id + "-weight").text(String(set.weight ? parseFloat(set.weight): 0).replace(".", ","));
                     generator.display.tempo(id, set.concentric, set.isometric, set.eccentric);
                 });
             },
@@ -66,6 +70,9 @@ export default class extends Controller {
         generator.display.add_form();
     }
     add() {
+        $.each($(".add-input-required"), function(index, input) {
+            $(input).val($(this).val().replace(",", "."));
+        });
         $.ajax({
             type: "POST",
             url: "/session/set/add",
@@ -112,12 +119,12 @@ export default class extends Controller {
                 });
                 let prefix = sequence ? exercice.children().last().attr("id"): exercice_id;
                 if (!$("#" + prefix + "-body").children().length) {
-                    if (exercice.prev('br').length) {
-                        exercice.prev('br').remove();
+                    if (exercice.prev("br").length) {
+                        exercice.prev("br").remove();
                     }
                     exercice.remove();
-                    if ($("#session-exercices-title").next('br').length) {
-                        $("#session-exercices-title").next('br').remove();
+                    if ($("#session-exercices-title").next("br").length) {
+                        $("#session-exercices-title").next("br").remove();
                     }
                 }
             },
