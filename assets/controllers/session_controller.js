@@ -6,17 +6,45 @@ export default class extends Controller {
         $("#loading").remove();
         generator.display.session($("#session-identifier").text());
         $("#button-choose").attr("disabled", $("#minimum-message").hasClass("d-none") ? false: true);
+        $(document).on('click keyup', function(event) {
+            if (!$(event.target).closest($(".set-part")).length) {
+                $(".form-tempo").addClass("d-none");
+            }
+        });
         if ($("#_exercice").length) {
             $("#section-search-input").on("input", function() {
                 generator.display.searchOutput($("#exercice-search").val(), $("#exercice-equipment").val());
             });
-            $(document).on('click keyup', function(event) {
-                if (!$(event.target).closest($(".set-part")).length) {
-                    $(".form-tempo").addClass("d-none");
-                }
+        }
+        if ($("#_add").length) {
+            $(".button-new-set").on("click", function() {
+                $("#button-add-set").attr("disabled", true);
+            })
+            $("#_add").on("input click", function() {
+                let hide = false;
+                $.each($(".add-input-required"), function(index, input) {
+                    if ($(input).val() === "") {
+                        hide = true;
+                    }
+                });
+                $("#button-add-set").attr("disabled", hide);
+            });
+        }
+        if ($("#_edit").length) {
+            $("#_edit").on("input click", function() {
+                let hide = false;
+                $.each($(".edit-input-required"), function(index, input) {
+                    if ($(input).val() === "") {
+                        hide = true;
+                    }
+                });
+                $("#button-edit-set").attr("disabled", hide);
             });
         }
         generator.display.searchOutput();
+        $(".button-new-set").on("click", function() {
+            generator.display.add_form();
+        });
     }
     edit() {
         $.ajax({
@@ -26,14 +54,15 @@ export default class extends Controller {
             success: (response) => {
                 $.each(response["sets"], function(id, set) {
                     $("#" + id + "-symmetry").text(set.symmetry);
-                    $("#" + id + "-repetitions").text(set.repetitions);
-                    $("#" + id + "-weight").text(set.weight);
+                    $("#" + id + "-repetitions").text(set.repetitions ? parseInt(set.repetitions): 0);
+                    $("#" + id + "-weight").text(set.weight ? parseFloat(set.weight): 0);
                     generator.display.tempo(id, set.concentric, set.isometric, set.eccentric);
                 });
             },
         });
     }
     choose() {
+        $("#button-add-set").attr("disabled", true);
         generator.display.add_form();
     }
     add() {

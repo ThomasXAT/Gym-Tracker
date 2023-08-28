@@ -89,36 +89,27 @@ class Sequence
     {
         $exercices = array();
         $size = $this->getSize();
-        $index = 0;
-        $sets = $this->getSets();
-        while ($index === 0 || $index % $size !== 0) {
-            if (isset($sets[$index])) {
-                $set = $sets[$index];
-                if (!$set->isDropping()) {
-                    $name = $set->getExercice()->getName();
-                    $equipment = $set->getEquipment();
+        $exercice = sizeof($exercices) - 1;
+        foreach($this->getSets() as $current) {
+            if (!$current->isDropping()) {
+                $exercice = ($exercice + 1) % $size;
+                if (isset($exercices[$exercice])) {
+                    array_push($exercices[$exercice]['sets'], array());
+                }
+                else {
+                    $name = $current->getExercice()->getName();
+                    $equipment = $current->getEquipment();
                     array_push($exercices, [
-                        'id' => $set->getExercice()->getId(),
+                        'id' => $current->getExercice()->getId(),
                         'fullname' => $name . ' (' . mb_strtolower(array_search($equipment, Exercice::EQUIPMENTS)) . ')', 
                         'name' => $name, 
                         'equipment' => $equipment, 
-                        'sets' => array()
+                        'sets' => [array()],
                     ]);
-                    $index++;
                 }
-
-            }
-        }
-        $exercice_index = 0;
-        foreach ($sets as $set) {
-            if (!$set->isDropping()) {
-                array_push($exercices[$exercice_index]['sets'], array());
-            }
-            $set_index = sizeof($exercices[$exercice_index]['sets']) - 1;
-            array_push($exercices[$exercice_index]['sets'][$set_index], $set);
-            if (!$set->isDropping()) {
-                $exercice_index = ($exercice_index + 1) % $size;
-            }
+            }   
+            $set = sizeof($exercices[$exercice]['sets']) - 1;
+            array_push($exercices[$exercice]['sets'][$set], $current);
         }
         return $exercices;
     }

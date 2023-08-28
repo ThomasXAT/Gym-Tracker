@@ -77,14 +77,14 @@ class SessionController extends AbstractController
     {
         $data = $_POST;
         foreach ($data['sets'] as $id => $edited) {
-            $set = $setRepository->findOneBy(["id" => $id]);
+            $set = $setRepository->findOneBy(['id' => $id]);
             $set
-                ->setSymmetry($edited["symmetry"])
-                ->setRepetitions($edited["repetitions"])
-                ->setWeight($edited["weight"])
-                ->setConcentric($edited["concentric"])
-                ->setIsometric($edited["isometric"])
-                ->setEccentric($edited["eccentric"])
+                ->setSymmetry($edited['symmetry'])
+                ->setRepetitions(isset($edited['repetitions']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
+                ->setWeight(isset($edited['weight']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
+                ->setConcentric(isset($edited['concentric']) && $edited['concentric'] > 1 ? $edited['concentric']: 1)
+                ->setIsometric(isset($edited['isometric']) && $edited['isometric'] > 1 ? $edited['isometric']: 1)
+                ->setEccentric(isset($edited['eccentric']) && $edited['eccentric'] > 1 ? $edited['eccentric']: 1)
             ;
             $setRepository->save($set, true);
         }
@@ -117,22 +117,22 @@ class SessionController extends AbstractController
             }
             foreach ($data['sets'] as $created) {
                 $exercice = $exerciceRepository->findOneBy(['id' => $created['exercice']]);
-                $newSet = new Set();
-                $newSet
+                $set = new Set();
+                $set
                     ->setSession($session)
                     ->setSequence(isset($sequence) ? $sequence: null)
                     ->setExercice($exercice)
                     ->setEquipment($created['equipment'])
                     ->setSymmetry($created['symmetry'])
-                    ->setRepetitions($created['repetitions'])
-                    ->setWeight($created['weight'])
-                    ->setConcentric($created["concentric"])
-                    ->setIsometric($created["isometric"])
-                    ->setEccentric($created["eccentric"])
+                    ->setRepetitions(isset($created['repetitions']) && $created['repetitions'] > 0 ? $created['repetitions']: 0)
+                    ->setWeight(isset($created['weight']) && $created['weight'] > 0 ? $created['weight']: 0)
+                    ->setConcentric(isset($created['concentric']) && $created['concentric'] > 1 ? $created['concentric']: 1)
+                    ->setIsometric(isset($created['isometric']) && $created['isometric'] > 1 ? $created['isometric']: 1)
+                    ->setEccentric(isset($created['eccentric']) && $created['eccentric'] > 1 ? $created['eccentric']: 1)
+                    ->setDropping($created['dropping'] === 'true')
                     ->setDate(new DateTime())
-                    ->setDropping(false)
                 ;
-                $setRepository->save($newSet, true);
+                $setRepository->save($set, true);
             }
         }
         $exercices = json_decode(file_get_contents($this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() . '/api/session'), true)[$session->getId()]['exercices'];

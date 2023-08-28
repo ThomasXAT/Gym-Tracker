@@ -5,7 +5,7 @@
             <span hidden id="athlete-identifier">{{ session.athlete.id }}</span>
             <span hidden id="session-identifier">{{ session.id }}</span>
             <div class="row">
-{% if app.user.isWorkingOut == false %}
+{% if app.user.workingOut == false %}
                 <section id="breadcrumb" class="mb-1 mb-md-2 p-2 mx-auto d-flex justify-content-end align-items-center">
                     <div class="col-3 text-white fw-bold fs-3">
                         <span>#{{ position }}</span>
@@ -21,7 +21,7 @@
                     </div>
                 </section>
 {% endif %}
-                <section id="session" class="mx-auto{% if app.user.isWorkingOut %} mt-2 mt-md-3{% endif %}">
+                <section id="session" class="mx-auto{% if app.user.workingOut %} mt-2 mt-md-3{% endif %}">
                     <section class="mt-1 mt-md-2 mb-3 text-center">
                         <h3 class="text-white identifier">{{ session.title }}</h3>
                         <span>Séance du 26 août 2023 à 17:18</span>

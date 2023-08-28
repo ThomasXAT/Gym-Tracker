@@ -19,7 +19,7 @@
                     <a class="ps-2 d-none d-md-block" href="{{ path('profile', { 'username': app.user.username }) }}"><img id="picture" width="38px" height="38px" class="profile-picture pointer border p-picture-little{% if page is defined and page == 'profile' and athlete is defined and athlete == app.user %} border-white{% endif %}" src="{% if app.user.picture %}{{ asset(app.user.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}"></a>
                 </section>
 {% endif %}
-                {# New session #}<section>
+                {# Session #}<section>
 {% if app.user.workingOut %}
                     <div class="d-flex">
                         <button class="button-new-set d-none d-md-block btn btn-success text-nowrap me-2"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button>

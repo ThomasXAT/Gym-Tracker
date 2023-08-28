@@ -18,6 +18,7 @@ translations["dumbbell"] = "haltères";
 translations["cable"] = "poulie";
 translations["smith"] = "barre guidée";
 translations["machine"] = "machine";
+translations["add_dropset"] = "Ajouter une dégressive"
 
 export var translator = {
     translations: translations,
@@ -323,7 +324,6 @@ let display = {
             )
             .append($("<br>"))
         ;
-        // Complex exercice
         if (exercice.sequence) {
             $.each(exercice.exercices, function(j, exercice_part) {
                 let exercice_part_index = j + 1;
@@ -352,7 +352,6 @@ let display = {
                 generator.display.exercice_part(exercice_part_id, exercice_part, sets)
             });
         }
-        // Simple exercice
         else {
             generator.display.exercice_part(exercice_id, exercice, sets)
         }
@@ -370,12 +369,12 @@ let display = {
                 )
             )
         ;
-        // Table head
         $("#" + prefix + "-head")
             .append($("<tr></tr>")
                 .append($("<th></th>")
                     .attr("scope", "col")
                     .addClass("text-center text-body")
+                    .text("#")
                 )
                 .append($("<th></th>")
                     .attr("scope", "col")
@@ -400,7 +399,6 @@ let display = {
                 )
             )
         ;
-        // Table body
         $.each(exercice.sets, function(i, set) {
             generator.display.set(prefix, i + 1, set, sets);
         });
@@ -447,7 +445,6 @@ let display = {
         $.each(set, function(j, set_part_id) {
             generator.display.set_part(set_id, set_part_id, sets);
         });
-        // Current
         if ($("#_edit").length) {
             $("#" + set_id)
                 .attr("data-bs-toggle", "modal")
@@ -463,21 +460,18 @@ let display = {
                             .addClass("text-white")
                             .text($("#exercice-" + exercice_index + "-title").text())
                         )
-                        .on("click", function() {
-                            forms.addClass("d-none");
-                        });
                     ;               
                     if (set_id.split("-")[2] === "part") {
                         let exercice_part_index = 1;
                         let next_exists = true;
                         while (next_exists) {
-                            generator.display.edit_form("exercice-" + exercice_index + "-part-" + exercice_part_index, set_index, true);
+                            generator.display.edit_form_part("exercice-" + exercice_index + "-part-" + exercice_part_index, set_index, true);
                             exercice_part_index++;
                             next_exists = $("#exercice-" + exercice_index + "-part-" + exercice_part_index + "-set-" + set_index).length ? true: false;
                         }
                     }
                     else {
-                        generator.display.edit_form(prefix, set_index);
+                        generator.display.edit_form_part(prefix, set_index);
                     }
                 })
             ;
@@ -551,11 +545,10 @@ let display = {
             .append(tempo ? null: "∅")
         ;
     },
-    edit_form: function(prefix, set_index, sequence = false) {
+    edit_form_part: function(prefix, set_index, sequence = false) {
         let edit_set_id = "_edit-" + prefix + "-set-" + set_index;
         $("#_edit-form")
             .append($("<article></article>")
-                .addClass("mb-1")
                 .attr("id", edit_set_id)
             )
         ;
@@ -576,7 +569,7 @@ let display = {
         ;
         $.each($("#" + prefix + "-set-" + set_index + "-id").children(), function(i, set_part) {
             let set_part_id = set_part.innerText;
-            generator.display.form_set_part(edit_set_id, set_part_id);
+            generator.display.form_set_part(edit_set_id, set_part_id, $("#" + set_part_id + "-dropping").text() === "true");
         });
     },
     add_form: function() {
@@ -616,7 +609,7 @@ let display = {
             let new_set_id = "_add-set-" + index;
             $("#_add-form")
                 .append($("<article></article>")
-                    .addClass("mb-1")
+                    .addClass(index === $("#section-selected-exercices").children().length - 1 ? "": "mb-2")
                     .attr("id", new_set_id)
                 )
             ;
@@ -634,18 +627,47 @@ let display = {
                 .append($("<section></section>")
                     .attr("id", new_set_id + "-parts")
                 )
+                .append($("<section></section>")
+                    .attr("id", new_set_id + "-drop")
+                    .addClass("d-flex")
+                    .append($("<div></div>")
+                        .addClass("col-11")
+                        .append($("<a></a>")
+                            .text("+ " + translator.translate("add_dropset"))
+                            .addClass("add-drop-set text-decoration-none pointer-only")
+                            .on("click", function() {
+                                generator.display.form_set_part(new_set_id, Date.now(), true, true, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
+                                $("#" + new_set_id + "-drop-delete").attr("hidden", false);
+                            })
+                        )
+                    )
+                    .append($("<div></div>")
+                        .attr("id", new_set_id + "-drop-delete")
+                        .attr("hidden", true)
+                        .addClass("col-1 f-flex text-end align-items-center")
+                        .append($("<i></i>")
+                            .addClass("fa-regular fa-circle-xmark pointer")
+                        )
+                        .on("click", function() {
+                            $("#" + new_set_id + "-parts").children().last().remove();
+                            if ($("#" + new_set_id + "-parts").children().length === 1) {
+                                $(this).attr("hidden", true);
+                            }
+                        })
+                    )
+                )
             ;
-            generator.display.form_set_part(new_set_id, Date.now(), true, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
+            generator.display.form_set_part(new_set_id, Date.now(), false, true, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
         });
     },
-    form_set_part: function(prefix, set_part_id, is_new = false, exercice_id = null, equipment = null) {
+    form_set_part: function(prefix, set_part_id, is_dropping = false, is_new = false, exercice_id = null, equipment = null) {
         let form_set_part_id = (is_new ? "_add-": "_edit-") + set_part_id;
         $("#" + prefix + "-parts")
             .append($("<div></div>")
                 .attr("id", form_set_part_id)
-                .addClass("set-part")
+                .addClass(is_dropping ? "set-part drop-set": "set-part")
                 .append($("<section></section>")
-                    .addClass("d-flex justify-content-center py-1")
+                    .addClass("d-flex py-1")
                     .append($("<div></div>")
                         .addClass("col-6 pe-2")
                         .append($("<select></select>")
@@ -668,9 +690,12 @@ let display = {
                         .append($("<input>")
                             .attr("id", form_set_part_id + "-repetitions")
                             .attr("name", "sets[" + set_part_id + "][repetitions]")
-                            .addClass("form-control text-center")
+                            .addClass("form-control text-center" + (is_new ? " add-input-required": " edit-input-required"))
                             .attr("placeholder", translator.translate("repetitions"))
                             .val($("#" + set_part_id + "-repetitions").text())
+                            .on("input", function() {
+                                $(this).val($(this).val().replace(/[^0-9]/g, "").substring(0, 3))
+                            })
                         )
                     )
                     .append($("<div></div>")
@@ -678,9 +703,12 @@ let display = {
                         .append($("<input>")
                             .attr("id", form_set_part_id + "-weight")
                             .attr("name", "sets[" + set_part_id + "][weight]")
-                            .addClass("form-control text-center")
+                            .addClass("form-control text-center" + (is_new ? " add-input-required": " edit-input-required"))
                             .attr("placeholder", translator.translate("weight"))
                             .val($("#" + set_part_id + "-weight").text())
+                            .on("input", function() {
+                                $(this).val($(this).val().replace(/[^0-9]/g, "").substring(0, 3))
+                            })
                         )
                     )
                 )
@@ -700,8 +728,12 @@ let display = {
                             .append($("<input>")
                                 .attr("id", form_set_part_id + "-concentric")
                                 .attr("name", "sets[" + set_part_id + "][concentric]")
+                                .attr("placeholder", 1)
                                 .addClass("form-control text-center mx-auto tempo-input")
-                                .val($("#" + set_part_id + "-concentric").text() ? $("#" + set_part_id + "-concentric").text(): 1)
+                                .val($("#" + set_part_id + "-concentric").text() &&  $("#" + set_part_id + "-concentric").text() !== "1" ? $("#" + set_part_id + "-concentric").text(): null)
+                                .on("input", function() {
+                                    $(this).val($(this).val().replace(/[^0-9]/g, "").substring(0, 2))
+                                })
                             )
                         )
                     )
@@ -718,8 +750,12 @@ let display = {
                             .append($("<input>")
                                 .attr("id", form_set_part_id + "-isometric")
                                 .attr("name", "sets[" + set_part_id + "][isometric]")
+                                .attr("placeholder", 1)
                                 .addClass("form-control text-center mx-auto tempo-input")
-                                .val($("#" + set_part_id + "-isometric").text() ? $("#" + set_part_id + "-isometric").text(): 1)
+                                .val($("#" + set_part_id + "-isometric").text() && $("#" + set_part_id + "-isometric").text() !== "1" ? $("#" + set_part_id + "-isometric").text(): null)
+                                .on("input", function() {
+                                    $(this).val($(this).val().replace(/[^0-9]/g, "").substring(0, 2))
+                                })
                             )
                         )
                     )
@@ -736,8 +772,12 @@ let display = {
                             .append($("<input>")
                                 .attr("id", form_set_part_id + "-eccentric")
                                 .attr("name", "sets[" + set_part_id + "][eccentric]")
+                                .attr("placeholder", 1)
                                 .addClass("form-control text-center mx-auto tempo-input")
-                                .val($("#" + set_part_id + "-eccentric").text() ? $("#" + set_part_id + "-eccentric").text(): 1)
+                                .val($("#" + set_part_id + "-eccentric").text() && $("#" + set_part_id + "-eccentric").text() !== "1" ? $("#" + set_part_id + "-eccentric").text(): null)
+                                .on("input", function() {
+                                    $(this).val($(this).val().replace(/[^0-9]/g, "").substring(0, 2))
+                                })
                             )
                         )
                     )
@@ -747,6 +787,12 @@ let display = {
                     forms.addClass("d-none");
                     $("#" + form_set_part_id + "-tempo").removeClass("d-none");
                 })
+                .append($("<input>")
+                    .attr("id", form_set_part_id + "-dropping")
+                    .attr("name", "sets[" + set_part_id + "][dropping]")
+                    .attr("hidden", true)
+                    .val(is_dropping)
+                )
                 .append(is_new ? $("<input>")
                     .attr("id", form_set_part_id + "-exercice")
                     .attr("name", "sets[" + set_part_id + "][exercice]")
