@@ -199,8 +199,8 @@ class DefaultController extends AbstractController
         throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }
 
-    #[Route(path:'/@{username}/sessions/{slug}', name: 'session_display')]
-    public function session_display(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, string $username, string $slug) {
+    #[Route(path:'/@{username}/sessions/{slug}/{string}', name: 'session_display')]
+    public function session_display(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, string $username, string $slug, string $string) {
         /**
          * @var Athlete $user
          */
@@ -210,7 +210,7 @@ class DefaultController extends AbstractController
         }
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
-            $session = $sessionRepository->findOneBy(['athlete' => $athlete, 'slug' => $slug, 'current' => false]);
+            $session = $sessionRepository->findOneBy(['athlete' => $athlete, 'slug' => $slug, 'string' => $string, 'current' => false]);
             if ($session) {
                 $sessions = $sessionRepository->findBy(['athlete' => $athlete]);
                 for ($i = 0; $i < sizeof($sessions); $i++) {

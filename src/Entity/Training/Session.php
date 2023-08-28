@@ -46,6 +46,9 @@ class Session
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $string = null;
+
 
     public function __construct()
     {
@@ -246,6 +249,18 @@ class Session
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getString(): ?string
+    {
+        return $this->string;
+    }
+
+    public function setString(string $string): self
+    {
+        $this->string = $string;
 
         return $this;
     }
