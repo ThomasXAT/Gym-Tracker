@@ -19,11 +19,7 @@
                                 </div>
                                 <div id="collapse-session-{{ session.id }}" class="accordion-collapse collapse" data-bs-parent="#sessions-accordion">
                                     <div class="accordion-body">
-                                        <section id="session-muscles-{{ session.id }}">
-                                            <h4>{{ 'main.profile.sessions.muscles'|trans }}</h4>
-                                        </section>
-                                        <section id="session-exercices-{{ session.id }}" class="my-3">
-                                            <h4>{{ 'main.profile.sessions.exercices'|trans }}</h4>
+                                        <section id="session-exercices-{{ session.id }}" class="mb-3">
                                             <ul class="list-group">
 {% for exercice in session.exercices %}
                                                 <li class="list-group-item d-flex justify-content-between align-items-center">

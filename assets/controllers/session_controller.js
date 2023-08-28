@@ -3,7 +3,6 @@ import { generator } from "./common";
 
 export default class extends Controller {
     connect() {
-        $("#loading").remove();
         generator.display.session($("#session-identifier").text());
         $("#button-choose").attr("disabled", $("#minimum-message").hasClass("d-none") ? false: true);
         $(document).on("click keyup", function(event) {
@@ -80,13 +79,10 @@ export default class extends Controller {
             data: $("#_add-form").serialize(),
             success: (response) => {
                 let exercice_index = 0;
-                if ($("#session-exercices").children().length > 1) {
+                if ($("#session-exercices").children().length > 0) {
                     exercice_index = parseInt($("#session-exercices").children().last().attr("id").replace("exercice-", ""));
                 }
                 if (response.new) {
-                    if (exercice_index) {
-                        $("#session-exercices").append($("<br>"));
-                    }
                     exercice_index++;
                     generator.display.exercice(exercice_index, response.last, response.sets);
                     $("#session-exercices").find(":last").remove();
@@ -120,13 +116,7 @@ export default class extends Controller {
                 });
                 let prefix = sequence ? exercice.children().last().attr("id"): exercice_id;
                 if (!$("#" + prefix + "-body").children().length) {
-                    if (exercice.prev("br").length) {
-                        exercice.prev("br").remove();
-                    }
                     exercice.remove();
-                    if ($("#session-exercices-title").next("br").length) {
-                        $("#session-exercices-title").next("br").remove();
-                    }
                 }
             },
         });

@@ -225,32 +225,8 @@ let display = {
             type: "GET",
             dataType: "json",
             success: function(response) {
-                /*
-                // Muscles
-                $("#session-muscles")
-                    .empty()
-                    .addClass("py-1")
-                    .append($("<h4></h4>")
-                        .text("Muscles sollicités")
-                    )
-                    .append($("<p></p>")
-                        .addClass("px-1 px-md-2")
-                        .text("Chargement des muscles sol")
-                    )
-                ;
-                */
-                // Exercices
                 $("#session-exercices")
                     .empty()
-                    .addClass("py-1")
-                    .append($("<h4></h4>")
-                        .attr("id", "session-exercices-title")
-                        .text("Exercices")
-                    )
-                    .append($("<p></p>")
-                        .addClass("px-1 px-md-2")
-                        .text(translator.translate("loading_exercices"))
-                    )
                 ;
                 generator.display.exercices(response[id]);
             }
@@ -262,6 +238,7 @@ let display = {
             type: "GET",
             dataType: "json",
             success: function(response) {
+                $("#loading").remove();
                 $("#session-exercices").find(":last").remove();
                 $.each(session.exercices, function(i, exercice) {
                     generator.display.exercice(i + 1, exercice, response)
@@ -269,7 +246,7 @@ let display = {
                 if (session.exercices.length > 0) {
                     $("#session-exercices").find(":last").remove();
                 }
-                if ($("#session-exercices").children().length > 1 && $("#_exercice").length) {
+                if (Object.keys(response).length && $("#_exercice").length) {
                     $.ajax({
                         type: "POST",
                         url: "/api/exercice",
@@ -302,7 +279,7 @@ let display = {
         $("#session-exercices")
             .append($("<article></article")
                 .attr("id", exercice_id)
-                .addClass("px-1 px-md-2")
+                .addClass("px-1 px-md-2 mt-4 mt-md-3 pt-md-4")
                 .append($("<input>")
                     .attr("id", "exercice-" + exercice_index + "-sequence")
                     .val(exercice.sequence)
@@ -323,7 +300,6 @@ let display = {
                     .addClass("text-white")
                 )
             )
-            .append($("<br>"))
         ;
         if (exercice.sequence) {
             $.each(exercice.exercices, function(j, exercice_part) {
