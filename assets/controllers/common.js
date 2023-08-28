@@ -19,6 +19,7 @@ translations["cable"] = "poulie";
 translations["smith"] = "barre guidée";
 translations["machine"] = "machine";
 translations["add_dropset"] = "Ajouter une dégressive"
+translations["delete_dropset"] = "Supprimer"
 
 export var translator = {
     translations: translations,
@@ -632,7 +633,7 @@ let display = {
                         .attr("id", new_set_id + "-drop")
                         .addClass("d-flex")
                         .append($("<div></div>")
-                            .addClass("col-11")
+                            .addClass("col-8")
                             .append($("<a></a>")
                                 .text("+ " + translator.translate("add_dropset"))
                                 .addClass("add-drop-set text-decoration-none pointer-only")
@@ -645,16 +646,17 @@ let display = {
                         .append($("<div></div>")
                             .attr("id", new_set_id + "-drop-delete")
                             .attr("hidden", true)
-                            .addClass("col-1 f-flex text-end align-items-center")
-                            .append($("<i></i>")
-                                .addClass("fa-regular fa-circle-xmark pointer")
+                            .addClass("col-4 text-end")
+                            .append($("<a></a>")
+                            .text(translator.translate("delete_dropset"))
+                                .addClass("text-decoration-none pointer-only")
+                                .on("click", function() {
+                                    $("#" + new_set_id + "-parts").children().last().remove();
+                                    if ($("#" + new_set_id + "-parts").children().length === 1) {
+                                        $("#" + new_set_id + "-drop-delete").attr("hidden", true);
+                                    }
+                                })
                             )
-                            .on("click", function() {
-                                $("#" + new_set_id + "-parts").children().last().remove();
-                                if ($("#" + new_set_id + "-parts").children().length === 1) {
-                                    $(this).attr("hidden", true);
-                                }
-                            })
                         )
                     )
                 ;

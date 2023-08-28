@@ -58,9 +58,13 @@ main.main, footer.main, .modal-body, .accordion-collapse {
     cursor: pointer;
 }
 
-#search {
+.search-bar {
     outline: none !important;
     box-shadow: none !important;
+}
+
+.search-bar:focus {
+    border-color: var(--bs-border-color) !important;
 }
 
 #logo {
@@ -157,16 +161,11 @@ footer.main {
     width: 75% !important;
 }
 
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
+#main {
+    min-height: calc(100vh - 110px);
+    @media screen and (min-width: 768px) {
+        min-height: calc(100vh - 154px);
+    }
 }
 
 /* c5ced6 */

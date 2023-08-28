@@ -64,12 +64,6 @@ if (identifiers.length > 0) {
     ;
 }
 
-let header = document.getElementById("header");
-let main = document.getElementById("main");
-let footer = document.getElementById("footer");
-
-main.style.minHeight = window.innerHeight - (header.clientHeight + footer.clientHeight) + "px";
-
 import { Modal } from 'bootstrap'
 
 if (document.getElementById("_add")) {

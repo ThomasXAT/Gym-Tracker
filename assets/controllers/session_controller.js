@@ -42,6 +42,7 @@ export default class extends Controller {
             });
         }
         generator.display.searchOutput();
+        $("#exercice-equipment").val("");
         $(".button-new-set").on("click", function() {
             generator.display.add_form();
         });

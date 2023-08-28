@@ -12,11 +12,19 @@ main:
     title: Répertoire
     search: Rechercher un athlète
     results: Résultats de la recherche
-    empty: Aucun résultat ne correspond à votre recherche. Essayez encore.
+    empty: Aucun résultat ne correspond à votre recherche. C'est dommage.
   statistics:
     title: Statistiques
   profile:
     title: Profil
+    measurement:
+      label: Mesures anthropométriques
+      list: Historique des mesures
+      public: Données publiques
+      private: Données privées
+      height: Taille
+      weight: Poids
+      ratio: PDC
     edit:
       button: Éditer
       form: Édition du profil
@@ -36,7 +44,7 @@ main:
         label: Mesures anthropométriques
         height: Taille
         weight: Poids
-        checkbox: Afficher les mesures sur le profil
+        checkbox: Afficher les mesures en public
       delete_measurement: Supprimer les mesures
       submit: Éditer le profil
     sessions:

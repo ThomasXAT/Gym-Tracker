@@ -322,4 +322,26 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
         }
         return false;
     }
+
+    public function getHeight(): ?float
+    {
+        if (sizeof($this->getMeasurements())) {
+            $measurements = $this->getMeasurements();
+            $measurements = iterator_to_array($measurements);
+            $measurement = end($measurements);
+            return $measurement->getHeight();
+        }
+        return null;
+    }
+
+    public function getWeight(): ?float
+    {
+        if (sizeof($this->getMeasurements())) {
+            $measurements = $this->getMeasurements();
+            $measurements = iterator_to_array($measurements);
+            $measurement = end($measurements);
+            return $measurement->getWeight();
+        }
+        return null;
+    }
 }
