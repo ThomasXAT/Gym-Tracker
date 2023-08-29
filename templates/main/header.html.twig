@@ -19,6 +19,13 @@
                     <a class="ps-2 d-none d-md-block" href="{{ path('profile', { 'username': app.user.username }) }}"><img id="picture" width="38px" height="38px" class="profile-picture pointer-only border p-picture-little" src="{% if app.user.picture %}{{ asset(app.user.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}"></a>
                 </section>
 {% endif %}
+{% if app.user.workingOut %}
+                {# Timer #}<section>
+                    <div id="session-timer" class="text-white">
+                        <span id="session-timer-hours"></span><span id="session-timer-separator-1"></span><span id="session-timer-minutes"></span><span id="session-timer-separator-2"></span><span id="session-timer-seconds"></span>
+                    </div>
+                </section>
+{% endif %}
                 {# Session #}<section>
 {% if app.user.workingOut %}
                     <div class="d-flex">

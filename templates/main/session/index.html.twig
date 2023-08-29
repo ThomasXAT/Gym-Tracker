@@ -24,7 +24,7 @@
                 <section id="session" class="mx-auto{% if app.user.workingOut %} mt-2 mt-md-3{% endif %}">
                     <section class="mt-1 mt-md-2 mb-3 text-center">
                         <h3 class="text-white identifier">{{ session.title }}</h3>
-                        <span>Séance du 26 août 2023 à 17:18</span>
+                        <span>{{ 'main.session.at_date'|trans }} {{ session.start|date('d') }} {{ ('month.' ~ session.start|date('m'))|trans }} {{ session.start|date('Y') }} {{ 'main.session.at_time'|trans }} {{ session.start|date('H:i') }}</span>
                     </section>
                     <div id="loading" class="text-center">
                         <p class="p-5"><i class="fa-solid fa-syringe"></i> {{ 'loading'|trans }}</p>

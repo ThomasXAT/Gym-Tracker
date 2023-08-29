@@ -225,6 +225,7 @@ let display = {
             type: "GET",
             dataType: "json",
             success: function(response) {
+                timer.start(response[id].start, "session-timer");
                 $("#session-exercices")
                     .empty()
                 ;
@@ -875,5 +876,25 @@ export var selector = {
         if (equipment) {
             $("#selected-" + uniqueId + "-equipment").val(equipment);
         }
+    }
+}
+
+export var timer = {
+    start(start, timer_id) {
+        start = new Date(start).getTime();
+        setInterval(function() {
+            let current = Date.now();
+            let difference = current - start;
+            let seconds = Math.floor(difference / 1000);
+            let hours = Math.floor(seconds / 3600);
+            seconds = seconds % 3600;
+            let minutes = Math.floor(seconds / 60);
+            seconds = seconds % 60;
+            $("#" + timer_id + "-hours").text(hours < 10 ? "0" + hours: hours);
+            $("#" + timer_id + "-separator-1").text(":");
+            $("#" + timer_id + "-minutes").text(minutes < 10 ? "0" + minutes: minutes);
+            $("#" + timer_id + "-separator-2").text(":");
+            $("#" + timer_id + "-seconds").text(seconds < 10 ? "0" + seconds: seconds);
+        }, 1000);
     }
 }
