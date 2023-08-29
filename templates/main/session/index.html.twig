@@ -11,7 +11,7 @@
                         <span>#{{ position }}</span>
                     </div>
                     <div class="col-9 text-end text-truncate" aria-label="breadcrumb">
-                        <span class="identifier">@{{ session.athlete.username }}</a></span>
+                        <span><a href="{{ path('profile', {'username': session.athlete.username}) }}" class="text-decoration-none">@{{ session.athlete.username }}</a></span>
                         <span class="mx-1"><i class="fa-solid fa-chevron-right"></i></span>
                         <span class="d-md-none"><a class="text-decoration-none" href="{{ path('sessions', { 'username': session.athlete.username }) }}">{{ 'main.profile.sessions.title'|trans }}</a></span>
                         <span class="d-none d-md-inline"><a class="text-decoration-none" href="{{ path('sessions', { 'username': session.athlete.username }) }}">{{ 'main.profile.sessions.list'|trans }}</a></span>                        

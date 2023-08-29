@@ -98,20 +98,20 @@ class ProfileType extends AbstractType
             ])
             ->add('height', NumberType::class, [
                 'mapped' => false,
-                'label' => $this->translator->trans('main.profile.edit.measurement.height'),
+                'label' => $this->translator->trans('main.profile.edit.measurements.height'),
                 'required' => false,
                 'attr' => ['class' => 'form-control text-end'],
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('weight', NumberType::class, [
                 'mapped' => false,
-                'label' => $this->translator->trans('main.profile.edit.measurement.weight'),
+                'label' => $this->translator->trans('main.profile.edit.measurements.weight'),
                 'required' => false,
                 'attr' => ['class' => 'form-control text-end'],
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('measurement', CheckboxType::class, [
-                'label' => $this->translator->trans('main.profile.edit.measurement.checkbox'),
+                'label' => $this->translator->trans('main.profile.edit.measurements.checkbox'),
                 'required' => false,
                 'attr' => ['class' => 'form-check-input'],
                 'label_attr' => ['class' => 'form-check-label'],

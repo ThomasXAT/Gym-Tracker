@@ -41,7 +41,7 @@
                             </section>
 {% endif %}
                             <section>
-                                <span class="identifier">@{{ athlete.username }}</span>
+                                <span><a href="{{ path('profile', {'username': athlete.username}) }}" class="text-decoration-none">@{{ athlete.username }}</a></span>
                             </section>
                         </section>
                     </main>

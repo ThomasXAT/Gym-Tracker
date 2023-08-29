@@ -156,6 +156,10 @@ class DefaultController extends AbstractController
                             ->setWeight($form->get('weight')->getData())
                             ->setDate(new DateTime)
                         ;
+                        $measurements = $measurementRepository->findBy(['height' => null, 'weight' => null]);
+                        foreach ($measurements as $measurement) {
+                            $measurementRepository->remove($measurement, true);
+                        }
                         $measurementRepository->save($newMeasurement, true);
                     }
                     if ($newPassword) {
@@ -216,7 +220,8 @@ class DefaultController extends AbstractController
                 for ($i = 0; $i < sizeof($sessions); $i++) {
                     if ($session->getSlug() == $sessions[$i]->getSlug()) {
                         return $this->render('main/session/index.html.twig', [
-                            'page' => 'session',
+                            'page' => 'profile.session',
+                            'athlete' => $athlete,
                             'session' => $session,
                             'position' => $i + 1,
                         ]);
@@ -224,6 +229,33 @@ class DefaultController extends AbstractController
                 }
             }
             throw new NotFoundHttpException('Session not found. The requested session does not exist.');
+        }
+        throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
+    }
+
+    #[Route(path:'/@{username}/measurements', name: 'measurements')]
+    public function measurements(AthleteRepository $athleteRepository, MeasurementRepository $measurementRepository, String $username): Response
+    {
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
+        if ($user->isWorkingOut()) {
+            return $this->redirectToRoute('home');
+        }
+        $athlete = $athleteRepository->findOneBy(['username' => $username]);
+        if ($athlete) {
+            $measurements = $measurementRepository->findBy(['athlete' => $athlete], ['date' => 'desc']);
+            if ($measurements && ($athlete->isMeasurement() || $athlete === $user)) {
+                return $this->render('main/profile/measurements/index.html.twig', [
+                    'page' => 'profile.measurements',
+                    'athlete' => $athlete,
+                    'measurements' => $measurements,
+                ]);
+            }
+            else {
+                return $this->redirectToRoute('profile', ['username' => $athlete->getUsername()]);
+            }
         }
         throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }

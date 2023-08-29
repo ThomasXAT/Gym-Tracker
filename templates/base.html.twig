@@ -7,7 +7,7 @@
 <html lang="fr" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>{% if page == 'session' %}{{ session.title }}{% else %}{% if page == 'profile' or page == 'profile.sessions' %}@{{ athlete.username }} - {% endif %}{% if search is defined and search|length %}« {{ search }} » - {% endif %}{{ (section ~ '.' ~ page ~ '.' ~ 'title')|trans }}{% endif %}</title>
+    <title>{% if page == 'home' %}{{ 'title'|trans }} - {% endif %}{% if page == 'session' %}{{ 'main.session.new'|trans }}{% else %}{% if page == 'profile' or page == 'profile.sessions' or page == 'profile.session' or page =='profile.measurements' %}@{{ athlete.username }} - {% endif %}{% if search is defined and search|length %}« {{ search }} » - {% endif %}{{ (section ~ '.' ~ page ~ '.' ~ 'title')|trans }}{% if page == 'profile.session' %} {{ position }}{% endif %}{% endif %}</title>
 {% block stylesheets %}
     {{ encore_entry_link_tags('app') }}
 {% endblock %}

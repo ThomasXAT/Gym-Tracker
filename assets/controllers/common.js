@@ -240,13 +240,9 @@ let display = {
             dataType: "json",
             success: function(response) {
                 $("#loading").remove();
-                $("#session-exercices").find(":last").remove();
                 $.each(session.exercices, function(i, exercice) {
                     generator.display.exercice(i + 1, exercice, response)
                 });
-                if (session.exercices.length > 0) {
-                    $("#session-exercices").find(":last").remove();
-                }
                 if (Object.keys(response).length && $("#_exercice").length) {
                     $.ajax({
                         type: "POST",
@@ -280,7 +276,7 @@ let display = {
         $("#session-exercices")
             .append($("<article></article")
                 .attr("id", exercice_id)
-                .addClass("px-1 px-md-2 mt-4 mt-md-3 pt-md-4")
+                .addClass("mt-3 pt-1 pt-md-4")
                 .append($("<input>")
                     .attr("id", "exercice-" + exercice_index + "-sequence")
                     .val(exercice.sequence)

@@ -2,7 +2,7 @@
 {% block body %}
         <section class="content container" {{ stimulus_controller('register') }}>
             <div id="title" class="text-center py-3">
-                <h2>{{ 'authentication.register.form'|trans }}</h2>
+                <h2 class="text-white">{{ 'authentication.register.form'|trans }}</h2>
                 <p class="required">{{ 'authentication.register.required'|trans }}</p>
             </div>
 {{ include('authentication/register/_form.html.twig') }} 

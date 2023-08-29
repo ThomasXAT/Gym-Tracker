@@ -30,14 +30,26 @@ main:
     title: Statistiques
   profile:
     title: Profil
-    measurement:
+    measurements:
+      title: Mesures
       label: Mesures anthropométriques
       list: Historique des mesures
       public: Données publiques
       private: Données privées
+      date: Date
+      time: Heure
+      datetime: Date & Heure
       height: Taille
       weight: Poids
-      ratio: PDC
+      bmi:
+        label: IMC
+        underweight: Sous-poids
+        normal: Normal
+        overweight: Surpoids
+        obese: Obésité
+        extremely_obese: Obésité sévère
+      at_date: Mesure du
+      at_time: à
     edit:
       button: Éditer
       form: Édition du profil
@@ -53,7 +65,7 @@ main:
       confirmation: Confirmation du mot de passe
       description: Description
       quotation: Citation
-      measurement:
+      measurements:
         label: Mesures anthropométriques
         height: Taille
         weight: Poids
@@ -65,9 +77,9 @@ main:
       last: Dernières séances
       list: Liste des séances
       full: Consulter la liste complète
-      muscles: Muscles sollicités
-      exercices: Exercices
       show: Consulter la séance
+    session:
+      title: Séance
   session:
     new:  Nouvelle séance
     start: Débuter la séance
@@ -75,6 +87,8 @@ main:
     label: Intitulé de la séance
     at_date: Séance du
     at_time: à
+    muscles: Muscles sollicités
+    exercices: Exercices
     exercice:
       search: Saisissez un nom ou un muscle
       equipment:

@@ -40,7 +40,7 @@ main.main, footer.main, .modal-body, .accordion-collapse {
     }
 }
 
-#sessions, #session, #breadcrumb {
+#sessions, #session, #breadcrumb, #measurements {
     max-width: 925px;
 }
 
@@ -58,6 +58,9 @@ main.main, footer.main, .modal-body, .accordion-collapse {
     cursor: pointer;
 }
 
+.not-allowed {
+    cursor: not-allowed;
+}
 .search-bar {
     outline: none !important;
     box-shadow: none !important;
