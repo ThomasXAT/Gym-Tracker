@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
         <section class="content container" {{ stimulus_controller('session') }}>
-            <h2 hidden>{{ session.athlete.username }}</h2>
+            <h2 id="athlete-username" hidden>{{ session.athlete.username }}</h2>
             <span hidden id="athlete-identifier">{{ session.athlete.id }}</span>
             <span hidden id="session-identifier">{{ session.id }}</span>
             <div class="row">
@@ -32,12 +32,10 @@
                     </div>
                     <section id="session-muscles"></section>
                     <section id="session-exercices"></section>
-{% if session.current or session.athlete == app.user %}
-{{ include('main/session/_edit.html.twig') }}
 {% if session.current %}
+{{ include('main/session/_edit.html.twig') }}
 {{ include('main/session/_add.html.twig') }}
 {{ include('main/session/_exercice.html.twig') }}
-{% endif %}
 {% endif %}
                 </section>
             </div>

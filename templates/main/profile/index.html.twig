@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
         <section class="content container" {{ stimulus_controller('profile') }}>
-            <h2 hidden>{{ athlete.username }}</h2>
+            <h2 id="athlete-username" hidden>{{ athlete.username }}</h2>
             <span hidden id="athlete-identifier">{{ athlete.id }}</span>
             <div class="row justify-content-center">
                 {# Information #}<section id="information" class="pe-md-2 p-2 mx-auto{% if athlete.description or athlete.quotation %} me-lg-0{% endif %}">
