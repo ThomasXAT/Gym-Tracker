@@ -5,7 +5,7 @@
             <span hidden id="athlete-identifier">{{ session.athlete.id }}</span>
             <span hidden id="session-identifier">{{ session.id }}</span>
             <div class="row">
-{% if app.user.workingOut == false %}
+{% if session.current == false %}
                 <section id="breadcrumb" class="mb-1 mb-md-2 p-2 mx-auto d-flex justify-content-end align-items-center">
                     <div class="col-3 text-white fw-bold fs-3">
                         <span>#{{ position }}</span>
@@ -21,7 +21,7 @@
                     </div>
                 </section>
 {% endif %}
-                <section id="session" class="mx-auto{% if app.user.workingOut %} mt-2 mt-md-3{% endif %}">
+                <section id="session" class="mx-auto{% if session.current %} mt-2 mt-md-3{% endif %}">
                     <section class="mt-1 mt-md-2 mb-3 text-center">
                         <h3 class="text-white identifier">{{ session.title }}</h3>
                         <span>{{ 'main.session.at_date'|trans }} {{ session.start|date('d') }} {{ ('month.' ~ session.start|date('m'))|trans }} {{ session.start|date('Y') }} {{ 'main.session.at_time'|trans }} {{ session.start|date('H:i') }}</span>
@@ -32,6 +32,11 @@
                     </div>
                     <section id="session-muscles"></section>
                     <section id="session-exercices"></section>
+{% if app.user == session.athlete and session.current == false %}
+                    <div id="session-delete" class="text-center py-2 py-md-3 mb-2 mb-md-0" hidden>
+                        <a href="{{ path('session_delete', { 'id': session.id }) }}"><button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i> {{ 'main.session.delete'|trans }}</button></a>
+                    </div>
+{% endif %}
 {% if session.current %}
 {{ include('main/session/_edit.html.twig') }}
 {{ include('main/session/_add.html.twig') }}

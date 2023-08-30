@@ -87,6 +87,7 @@ main:
     label: Intitulé de la séance
     at_date: Séance du
     at_time: à
+    delete: Supprimer la séance
     muscles: Muscles sollicités
     exercices: Exercices
     exercice:

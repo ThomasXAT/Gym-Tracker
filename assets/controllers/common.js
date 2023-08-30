@@ -240,6 +240,9 @@ let display = {
             dataType: "json",
             success: function(response) {
                 $("#loading").remove();
+                if ($("#session-delete").length) {
+                    $("#session-delete").attr("hidden", false);
+                }
                 $.each(session.exercices, function(i, exercice) {
                     generator.display.exercice(i + 1, exercice, response)
                 });

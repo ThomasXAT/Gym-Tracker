@@ -167,4 +167,22 @@ class SessionController extends AbstractController
         }
         return $this->json($result);
     }
+
+    #[Route(path:'/delete/{id}', name: 'delete', methods: ['GET'])]
+    public function delete(Session $session, SessionRepository $sessionRepository, SetRepository $setRepository, SequenceRepository $sequenceRepository): Response
+    {
+        if ($this->getUser() === $session->getAthlete()) {
+            $sets = $session->getSets();
+            foreach ($sets as $set) {
+                $setRepository->remove($set, true);
+            }
+            $sequences = $session->getSequences();
+            foreach ($sequences as $sequence) {
+                $sequenceRepository->remove($sequence, true);
+            }
+            $sessionRepository->remove($session, true);
+            return $this->redirectToRoute('sessions', ['username' => $session->getAthlete()->getUsername()]);
+        }
+        return $this->redirectToRoute('home');
+    }
 }
