@@ -4,27 +4,27 @@
             <h2 id="athlete-username" hidden>{{ athlete.username }}</h2>
             <span hidden id="athlete-identifier">{{ athlete.id }}</span>
             <div class="row">
-                <section id="breadcrumb" class="mb-1 mb-md-2 p-2 mx-auto d-flex justify-content-between align-items-center">
-                    <h3 hidden>{{ 'main.profile.measurements.label'|trans }}</h3>
+                <section id="breadcrumb" class="mb-md-2 p-2 mx-auto d-flex justify-content-between align-items-center">
+                    <h3 hidden>{{ 'measurement.label'|trans }}</h3>
                     <div class="col-3 col-md-6 text-white fw-bold fs-3">
-                        <span class="d-md-none">{{ 'main.profile.measurements.title'|trans }}</span>
-                        <span class="d-none d-md-inline">{{ 'main.profile.measurements.list'|trans }}</span>
+                        <span class="d-md-none">{{ 'main.measurements.title'|trans }}</span>
+                        <span class="d-none d-md-inline">{{ 'main.measurements.full'|trans }}</span>
                     </div>
                     <div class="col-9 col-md-6 text-end text-truncate" aria-label="breadcrumb">
                         <span><a href="{{ path('profile', {'username': athlete.username}) }}" class="text-decoration-none">@{{ athlete.username }}</a></span>
                         <span class="mx-1"><i class="fa-solid fa-chevron-right"></i></span>
-                        <span class="d-md-none fw-bold">{{ 'main.profile.measurements.title'|trans }}</span>
-                        <span class="d-none d-md-inline fw-bold">{{ 'main.profile.measurements.list'|trans }}</span>
+                        <span class="d-md-none fw-bold">{{ 'main.measurements.title'|trans }}</span>
+                        <span class="d-none d-md-inline fw-bold">{{ 'main.measurements.full'|trans }}</span>
                     </div>
                 </section>
                 {# measurements #}<section id="measurements" class="p-2 mx-auto" {{ stimulus_controller('measurements') }}>
                     <table class="table table-dark table-striped text-center">                        
                         <thead id="measurements-head" class="text-body">
                             <tr>
-                                <th scope="col">{{ 'main.profile.measurements.datetime'|trans }}</th>
-                                <th scope="col">{{ 'main.profile.measurements.height'|trans }}</th>
-                                <th scope="col">{{ 'main.profile.measurements.weight'|trans }}</th>
-                                <th scope="col" class="d-none d-sm-table-cell">{{ 'main.profile.measurements.bmi.label'|trans }}</th>
+                                <th scope="col">{{ 'main.measurements.datetime'|trans }}</th>
+                                <th scope="col">{{ 'measurement.height'|trans }}</th>
+                                <th scope="col">{{ 'measurement.weight'|trans }}</th>
+                                <th scope="col" class="d-none d-sm-table-cell">{{ 'measurement.bmi'|trans }}</th>
 {% if athlete == app.user %}
                                 <th scope="col"></th>
 {% endif %}
@@ -34,13 +34,13 @@
 {% for measurement in measurements %}
 {% if measurement.height != null and measurement.weight != null %}
                             <tr id="measurement-{{ measurement.id }}" class="align-middle">
-                                <td><span class="d-sm-none">{{ measurement.date|date('d/m/Y') }}</span><span class="d-none d-md-inline"><span class="text-body">{{ 'main.profile.measurements.at_date'|trans }}</span> </span><span class="d-none d-sm-inline">{{ measurement.date|date('d') }} {{ ('month.' ~ measurement.date|date('m'))|trans }} {{ measurement.date|date('Y') }}</span> <span class="text-body d-none d-md-inline">{{ 'main.profile.measurements.at_time'|trans }}</span> {{ measurement.date|date('H:i') }}</td>
-                                <td>{{ measurement.height }}</td>
-                                <td>{{ measurement.weight }}</td>
-{% set bmi = measurement.weight / ((measurement.height / 100) * (measurement.height / 100)) %}
-                                <td class="fw-bold d-none d-sm-table-cell">{{ bmi|round(1) }}</td>
+                                <td><span class="d-sm-none">{{ measurement.date|date('d/m/Y') }}</span><span class="d-none d-md-inline"><span class="text-body">{{ 'main.measurements.at_date'|trans }}</span> </span><span class="d-none d-sm-inline">{{ ('day.' ~ measurement.date|date('d'))|trans }} {{ ('month.' ~ measurement.date|date('m'))|trans }} {{ measurement.date|date('Y') }}</span> <span class="text-body d-none d-md-inline">{{ 'main.measurements.at_time'|trans }}</span> {{ measurement.date|date('H:i') }}</td>
+                                <td>{{ measurement.height|replace({'.': ','}) }}<span class="d-none d-md-inline text-body"> m</span></td>
+                                <td>{{ measurement.weight|replace({'.': ','}) }}<span class="d-none d-md-inline text-body"> kg</span></td>
+{% set bmi = measurement.weight / (measurement.height * measurement.height)%}
+                                <td class="fw-bold d-none d-sm-table-cell">{{ bmi|round(1)|replace({'.': ','}) }}<span class="d-none d-md-inline text-body"> kg/m²</span></td>
 {% if athlete == app.user %}
-                                <td><button id="delete-measurement-{{ measurement.id }}" class="btn btn-outline-danger delete-measurement"><i class="fa-solid fa-trash"></i><span class="d-none d-md-inline"> Supprimer</span></td>
+                                <td><button id="delete-measurement-{{ measurement.id }}" class="btn btn-outline-danger delete-measurement"><i class="fa-solid fa-trash"></i><span class="d-none d-md-inline"> {{ 'delete'|trans }}</span></td>
 {% endif %}
                             </tr>
 {% endif %}

@@ -17,10 +17,10 @@ class Quotation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(length: 96)]
     private ?string $text = null;
 
-    #[ORM\Column(length: 64)]
+    #[ORM\Column(length: 48)]
     private ?string $author = null;
 
     #[ORM\OneToMany(mappedBy: 'quotation', targetEntity: Athlete::class)]

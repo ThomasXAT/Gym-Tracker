@@ -67,8 +67,12 @@ class SecurityController extends AbstractController
                         $form->get('password')->getData()
                     )
                 );
-                $athlete->setRegistration(new DateTime);
-                $athlete->setMeasurement(false);
+                $athlete
+                    ->setRegistration(new DateTime)
+                    ->setMeasurement(false)
+                    ->setDescription('<p>Je suis nouveau sur <strong>Gym-Tracker</strong> !</p>')
+                    ->setUnit('kg')
+                ;
                 $athleteRepository->save($athlete, true);
                 // do anything else you need here, like send an email
                 return $this->redirectToRoute('home');

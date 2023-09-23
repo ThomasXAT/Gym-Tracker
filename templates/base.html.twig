@@ -6,8 +6,9 @@
 <!DOCTYPE html>
 <html lang="fr" data-bs-theme="dark">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <title>{% if page == 'home' %}{{ 'title'|trans }} - {% endif %}{% if page == 'session' %}{{ 'main.session.new'|trans }}{% else %}{% if page == 'profile' or page == 'profile.sessions' or page == 'profile.session' or page =='profile.measurements' %}@{{ athlete.username }} - {% endif %}{% if search is defined and search|length %}« {{ search }} » - {% endif %}{{ (section ~ '.' ~ page ~ '.' ~ 'title')|trans }}{% if page == 'profile.session' %} {{ position }}{% endif %}{% endif %}</title>
+    <title>{% if app.user and app.user.workingOut %}{{ 'main.session.new'|trans }}{% else %}{% if page == 'home' %}{{ 'app'|trans }} - {% endif %}{% if page == 'profile' or page == 'sessions' or page == 'session' or page =='measurements' %}@{{ athlete.username }} - {% endif %}{% if search is defined and search|length %}« {{ search }} » - {% endif %}{{ (section ~ '.' ~ page ~ '.' ~ 'title')|trans }}{% if page == 'session' %} {{ position }}{% endif %}{% endif %}</title>
 {% block stylesheets %}
     {{ encore_entry_link_tags('app') }}
 {% endblock %}
@@ -16,24 +17,19 @@
 {% endblock %}
 </head>
 <body>
-    <h1 hidden>{{ 'title'|trans }}</h1>
+    <h1 hidden>{{ 'app'|trans }}</h1>
     <header id="header" class="{{ section }} {% if section == 'main' %}bg-dark border-bottom {% endif %}py-3 px-md-3 d-flex align-items-center">
 {% include("/#{section}/header.html.twig") %}
     </header>
-{% if section == 'main' %}
+{% if section == 'main' and not app.user.workingOut %}
 {{ include('main/_session.html.twig') }}
 {% endif %}
     <main id="main" class="{{ section }} p-2 p-md-3">
 {% block body %}{% endblock %}
     </main>
-    <footer id="footer" class="{{ section }} {% if section == 'main' %}border-top border-bottom {% endif %}p-2 p-md-3">
+    <footer id="footer" class="{{ section }} {% if section == 'main' %}border-top border-top {% endif %}p-2 p-md-3">
 {% include("/#{section}/footer.html.twig") %}
     </footer>
-{% if section == 'main' %}
-    <section class="mandatory-information">
-        <br>
-    </section>
-{% endif %}
 {% if section == 'main' %}
     <div id="nav-mobile" class="{{ section }} d-md-none {% if section == 'main' %}bg-dark border-top {% endif %}d-flex align-items-center">
 {{ include('main/nav-mobile.html.twig') }}

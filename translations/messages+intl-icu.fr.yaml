@@ -1,10 +1,35 @@
-
-placeholder: "#"
-title: Gym-Tracker
-return: Retour
-loading: Chargement...
-bilateral: bilatéral
-unilateral: unilatéral
+day:
+  01: 1ᵉʳ
+  02: 2
+  03: 3
+  04: 4
+  05: 5
+  06: 6
+  07: 7
+  08: 8
+  09: 9
+  10: 10
+  11: 11
+  12: 12
+  13: 13
+  14: 14
+  15: 15
+  16: 16
+  17: 17
+  18: 18
+  19: 19
+  20: 20
+  21: 21
+  22: 22
+  23: 23
+  24: 24
+  25: 25
+  26: 26
+  27: 27
+  28: 28
+  29: 29
+  30: 30
+  31: 31
 month:
   01: janvier
   02: février
@@ -18,6 +43,71 @@ month:
   10: octobre
   11: novembre
   12: décembre
+app: Gym-Tracker
+return: Retour
+loading: Chargement
+all: Tous
+settings: Paramètres
+required: Champs obligatoires
+delete: Supprimer
+hi: Salut
+bodyweight: poids du corps
+band: élastique
+barbell: barre
+dumbbell: haltères
+cable: poulie
+smith: barre guidée
+machine: machine
+set: Série
+symmetry:
+  label: Symétrie
+  unilateral: Unilatéral
+  bilateral: Bilatéral
+repetitions: Répts
+weight: Poids
+tempo:
+  label: Tempo
+  concentric: Concentrique
+  isometric: Isométrique
+  eccentric: Excentrique
+unit:
+  label: Les poids sont exprimés en
+  kg: kilogrammes
+  lbs: livres
+athlete:
+  label: Athlète
+  picture: Photo de profil
+  firstname: Prénom
+  surname: Nom
+  username: Nom d'utilisateur
+  email: Adresse e-mail
+  password:
+    label: Mot de passe
+    new: Nouveau mot de passe
+    confirmation: Confirmation du mot de passe
+quotation:
+  label: Citation
+  text: Texte
+  author: Auteur
+measurement:
+  label: Mesures anthropométriques
+  height: Taille
+  weight: Poids
+  bmi: IMC
+authentication:
+  login:
+    title: Connexion
+    form: Formulaire de connexion
+    remember_me: Se souvenir de moi
+    submit: Se connecter
+    register: Je ne possède pas de compte
+  logout:
+    submit: Se déconnecter
+  register:
+    title: Inscription
+    form: Formulaire d'inscription
+    submit: S'inscrire
+    login: Je possède déjà un compte
 main:  
   home:
     title: Accueil
@@ -25,86 +115,66 @@ main:
     title: Répertoire
     search: Rechercher un athlète
     results: Résultats de la recherche
-    empty: Aucun résultat ne correspond à votre recherche. C'est dommage.
-  statistics:
-    title: Statistiques
+    empty: Aucun résultat ne correspond à votre recherche.
   profile:
     title: Profil
     measurements:
-      title: Mesures
-      label: Mesures anthropométriques
-      list: Historique des mesures
       public: Données publiques
       private: Données privées
-      date: Date
-      time: Heure
-      datetime: Date & Heure
-      height: Taille
-      weight: Poids
-      bmi:
-        label: IMC
-        underweight: Sous-poids
-        normal: Normal
-        overweight: Surpoids
-        obese: Obésité
-        extremely_obese: Obésité sévère
-      at_date: Mesure du
-      at_time: à
-    edit:
-      button: Éditer
-      form: Édition du profil
-      required: Champs obligatoires
-      picture: Photo de profil
-      delete_picture: Supprimer la photo de profil
-      identity: Informations générales
-      firstname: Prénom
-      surname: Nom
-      username: Nom d'utilisateur
-      email: Adresse e-mail
-      password: Nouveau mot de passe
-      confirmation: Confirmation du mot de passe
-      description: Description
-      quotation: Citation
-      measurements:
-        label: Mesures anthropométriques
-        height: Taille
-        weight: Poids
-        checkbox: Afficher les mesures en public
-      delete_measurement: Supprimer les mesures
-      submit: Éditer le profil
+      list: Consulter l'historique
+      edit:
+        title: Édition des mesures
+        delete: Supprimer les mesures
+        submit: Éditer les mesures
+      add: Ajouter des mesures
     sessions:
-      title: Séances
-      last: Dernières séances
-      list: Liste des séances
-      full: Consulter la liste complète
+      label: Dernières séances
+      list: Consulter la liste complète
       show: Consulter la séance
-    session:
-      title: Séance
+    edit:
+      button: Éditer le profil
+      title: Édition du profil
+      picture:
+        delete: Supprimer la photo de profil
+      identity:
+        label: Informations générales
+      measurements:
+        share: Afficher les mesures en public
+        delete: Supprimer les mesures
+      description:
+        label: Description & Citation
+      quotation:
+        label: Citation
+        none: Aucune
+      submit: Éditer le profil
+  sessions:
+    title: Séances
+    full: Liste des séances
+    show: Consulter la séance
+  measurements:
+    title: Mesures
+    full: Historique des mesures
+    datetime: Date & Heure
+    at_date: Mesure du
+    at_time: à
   session:
-    new:  Nouvelle séance
+    title: Séance
+    new: Nouvelle séance
     start: Débuter la séance
     stop: Conclure la séance
     label: Intitulé de la séance
     at_date: Séance du
     at_time: à
     delete: Supprimer la séance
+    welcome: Bonne séance !
     muscles: Muscles sollicités
     exercices: Exercices
     exercice:
-      search: Saisissez un nom ou un muscle
-      equipment:
-        all: Tous
-        bodyweight: poids du corps 
-        band: élastique
-        barbell: barre
-        dumbbell: haltères
-        cable: poulie
-        smith: barre guidée
-        machine: machine
+      search: Saisissez un nom ou un muscle      
       choose:
         title: Création d'un exercice
         submit: Valider l'exercice
-        action: Sélection de l'exercice
+        action: Sélectionner l'exercice
         minimum: Un exercice au minimum est requis.
     set:
       new: Nouvelle série
@@ -120,26 +190,34 @@ main:
         title: Suppression d'une série
         submit: Supprimer
         action: Supprimer une série
-authentication:
-  login:
-    title: Connexion
-    form: Formulaire de connexion
-    username: Nom d'utilisateur
-    password: Mot de passe
-    remember_me: Se souvenir de moi
-    submit: Se connecter
-    link: Je ne possède pas de compte
-  logout:
-    submit: Se déconnecter
-  register:
-    title: Inscription
-    form: Formulaire d'inscription
-    required: Champs obligatoires
-    firstname: Prénom
-    surname: Nom
-    username: Nom d'utilisateur
-    email: Adresse e-mail
-    password: Mot de passe
-    confirmation: Confirmation du mot de passe
-    submit: S'inscrire
-    link: Je possède déjà un compte
+dropset:
+    add: Ajouter une dégressive
+    delete: Supprimer
+validator:
+  firstname:
+    characters: "Caractères valides : lettres, espaces et tirets."
+    extremities: "Espaces et tirets interdits aux extrémités."
+    size:
+      max: "Taille maximale : 24 caractères."
+  surname:
+    characters: "Caractères valides : lettres, espaces et tirets."
+    extremities: "Espaces et tirets interdits aux extrémités."
+    size:
+      max: "Taille maximale : 24 caractères."
+  username:
+    characters: "Caractères autorisés : lettres, espaces et tirets bas."
+    size:
+      min: "Taille minimale : 2 caractères."
+      max: "Taille maximale : 16 caractères."
+  email:
+    format: "Le format de l'adresse est incorrect."
+    size:
+      max: "Taille maximale : 128 caractères."
+  password:
+    size:
+      min: "Taille minimale : 8 caractères."
+      max: "Taille maximale : 48 caractères."
+    confirmation: "Les mots de passe ne correspondent pas."
+  measurement:
+    height: "Taille incorrecte. Caractères valides : trois chiffres, une virgule et une décimale."
+    weight: "Poids incorrect. Caractères valides : trois chiffres, une virgule et une décimale."

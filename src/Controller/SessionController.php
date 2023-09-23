@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-#[Route(path: '/session', name: 'session_', methods: ['POST'])]
+#[Route(path: '/session', name: 'session_')]
 class SessionController extends AbstractController
 {
     private RequestStack $requestStack;
@@ -82,7 +82,7 @@ class SessionController extends AbstractController
             $set
                 ->setSymmetry($edited['symmetry'])
                 ->setRepetitions(isset($edited['repetitions']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
-                ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? $edited['weight']: 0)
+                ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? ($set->getSession()->getAthlete()->getUnit() === 'lbs' ? $edited['weight'] * 0.45359237: $edited['weight']): 0)
                 ->setConcentric(isset($edited['concentric']) && $edited['concentric'] > 1 ? $edited['concentric']: 1)
                 ->setIsometric(isset($edited['isometric']) && $edited['isometric'] > 1 ? $edited['isometric']: 1)
                 ->setEccentric(isset($edited['eccentric']) && $edited['eccentric'] > 1 ? $edited['eccentric']: 1)
@@ -126,7 +126,7 @@ class SessionController extends AbstractController
                     ->setEquipment($created['equipment'])
                     ->setSymmetry($created['symmetry'])
                     ->setRepetitions(isset($created['repetitions']) && $created['repetitions'] > 0 ? $created['repetitions']: 0)
-                    ->setWeight(isset($created['weight']) && $created['weight'] > 0 ? $created['weight']: 0)
+                    ->setWeight(isset($created['weight']) && $created['weight'] > 0 ? ($session->getAthlete()->getUnit() === 'lbs' ? $created['weight'] * 0.45359237: $created['weight']): 0)
                     ->setConcentric(isset($created['concentric']) && $created['concentric'] > 1 ? $created['concentric']: 1)
                     ->setIsometric(isset($created['isometric']) && $created['isometric'] > 1 ? $created['isometric']: 1)
                     ->setEccentric(isset($created['eccentric']) && $created['eccentric'] > 1 ? $created['eccentric']: 1)
@@ -168,7 +168,7 @@ class SessionController extends AbstractController
         return $this->json($result);
     }
 
-    #[Route(path:'/delete/{id}', name: 'delete', methods: ['GET'])]
+    #[Route(path:'/delete/{id}', name: 'delete')]
     public function delete(Session $session, SessionRepository $sessionRepository, SetRepository $setRepository, SequenceRepository $sequenceRepository): Response
     {
         if ($this->getUser() === $session->getAthlete()) {

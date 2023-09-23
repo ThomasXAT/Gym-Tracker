@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-import { validator } from "./common";
+import { Validator } from "./common";
 
 export default class extends Controller {
     connect() {
@@ -8,17 +8,17 @@ export default class extends Controller {
             type: "GET",
             dataType: "json",
             success: function(response) {  
-                $("#section-firstname").on("input", function() {
-                    validator.verify.surname($("#register_surname"), true);
-                    validator.verify.firstname($("#register_firstname"), true);
+                $("#section-firstname").on("input click keyup", function() {
+                    Validator.verify.surname($("#register_surname"), true);
+                    Validator.verify.firstname($("#register_firstname"), true);
                 });
-                $("#section-surname").on("input", function() {
-                    validator.verify.firstname($("#register_firstname"), true);
-                    validator.verify.surname($("#register_surname"), true);
+                $("#section-surname").on("input click keyup", function() {
+                    Validator.verify.firstname($("#register_firstname"), true);
+                    Validator.verify.surname($("#register_surname"), true);
                 });
                 $("#form-register").on("input", function() {
                     let fullname = false;
-                        if (validator.verify.firstname($("#register_firstname")) && validator.verify.surname($("#register_surname"))) {
+                        if (Validator.verify.firstname($("#register_firstname")) && Validator.verify.surname($("#register_surname"))) {
                             $("#help-fullname").html("");
                             fullname = true;
                         }
@@ -31,16 +31,16 @@ export default class extends Controller {
                         }); 
                         if (!available) {
                             $("#help-username").html("Cet identifiant n'est pas disponible.");
-                            validator.setInvalid($("#register_username"));
+                            Validator.setInvalid($("#register_username"));
                         }
                         else {
-                            username = validator.verify.username($("#register_username"), true);
+                            username = Validator.verify.username($("#register_username"), true);
                         }
-                    let email = validator.verify.email($("#register_email"), true);
+                    let email = Validator.verify.email($("#register_email"), true);
                     let password = false;
-                        if (validator.verify.password($("#register_password"), true)) {
+                        if (Validator.verify.password($("#register_password"), true)) {
                             $("#section-confirmation").prop("hidden", false);
-                            if (validator.verify.confirmation($("#register_confirmation"), $("#register_password"), true)) {
+                            if (Validator.verify.confirmation($("#register_confirmation"), $("#register_password"), true)) {
                                 password = true;
                             }
                         }

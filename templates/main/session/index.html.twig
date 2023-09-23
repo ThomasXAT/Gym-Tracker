@@ -3,32 +3,36 @@
         <section class="content container" {{ stimulus_controller('session') }}>
             <h2 id="athlete-username" hidden>{{ session.athlete.username }}</h2>
             <span hidden id="athlete-identifier">{{ session.athlete.id }}</span>
+            <span hidden id="athlete-unit">{{ session.athlete.unit }}</span>
             <span hidden id="session-identifier">{{ session.id }}</span>
             <div class="row">
 {% if session.current == false %}
                 <section id="breadcrumb" class="mb-1 mb-md-2 p-2 mx-auto d-flex justify-content-end align-items-center">
                     <div class="col-3 text-white fw-bold fs-3">
-                        <span>#{{ position }}</span>
+                        <span class="d-md-none">{{ position }}</span>
+                        <span class="d-none d-md-inline">{{ ('main.' ~ page ~ '.title')|trans ~ ' ' ~ position }}</span>
                     </div>
                     <div class="col-9 text-end text-truncate" aria-label="breadcrumb">
                         <span><a href="{{ path('profile', {'username': session.athlete.username}) }}" class="text-decoration-none">@{{ session.athlete.username }}</a></span>
                         <span class="mx-1"><i class="fa-solid fa-chevron-right"></i></span>
-                        <span class="d-md-none"><a class="text-decoration-none" href="{{ path('sessions', { 'username': session.athlete.username }) }}">{{ 'main.profile.sessions.title'|trans }}</a></span>
-                        <span class="d-none d-md-inline"><a class="text-decoration-none" href="{{ path('sessions', { 'username': session.athlete.username }) }}">{{ 'main.profile.sessions.list'|trans }}</a></span>                        
+                        <span class="d-md-none"><a class="text-decoration-none" href="{{ path('sessions', { 'username': session.athlete.username }) }}">{{ 'main.sessions.title'|trans }}</a></span>
+                        <span class="d-none d-md-inline"><a class="text-decoration-none" href="{{ path('sessions', { 'username': session.athlete.username }) }}">{{ 'main.sessions.full'|trans }}</a></span>                        
                         <span class="mx-1"><i class="fa-solid fa-chevron-right"></i></span>
-                        <span class="d-md-none fw-bold">#{{ position }}</span>
-                        <span class="d-none d-md-inline fw-bold identifier">{{ session.title }}</span>
+                        <span class="d-md-none fw-bold">{{ position }}</span>
+                        <span class="d-none d-md-inline fw-bold">{{ ('main.' ~ page ~ '.title')|trans ~ ' ' ~ position }}</span>
                     </div>
                 </section>
 {% endif %}
                 <section id="session" class="mx-auto{% if session.current %} mt-2 mt-md-3{% endif %}">
                     <section class="mt-1 mt-md-2 mb-3 text-center">
                         <h3 class="text-white identifier">{{ session.title }}</h3>
-                        <span>{{ 'main.session.at_date'|trans }} {{ session.start|date('d') }} {{ ('month.' ~ session.start|date('m'))|trans }} {{ session.start|date('Y') }} {{ 'main.session.at_time'|trans }} {{ session.start|date('H:i') }}</span>
+                        <span><span>{{ 'main.session.at_date'|trans }}</span> <span class="text-white">{{ ('day.' ~ session.start|date('d'))|trans }} {{ ('month.' ~ session.start|date('m'))|trans }} {{ session.start|date('Y') }}</span> <span>{{ 'main.session.at_time'|trans }}</span> <span class="text-white">{{ session.start|date('H:i') }}</span></span>
                     </section>
                     <div id="loading" class="text-center">
-                        <p class="p-5"><i class="fa-solid fa-syringe"></i> {{ 'loading'|trans }}</p>
-                        <!--<img id="loading-image" class="mb-3" src="images/dancing-ronnie.gif">-->
+                        <p class="py-5"><i class="fa-solid fa-syringe"></i> {{ 'loading'|trans }}...</p>
+                    </div>
+                    <div id="welcome" class="text-center" hidden>
+                        <p class="py-5">{{ 'main.session.welcome'|trans }}</p>
                     </div>
                     <section id="session-muscles"></section>
                     <section id="session-exercices"></section>
@@ -45,4 +49,5 @@
                 </section>
             </div>
         </section>
+        <div id="error"></div>
 {% endblock %}

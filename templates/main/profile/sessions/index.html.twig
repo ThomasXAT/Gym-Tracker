@@ -4,17 +4,17 @@
             <h2 id="athlete-username" hidden>{{ athlete.username }}</h2>
             <span hidden id="athlete-identifier">{{ athlete.id }}</span>
             <div class="row">
-                <section id="breadcrumb" class="mb-1 mb-md-2 p-2 mx-auto d-flex justify-content-between align-items-center">
+                <section id="breadcrumb" class="mb-md-2 p-2 mx-auto d-flex justify-content-between align-items-center">
                     <h3 hidden>{{ 'main.profile.sessions.list'|trans }}</h3>
                     <div class="col-3 col-md-4 text-white fw-bold fs-3">
-                        <span class="d-md-none">{{ 'main.profile.sessions.title'|trans }}</span>
-                        <span class="d-none d-md-inline">{{ 'main.profile.sessions.list'|trans }}</span>
+                        <span class="d-md-none">{{ 'main.sessions.title'|trans }}</span>
+                        <span class="d-none d-md-inline">{{ 'main.sessions.full'|trans }}</span>
                     </div>
                     <div class="col-9 col-md-8 text-end text-truncate" aria-label="breadcrumb">
                         <span><a href="{{ path('profile', {'username': athlete.username}) }}" class="text-decoration-none">@{{ athlete.username }}</a></span>
                         <span class="mx-1"><i class="fa-solid fa-chevron-right"></i></span>
-                        <span class="d-md-none fw-bold">{{ 'main.profile.sessions.title'|trans }}</span>
-                        <span class="d-none d-md-inline fw-bold">{{ 'main.profile.sessions.list'|trans }}</span>
+                        <span class="d-md-none fw-bold">{{ 'main.sessions.title'|trans }}</span>
+                        <span class="d-none d-md-inline fw-bold">{{ 'main.sessions.full'|trans }}</span>
                     </div>
                 </section>
                 {# Sessions #}<section id="sessions" class="p-2 mx-auto">

@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Controller\Administration\ExerciceCrudController;
 use App\Repository\AthleteRepository;
-use App\Repository\Culture\QuotationRepository;
 use App\Repository\Training\ExerciceRepository;
 use App\Repository\Training\SessionRepository;
 use App\Repository\Training\SetRepository;
@@ -27,12 +25,10 @@ class ApiController extends AbstractController
             $result[$athletes[$i]->getId()]['picture'] = $athletes[$i]->getPicture();
             $result[$athletes[$i]->getId()]['measurement'] = $athletes[$i]->isMeasurement();
             if ($athletes[$i]->isMeasurement()) {
-                $measurement = $athletes[$i]->getMeasurements()[$athletes[$i]->getMeasurements()->count()-1];
-                $result[$athletes[$i]->getId()]['height'] = $measurement->getHeight();
-                $result[$athletes[$i]->getId()]['weight'] = $measurement->getWeight();
+                $result[$athletes[$i]->getId()]['height'] = $athletes[$i]->getHeight();
+                $result[$athletes[$i]->getId()]['weight'] = $athletes[$i]->getWeight();
             }
             $result[$athletes[$i]->getId()]['description'] = $athletes[$i]->getDescription();
-            $result[$athletes[$i]->getId()]['quotation'] = $athletes[$i]->getQuotation() ? $athletes[$i]->getQuotation()->getId() : null;
         }
         return $this->json($result);
     }
@@ -89,18 +85,6 @@ class ApiController extends AbstractController
             $result[$sets[$i]->getId()]['isometric'] = $sets[$i]->getIsometric();
             $result[$sets[$i]->getId()]['eccentric'] = $sets[$i]->getEccentric();
             $result[$sets[$i]->getId()]['dropping'] = $sets[$i]->isDropping();
-        }
-        return $this->json($result);
-    }
-
-    #[Route(path:'/quotation', name: 'quotation')]
-    public function quotation(QuotationRepository $quotationRepository) {
-        $quotations = $quotationRepository->findBy($_GET);
-        $result = array();
-        for ($i = 0; $i < sizeof($quotations); $i++) {
-            $result[$quotations[$i]->getId()]['id'] = $quotations[$i]->getId();
-            $result[$quotations[$i]->getId()]['text'] = $quotations[$i]->getText();
-            $result[$quotations[$i]->getId()]['author'] = $quotations[$i]->getAuthor();
         }
         return $this->json($result);
     }

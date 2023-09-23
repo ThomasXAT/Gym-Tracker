@@ -2,12 +2,12 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <header class="modal-header">
-                            <p class="modal-title fs-5">{{ 'main.profile.edit.form'|trans }}</p>
+                            <p class="modal-title fs-5">{{ 'main.profile.edit.title'|trans }}</p>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </header>
                         <main class="modal-body">
-                            {{ form_start(form) }}
-                                <label for="section-picture" class="form-label">{{ 'main.profile.edit.picture'|trans }}</label>
+                            {{ form_start(edit_form) }}
+                                <label for="section-picture" class="form-label fw-bold">{{ 'athlete.picture'|trans }}</label>
                                 <section id="section-picture" class="row mb-3">
                                     <div class="col-4 pe-1">
                                         <section id="section-view">
@@ -17,87 +17,59 @@
                                     <div class="col-8 ps-1 d-flex align-items-center">
                                         <div>
                                             <section id="section-file">
-                                                {{ form_widget(form.file) }}
+                                                {{ form_widget(edit_form.file) }}
                                             </section>
                                             <p id="help-file" class="form-text text-danger"></p>
-                                            <a id="delete_picture" class="text-nowrap text-decoration-none pointer-only px-1">{{ 'main.profile.edit.delete_picture'|trans }}</a>
+                                            <a id="delete_picture" class="text-nowrap text-decoration-none pointer-only px-1">{{ 'main.profile.edit.picture.delete'|trans }}</a>
                                         </div>
                                     </div>
                                 </section> 
-                                {{ form_widget(form._delete_picture) }}
-                                <br>
-                                <label for="section-identity" class="form-label">{{ 'main.profile.edit.identity'|trans }}</label>
+                                {{ form_widget(edit_form._delete_picture) }}
+                                <label for="section-identity" class="form-label fw-bold">{{ 'main.profile.edit.identity.label'|trans }}</label>
                                 <section id="section-identity" class="mx-auto">
                                     <section id="section-fullname" class="mb-3">
                                         <div class="d-flex">
                                             <section id="section-firstname" class="form-floating col-6 pe-1">
-                                                {{ form_widget(form.firstname) }}
-                                                {{ form_label(form.firstname) }}
+                                                {{ form_widget(edit_form.firstname) }}
+                                                {{ form_label(edit_form.firstname) }}
                                             </section>
                                             <section id="section-surname" class="form-floating col-6 ms-1 pe-1">
-                                                {{ form_widget(form.surname) }}
-                                                {{ form_label(form.surname) }}
+                                                {{ form_widget(edit_form.surname) }}
+                                                {{ form_label(edit_form.surname) }}
                                             </section>
                                         </div>
                                         <p id="help-fullname" class="form-text text-danger"></p>
                                     </section>
                                     <section id="section-email" class="form-floating mb-3">
-                                        {{ form_widget(form.email) }}
-                                        {{ form_label(form.email) }}
+                                        {{ form_widget(edit_form.email) }}
+                                        {{ form_label(edit_form.email) }}
                                         <p id="help-email" class="form-text text-danger"></p>
                                     </section>
                                     <section id="section-password" class="form-floating mb-3">
-                                        {{ form_widget(form.password) }}
-                                        {{ form_label(form.password) }}
+                                        {{ form_widget(edit_form.password) }}
+                                        {{ form_label(edit_form.password) }}
                                         <p id="help-password" class="form-text text-danger"></p>
                                     </section>
                                     <section id="section-confirmation" class="form-floating mb-3" hidden>
-                                        {{ form_widget(form.confirmation) }}
-                                        {{ form_label(form.confirmation) }}
+                                        {{ form_widget(edit_form.confirmation) }}
+                                        {{ form_label(edit_form.confirmation) }}
                                         <p id="help-confirmation" class="form-text text-danger"></p>
                                     </section>
                                 </section>
-                                <br>
-                                <label for="section-measurement" class="form-label">{{ 'main.profile.edit.measurements.label'|trans }}</label>
-                                <section id="section-measurement" class="mx-auto">
-                                    <section id="section-measurement-checkbox" class="form-check mb-3">
-                                        {{ form_widget(form.measurement) }}
-                                        {{ form_label(form.measurement) }}
-                                    </section>
-                                    <section id="section-height" class="form-group mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <input type="range" class="form-range pe-3" id="range-height" min="140" max="220" step="0.1">                                            
-                                            {{ form_widget(form.height, {'attr': {'value': (height is defined and height) or (weight is defined and weight) ? height : null}}) }}
-                                            <span class="ps-1">cm</span>
-                                        </div>
-                                    </section>
-                                    <section id="section-weight" class="form-group mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <input type="range" class="form-range pe-3" id="range-weight" min="40" max="120" step="0.1">                                    
-                                            {{ form_widget(form.weight, {'attr': {'value': (weight is defined and weight) or (weight is defined and weight) ? weight : null}}) }}
-                                            <span class="ps-1">kg</span>
-                                        </div>
-                                    </section>
-                                    <p id="help-measurement" class="form-text text-danger"></p>
-                                    <a id="delete_measurement" class="text-nowrap text-decoration-none pointer-only px-1">{{ 'main.profile.edit.delete_measurement'|trans }}</a>
+                                <label for="section-description" class="form-label fw-bold">{{ 'main.profile.edit.description.label'|trans }}</label>
+                                <section id="section-description" class="form-group mb-2">
+                                    {{ form_widget(edit_form.description) }}
                                 </section>
-                                <br>
-                                <section id="section-description" class="form-group mb-3">
-                                    {{ form_label(form.description) }}
-                                    {{ form_widget(form.description) }}
+                                <section id="section-quotation" class="form-floating">
+                                    {{ form_widget(edit_form.quotation) }}
+                                    {{ form_label(edit_form.quotation) }}
                                 </section>
-<!--
-                                <section id="section-quotation" class="form-group mb-3">
-                                    {{ form_label(form.quotation) }}
-                                    {{ form_widget(form.quotation) }}
-                                </section>
--->
-                                <section id="section-submit" class="d-grid gap-2">
-                                    {{ form_widget(form.submit) }}
-                                </section>
-                                {{ form_widget(form._token) }}
-                            {{ form_end(form) }}
+                                {{ form_widget(edit_form._token) }}
+                            {{ form_end(edit_form) }}
                         </main>
+                        <footer class="modal-footer">
+                            <button id="profile_submit" class="btn btn-success" disabled><i class="fa-solid fa-pen-to-square"></i> {{ 'main.profile.edit.submit'|trans }}</button>
+                        </div>
                     </div>
                 </div>
             </aside>

@@ -1,6 +1,21 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-        <section class="content">
+        <section class="content container">
+            <h2 hidden>{{ 'main.home.title'|trans }}</h2>
+            <section>
+                <div class="h2 my-2 mb-md-3 d-flex align-items-center">
+                    <div class="me-2">👋</div>
+                    <div class="text-center">
+                        <span>{{ 'hi'|trans }}</span>
+{% if app.user.firstname %}
+                        <span class="text-white">{{ app.user.firstname }}</span>
+{% endif %}
+                        <span>!</span>
+                    </div>
+                </div>
+            </section>
+            <section>
 
+            </section>
         </section>
 {% endblock %}

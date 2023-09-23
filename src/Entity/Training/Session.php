@@ -227,7 +227,7 @@ class Session
                     $exercices[$exercice] = [
                         'sequence' => false,
                         'id' => $current->getExercice()->getId(),
-                        'fullname' => $name . ' (' . mb_strtolower(array_search($equipment, Exercice::EQUIPMENTS)) . ')',
+                        'fullname' => $name . ' (' . array_search($equipment, Exercice::EQUIPMENTS) . ')',
                         'name' => $name,
                         'equipment' => $equipment,
                         'sets' => [array()],

@@ -6,7 +6,7 @@
             <div class="row justify-content-center">
                 {# Information #}<section id="information" class="pe-md-2 p-2 mx-auto{% if athlete.description or athlete.quotation %} me-lg-0{% endif %}">
                     {# Recto #}<div id="recto" class="d-flex justify-content-center align-items-center">
-{% if (athlete.measurement or athlete == app.user) and ((height is defined and height) or (weight is defined and weight)) %}
+{% if (athlete.measurement or athlete == app.user) and (athlete.height or athlete.weight) %}
                         <span data-action="click->profile#verso" class="pointer d-lg-none"><i class="fa-solid fa-arrow-left fa-lg"></i></span>
 {% endif %}
                         <div class="card mx-3 mx-lg-0">
@@ -16,10 +16,10 @@
                                 </section>
                             </header>
                             <main class="card-body justify-content-center align-items-center d-flex">
-                                <section id="section-identity" class="text-center w-100 text-truncate">
+                                <section id="section-identity" class="text-center w-100">
 {% if athlete.firstname or athlete.surname %}
-                                    <section id="section-fullname" class="fs-3">
-                                        <span id="fullname">
+                                    <section id="section-fullname" class="text-truncate">
+                                        <span id="fullname" class="profile-fullname">
 {% if athlete.firstname %}
                                             <span id="firstname">{{ athlete.firstname }}</span>
 {% if athlete.surname %}
@@ -32,43 +32,41 @@
                                         </span>
                                     </section>
 {% endif %}
-                                    <section id="section-username">
+                                    <section id="section-username" class="text-truncate">
                                         <span id="username"><a href="{{ path('profile', {'username': athlete.username}) }}" class="text-decoration-none">@{{ athlete.username }}</a></span>
                                     </section>
                                 </section>
                             </main>
                             <footer class="card-footer">
-{% if (height is defined and height) or (weight is defined and weight) %}
-{% if athlete.measurement or app.user == athlete %}
+{% if (athlete.height or athlete.weight) and (athlete.measurement or app.user == athlete) %}
                                 <section id="section-verso" class="d-flex justify-content-between align-items-center">
                                     <span data-action="click->profile#verso" class="pointer d-none d-lg-block"><i class="fa-solid fa-arrow-left"></i></span>
                                     <span data-action="click->profile#verso" class="m-auto pointer">1 / 2</span>
                                     <span data-action="click->profile#verso" class="pointer d-none d-lg-block"><i class="fa-solid fa-arrow-right"></i></span>
                                 </section>
-{% else %}                                
-                                <section id="section-not-allowed" class="d-flex justify-content-center align-items-center">
-                                    <span class="not-allowed"><i class="fa-solid fa-lock"></i></span>
-                                </section>
-{% endif %}
-{% else %}  
+{% else %}
                                 <section id="section-no-measurement" class="d-flex justify-content-center align-items-center">
-                                    <span class="fw-bold">∅</span>
+    {% if app.user == athlete %}
+                                    <a class="text-decoration-none pointer-only" data-action="click->profile#measurement" data-bs-toggle="modal" data-bs-target="#_measurement"><i class="fa-solid fa-plus"></i> {{ 'main.profile.measurements.add'|trans }}</a>
+    {% else %}
+                                    <span>∅</span>
+    {% endif %}
                                 </section>
 {% endif %}
                             </footer>
                         </div>
-{% if (athlete.measurement or athlete == app.user) and ((height is defined and height) or (weight is defined and weight)) %}
+{% if (athlete.measurement or athlete == app.user) and (athlete.height or athlete.weight) %}
                         <span data-action="click->profile#verso" class="pointer d-lg-none"><i class="fa-solid fa-arrow-right fa-lg"></i></span>
 {% endif %}
                     </div>
-{% if (athlete.measurement or athlete == app.user) and ((height is defined and height) or (weight is defined and weight)) %}
+{% if (athlete.measurement or athlete == app.user) and (athlete.height or athlete.weight) %}
                     {# Verso #}<div id="verso" class="justify-content-center align-items-center d-none">
                         <span data-action="click->profile#recto" class="pointer d-lg-none"><i class="fa-solid fa-arrow-left fa-lg"></i></span>
                         <div class="card mx-3 mx-lg-0">
                             <header class="card-header">
-                                <div class="text-center fw-bold">{{ 'main.profile.measurements.label'|trans }}</div>
+                                <div class="text-center">{{ 'measurement.label'|trans }}</div>
 {% if athlete == app.user %}
-                                <div class="text-center">
+                                <div class="text-center mb-1">
 {% if athlete.measurement %}
                                     <span class="badge bg-success"><i class="fa-solid fa-eye"></i> {{ 'main.profile.measurements.public'|trans }}</span>
 {% else %}
@@ -79,25 +77,25 @@
                             </header>
                             <main class="card-body">
                                 <div>
-                                    <table class="table table-dark table-striped text-center border">
+                                    <table class="table table-dark table-striped text-center border mb-2{% if athlete == app.user %} pointer-only" data-action="click->profile#measurement" data-bs-toggle="modal" data-bs-target="#_measurement"{% else %}"{% endif %}>
                                         <thead>
                                             <tr>
-                                                <th scope="col">{{ 'main.profile.measurements.height'|trans }}</th>
-                                                <th scope="col">{{ 'main.profile.measurements.weight'|trans }}</th>
-                                                <th scope="col">{{ 'main.profile.measurements.bmi.label'|trans }}</th>
+                                                <th scope="col">{{ 'measurement.height'|trans }}</th>
+                                                <th scope="col">{{ 'measurement.weight'|trans }}</th>
+                                                <th scope="col">{{ 'measurement.bmi'|trans }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{{ athlete.height }}</td>
-                                                <td>{{ athlete.weight }}</td>
-{% set bmi = athlete.weight / ((athlete.height / 100) * (athlete.height / 100)) %}
-                                                <td class="fw-bold">{{ bmi|round(1) }}</td>
+                                                <td>{{ athlete.height|replace({'.': ','}) }}</td>
+                                                <td>{{ athlete.weight|replace({'.': ','}) }}</td>
+{% set bmi = athlete.weight / (athlete.height * athlete.height)%}
+                                                <td class="fw-bold">{{ bmi|round(1)|replace({'.': ','}) }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="text-center">
+                                <div class="text-end">
                                     <a href="{{ path('measurements', {'username': athlete.username}) }}" class="text-decoration-none">{{ 'main.profile.measurements.list'|trans }}</a>
                                 </div>
                             </main>
@@ -113,42 +111,43 @@
                     </div>
 {% endif %}
                 </section>
-{% if athlete.description or athlete.quotation %}
                 {# Description #}<section id="description" class="ps-md-2 p-2 mx-auto ms-lg-0">
                     <div class="card flex-fill">
                         <main class="card-body overflow-auto identifier">
                             {{ athlete.description|raw }}
                         </main>
 {% if athlete.quotation %}
-<!-- 
                         <footer class="card-footer">
                             <figure id="quotation">
-                                <blockquote class="blockquote overflow-auto">
-                                    <span class="text-truncate">{{ athlete.quotation.text }}</span>
+                                <blockquote class="blockquote">
+                                    <span>{{ athlete.quotation.text }}</span>
                                 </blockquote>
                                 <figcaption class="blockquote-footer overflow-auto">
-                                    <span class="text-truncate">{{ athlete.quotation.author }}</span>
+                                    <span>{{ athlete.quotation.author }}</span>
                                 </figcaption>
                             </figure>
                         </footer>
--->
 {% endif %}
                     </div>
                 </section>
+{% if athlete is defined and athlete == app.user %}
+                <div class="text-end">
+                    <a class="text-decoration-none pointer-only" data-action="click->profile#edit" data-bs-toggle="modal" data-bs-target="#_edit">{{ 'main.profile.edit.button'|trans }}</a>
+                </div>
 {% endif %}
 {% if sessions is defined and sessions %}
                 {# Sessions #}<section id="sessions" class="p-2">
-                    <h3 class="text-white">{{ 'main.profile.sessions.last'|trans }}</h3>
+                    <h3 class="text-white">{{ 'main.profile.sessions.label'|trans }}</h3>
 {{ include('main/profile/_sessions.html.twig') }}
                     <div class="text-end">
-                        <a class="text-truncate text-decoration-none" href="{{ path('sessions', {'username': athlete.username}) }}">{{ 'main.profile.sessions.full'|trans }}</a>
+                        <a class="text-truncate text-decoration-none" href="{{ path('sessions', {'username': athlete.username}) }}">{{ 'main.profile.sessions.list'|trans }}</a>
                     </div>
                 </section>
 {% endif %}
             </div>
 {% if athlete is defined and athlete == app.user %}
-            <button id="button-edit" class="btn btn-light text-nowrap" data-action="click->profile#edit" data-bs-toggle="modal" data-bs-target="#_edit"><i class="fa-solid fa-pen-to-square"></i> {{ 'main.profile.edit.button'|trans }}</button>
 {{ include('main/profile/_edit.html.twig') }}
+{{ include('main/profile/_measurement.html.twig') }}
 {% endif %}
         </section>
 {% endblock %}

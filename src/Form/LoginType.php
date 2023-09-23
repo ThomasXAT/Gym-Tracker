@@ -24,15 +24,15 @@ class LoginType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => $this->translator->trans('authentication.login.username'),
+                'label' => $this->translator->trans('athlete.username'),
                 'required' => false,
-                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.username')],
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('password', PasswordType::class, [
-                'label' => $this->translator->trans('authentication.login.password'),
+                'label' => $this->translator->trans('athlete.password.label'),
                 'required' => false,
-                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.password.label')],
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('remember_me', CheckboxType::class, [

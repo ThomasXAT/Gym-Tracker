@@ -64,6 +64,9 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $measurement = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $unit = null;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
@@ -343,5 +346,17 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
             return $measurement->getWeight();
         }
         return null;
+    }
+
+    public function getUnit(): ?string
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(string $unit): self
+    {
+        $this->unit = $unit;
+
+        return $this;
     }
 }

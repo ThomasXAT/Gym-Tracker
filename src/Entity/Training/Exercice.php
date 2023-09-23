@@ -35,13 +35,13 @@ class Exercice
     const SMITH = 'smith';
     const MACHINE = 'machine';
     const EQUIPMENTS = [
-        'Poids du corps' => self::BODYWEIGHT,
-        'Élastique' => self::BAND,
-        'Barre' => self::BARBELL,
-        'Haltères' => self::DUMBBELL,
-        'Poulie' => self::CABLE,
-        'Barre guidée' => self::SMITH,
-        'Machine' => self::MACHINE,
+        'poids du corps' => self::BODYWEIGHT,
+        'élastique' => self::BAND,
+        'barre' => self::BARBELL,
+        'haltères' => self::DUMBBELL,
+        'poulie' => self::CABLE,
+        'barre guidée' => self::SMITH,
+        'machine' => self::MACHINE,
     ];
 
     #[ORM\Id]

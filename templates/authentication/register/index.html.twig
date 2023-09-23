@@ -3,11 +3,11 @@
         <section class="content container" {{ stimulus_controller('register') }}>
             <div id="title" class="text-center py-3">
                 <h2 class="text-white">{{ 'authentication.register.form'|trans }}</h2>
-                <p class="required">{{ 'authentication.register.required'|trans }}</p>
+                <p class="required">{{ 'required'|trans }}</p>
             </div>
 {{ include('authentication/register/_form.html.twig') }} 
             <div class="py-2 text-center">
-                <a class="btn btn-link" href="{{ path('authentication_login') }}">{{ 'authentication.register.link'|trans }}</a>
+                <a class="btn btn-link" href="{{ path('authentication_login') }}">{{ 'authentication.register.login'|trans }}</a>
             </div>
         </section>
 {% endblock %}

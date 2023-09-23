@@ -24,36 +24,36 @@ class RegisterType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class, [
-                'label' => $this->translator->trans('authentication.register.firstname'),
+                'label' => $this->translator->trans('athlete.firstname'),
                 'required' => false,
-                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.firstname')],
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('surname', TextType::class, [
-                'label' => $this->translator->trans('authentication.register.surname'),
+                'label' => $this->translator->trans('athlete.surname'),
                 'required' => false,
-                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.surname')],
                 'label_attr' => ['class' => 'form-label'],
             ])     
             ->add('username', TextType::class, [
-                'label' => $this->translator->trans('authentication.register.username'),
-                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label' => $this->translator->trans('athlete.username'),
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.username')],
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('email', EmailType::class, [
-                'label' => $this->translator->trans('authentication.register.email'),
-                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label' => $this->translator->trans('athlete.email'),
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.email')],
                 'label_attr' => ['class' => 'form-label'],
             ])     
             ->add('password', PasswordType::class, [
-                'label' => $this->translator->trans('authentication.register.password'),
-                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'label' => $this->translator->trans('athlete.password.label'),
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.password.label')],
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('confirmation', PasswordType::class, [
-                'label' => $this->translator->trans('authentication.register.confirmation'),
+                'label' => $this->translator->trans('athlete.password.confirmation'),
                 'mapped' => false,
-                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('placeholder')],
+                'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.password.confirmation')],
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('submit', SubmitType::class, [

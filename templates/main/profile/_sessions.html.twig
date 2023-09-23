@@ -1,43 +1,38 @@
                     <div class="accordion accordion-flush" id="sessions-accordion">
 {% for session in sessions %}
                         <div id="session-{{ session.id }}" class="accordion-item border mb-2">
-                            <div class="session-title border-bottom d-flex text-white">
+                            <div class="session-title border-bottom d-flex">
                                 <div class="p-2 border-end">
                                     <span>{{ session.start|date('d/m/Y') }}</span>
                                 </div>
-                                <div class="p-2 w-100 text-truncate fw-bold">
+                                <div class="p-2 w-100 text-truncate">
                                     <span>{{ session.subtitle }}</span>
                                 </div>
                             </div>
                             <div>
                                 <div class="accordion-header">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-session-{{ session.id }}" aria-expanded="false" aria-controls="collapse-session-{{ session.id }}">
-                                        <div class="text-truncate">
+                                        <div class="text-truncate pe-3">
                                             <span class="identifier">{{ session.title }}</span>
                                         </div>
                                     </button>
                                 </div>
                                 <div id="collapse-session-{{ session.id }}" class="accordion-collapse collapse" data-bs-parent="#sessions-accordion">
-                                    <div class="accordion-body">
+                                    <div class="accordion-body pt-0">
                                         <section id="session-exercices-{{ session.id }}" class="mb-3">
-                                            <ul class="list-group">
+                                            <ol class="list-group">
 {% for exercice in session.exercices %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <li class="list-group-item exercices-list-item">
 {% if exercice.sequence %}
-{% set name = '' %}
 {% for part in exercice.exercices %}
-{% set name = name ~ part.name ~ ' (' ~ ('main.session.exercice.equipment.' ~ part.equipment)|trans ~ ')' %}
-{% if loop.index < exercice.exercices|length %}
-{% set name = name ~ ', ' %}
-{% endif %}
+                                                    <article class="d-md-inline">{{ part.name ~ ' (' ~ part.equipment|trans ~ ')' }}{% if loop.index != exercice.exercices|length %},{% endif %}</article>
 {% endfor %}
-                                                    {{ name }}
 {% else %}
-                                                    {{ exercice.name ~ ' (' ~ ('main.session.exercice.equipment.' ~ exercice.equipment)|trans ~ ')' }}
+                                                    <article>{{ exercice.name ~ ' (' ~ exercice.equipment|trans ~ ')' }}<article>
 {% endif %}
                                                 </li>
 {% endfor %}
-                                            </ul>
+                                            </ol>
                                         </section>
                                         <section id="section-show" class="d-flex justify-content-center">
                                             <a class="btn btn-outline-success" href="{{ path('session_display', { 'username': session.athlete.username, 'slug': session.slug, 'string': session.string }) }}">{{ 'main.profile.sessions.show'|trans }}</a>

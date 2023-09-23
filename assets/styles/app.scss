@@ -9,7 +9,7 @@
     color: var(--bs-danger) !important;
 }
 
-main.main, footer.main, .modal-body, .accordion-collapse {
+main.main, footer.main, .modal-body, .accordion-collapse, .authentication {
     background-color: #1b1f22 !important;
 }
 
@@ -40,7 +40,7 @@ main.main, footer.main, .modal-body, .accordion-collapse {
     }
 }
 
-#sessions, #session, #breadcrumb, #measurements {
+main.main > section.content {
     max-width: 925px;
 }
 
@@ -61,13 +61,17 @@ main.main, footer.main, .modal-body, .accordion-collapse {
 .not-allowed {
     cursor: not-allowed;
 }
-.search-bar {
+.search-bar, input, select {
     outline: none !important;
     box-shadow: none !important;
 }
 
 .search-bar:focus {
     border-color: var(--bs-border-color) !important;
+}
+
+.ck-editor {
+    border-color: red !important;
 }
 
 #logo {
@@ -122,22 +126,14 @@ main.main, footer.main, .modal-body, .accordion-collapse {
     left: 0;
     z-index: 1030;
     margin: 10px;
-    max-width: 90px;
+    max-width: 130px;
     @media screen and (max-width: 767px) {
         margin-bottom: 65px;
     }
 }
 
-footer.main {
+footer.main, .session-title, .session-date, .exercices-list-item {
     background-color: #262A2E !important;
-}
-
-.session-title {
-    background-color: #262A2E;
-}
-
-.session-date {
-    background-color: #262A2E;
 }
 
 .card.athlete {
@@ -169,6 +165,21 @@ footer.main {
     @media screen and (min-width: 768px) {
         min-height: calc(100vh - 154px);
     }
+}
+
+.profile-fullname {
+    font-size: 1.75em !important;
+}
+
+.accordion-button, .accordion-body {
+    background-color: #212529 !important;
+    color: #fff !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#exercice-list {
+    height: 112px;
 }
 
 /* c5ced6 */

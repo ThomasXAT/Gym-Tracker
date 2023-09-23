@@ -4,8 +4,8 @@
             {# Search #}<section id="section-search-mobile" class="d-md-none p-3 mx-auto">
                 <form method="get" action="/">
                     <div class="input-group">
-                        <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input id="athlete-search" name="search" type="text" class="form-control search-bar" placeholder="{{ 'main.repertory.search'|trans }}" {% if search is defined %}value="{{ search }}"{% endif %}>
+                        <span class="input-group-text pointer-only magnifying-glass"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input name="search" inputmode="search" class="form-control search-bar identifier" placeholder="{{ 'main.repertory.search'|trans }}" {% if search is defined %}value="{{ search }}"{% endif %}>
                     </div>
                 </form>
             </section>
@@ -24,10 +24,10 @@
                         <section class="text-start">
                             <img id="picture" width="96px" height="96px" class="profile-picture border p-picture-repertory" src="{% if athlete.picture %}{{ asset(athlete.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}">
                         </section>
-                        <section class="text-center mx-auto text-truncate px-3">
+                        <section class="text-center mx-auto px-3 overflow-auto">
 {% if athlete.firstname or athlete.surname %}
-                            <section class="fs-3">
-                                <span>
+                            <section id="section-fullname" class="text-truncate">
+                                <span class="profile-fullname">
 {% if athlete.firstname %}
                                     <span>{{ athlete.firstname }}</span>
 {% if athlete.surname %}
@@ -40,7 +40,7 @@
                                 </span>
                             </section>
 {% endif %}
-                            <section>
+                            <section id="section-username" class="text-truncate">
                                 <span><a href="{{ path('profile', {'username': athlete.username}) }}" class="text-decoration-none">@{{ athlete.username }}</a></span>
                             </section>
                         </section>
