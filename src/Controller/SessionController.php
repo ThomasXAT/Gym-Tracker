@@ -40,7 +40,7 @@ class SessionController extends AbstractController
                 ->setSlug($sluggerInterface->slug($data['title']))
                 ->setString(uniqid())
                 ->setAthlete($user)
-                ->setStart(new DateTime)
+                ->setStart(new DateTime())
             ;
             $sessionRepository->save($session, true);
         }
@@ -58,7 +58,7 @@ class SessionController extends AbstractController
             if (sizeof($session->getExercices())) {
                 $session
                     ->setCurrent(false)
-                    ->setEnd(new DateTime)
+                    ->setEnd(new DateTime())
                 ;
                 $sessionRepository->save($session, true);
             }

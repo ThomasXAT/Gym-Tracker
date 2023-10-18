@@ -68,7 +68,7 @@ class SecurityController extends AbstractController
                     )
                 );
                 $athlete
-                    ->setRegistration(new DateTime)
+                    ->setRegistration(new DateTime())
                     ->setMeasurement(false)
                     ->setDescription('<p>Je suis nouveau sur <strong>Gym-Tracker</strong> !</p>')
                     ->setUnit('kg')

@@ -23,8 +23,8 @@
                     </div>
                 </section>
 {% endif %}
-                <section id="session" class="mx-auto{% if session.current %} mt-2 mt-md-3{% endif %}">
-                    <section class="mt-1 mt-md-2 mb-3 text-center">
+                <section id="session" class="mx-auto{% if session.current %} mt-2 {% if session.current %}mt-mb-0{% else %}mt-md-3{% endif %}{% endif %}">
+                    <section class="mt-1 mt-md-2 mb-3 mb-md-0 text-center">
                         <h3 class="text-white identifier">{{ session.title }}</h3>
                         <span><span>{{ 'main.session.at_date'|trans }}</span> <span class="text-white">{{ ('day.' ~ session.start|date('d'))|trans }} {{ ('month.' ~ session.start|date('m'))|trans }} {{ session.start|date('Y') }}</span> <span>{{ 'main.session.at_time'|trans }}</span> <span class="text-white">{{ session.start|date('H:i') }}</span></span>
                     </section>

@@ -11,6 +11,8 @@ translations["machine"] = "machine";
 
 import {
     trans,
+    VALIDATOR_TITLE_EMPTY,
+    VALIDATOR_TITLE_SIZE_MAX,
     VALIDATOR_FIRSTNAME_CHARACTERS,
     VALIDATOR_FIRSTNAME_EXTREMITIES,
     VALIDATOR_FIRSTNAME_SIZE_MAX,
@@ -25,8 +27,8 @@ import {
     VALIDATOR_PASSWORD_SIZE_MIN,
     VALIDATOR_PASSWORD_SIZE_MAX,
     VALIDATOR_PASSWORD_CONFIRMATION,
-    VALIDATOR_MEASUREMENT_HEIGHT,
-    VALIDATOR_MEASUREMENT_WEIGHT,
+    VALIDATOR_profile_HEIGHT,
+    VALIDATOR_profile_WEIGHT,
     SET,
     SYMMETRY_LABEL,
     SYMMETRY_UNILATERAL,
@@ -84,43 +86,112 @@ export let Translator = {
 };    
 
 export let Validator = {
-    setValid: function(input) {
-        if (input.hasClass("is-invalid")) {
-            input.removeClass("is-invalid").addClass("is-valid");
+    setValid: function(input, measurement = false) {
+        if (measurement) {
+            let id = input.attr("id");
+            let before = $("#" + id + "-before");
+            let after = $("#" + id + "-after");
+            if (input.hasClass("border-invalid")) {
+                before.removeClass("border-invalid").addClass("border-valid");
+                input.removeClass("border-invalid").addClass("border-valid");
+                after.removeClass("border-invalid").addClass("border-valid");
+            }
+            else {
+                before.addClass("border-valid");
+                input.addClass("border-valid");
+                after.addClass("border-valid");
+            }
         }
         else {
-            input.addClass("is-valid");
+            if (input.hasClass("is-invalid")) {
+                input.removeClass("is-invalid").addClass("is-valid");
+            }
+            else {
+                input.addClass("is-valid");
+            }
         }
     },
-    setInvalid: function(input) {
-        if (input.hasClass("is-valid")) {
-            input.removeClass("is-valid").addClass("is-invalid");
+    setInvalid: function(input, measurement = false) {
+        if (measurement) {
+            let id = input.attr("id");
+            let before = $("#" + id + "-before");
+            let after = $("#" + id + "-after");
+            if (input.hasClass("border-valid")) {
+                before.removeClass("border-valid").addClass("border-invalid");
+                input.removeClass("border-valid").addClass("border-invalid");
+                after.removeClass("border-valid").addClass("border-invalid");
+            }
+            else {
+                before.addClass("border-invalid");
+                input.addClass("border-invalid");
+                after.addClass("border-invalid");
+            }
         }
         else {
-            input.addClass("is-invalid");
+            if (input.hasClass("is-valid")) {
+                input.removeClass("is-valid").addClass("is-invalid");
+            }
+            else {
+                input.addClass("is-invalid");
+            }
         }
     },
-    setNeutral: function(input) {
-        if (input.hasClass("is-valid")) {
-            input.removeClass("is-valid");
+    setNeutral: function(input, measurement = false) {
+        if (measurement) {
+            let id = input.attr("id");
+            let before = $("#" + id + "-before");
+            let after = $("#" + id + "-after");
+            if (input.hasClass("border-valid")) {
+                before.removeClass("border-valid");
+                input.removeClass("border-valid");
+                after.removeClass("border-valid");
+            }
+            if (input.hasClass("border-invalid")) {
+                before.removeClass("border-invalid");
+                input.removeClass("border-invalid");
+                after.removeClass("border-invalid");
+            }
+
         }
-        if (input.hasClass("is-invalid")) {
-            input.removeClass("is-invalid");
+        else {
+            if (input.hasClass("is-valid")) {
+                input.removeClass("is-valid");
+            }
+            if (input.hasClass("is-invalid")) {
+                input.removeClass("is-invalid");
+            }
         }
     },
     verify: {
+        title: function(title, help = false) {
+            if (help) {
+                $("#help-title").text(trans(VALIDATOR_TITLE_EMPTY));
+                Validator.setInvalid(title);
+            }
+            if (title.val() !== "") {
+                if (title.val().length > 64) {
+                    $("#help-title").text(trans(VALIDATOR_TITLE_SIZE_MAX));
+                }
+                else {
+                    $("#help-title").text("");
+                    Validator.setValid(title);
+                    return true;
+                }
+            }
+            return false;
+        },
         firstname: function(firstname, help = false) {
             if (help) {
                 Validator.setNeutral(firstname);
             }
-            if (firstname.val() != "") {
+            if (firstname.val() !== "") {
                 if (help) { Validator.setInvalid(firstname); }
                 firstname.val(firstname.val().split(new RegExp(/(\s|-)+/)).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(""));
                 if (!new RegExp(/^[a-zA-Zà-üÀ-Ü-\s]+$/).test(firstname.val())) {
                     if (help) { $("#help-fullname").text(trans(VALIDATOR_FIRSTNAME_CHARACTERS)); }
                     return false;
                 }
-                else if (firstname.val() != firstname.val().trim().replace(/^-+|-+$/g, '')) {
+                else if (firstname.val() !== firstname.val().trim().replace(/^-+|-+$/g, '')) {
                     if (help) { $("#help-fullname").text(trans(VALIDATOR_FIRSTNAME_EXTREMITIES)); }
                     return false;
                 }
@@ -138,14 +209,14 @@ export let Validator = {
             if (help) {
                 Validator.setNeutral(surname);
             }
-            if (surname.val() != "") {
+            if (surname.val() !== "") {
                 if (help) { Validator.setInvalid(surname); }
                 surname.val(surname.val().split(new RegExp(/(\s|-)+/)).map(word => word.toUpperCase()).join(""));
                 if (!new RegExp(/^[a-zA-Zà-üÀ-Ü-\s]+$/).test(surname.val())) {
                     if (help) { $("#help-fullname").text(trans(VALIDATOR_SURNAME_CHARACTERS)); }
                     return false;
                 }
-                else if (surname.val() != surname.val().trim().replace(/^-+|-+$/g, '')) {
+                else if (surname.val() !== surname.val().trim().replace(/^-+|-+$/g, '')) {
                     if (help) { $("#help-fullname").text(trans(VALIDATOR_SURNAME_EXTREMITIES)); }
                     return false;
                 }
@@ -164,7 +235,7 @@ export let Validator = {
                 $("#help-username").text("");
                 Validator.setNeutral(username);
             }
-            if (username.val() != "") {
+            if (username.val() !== "") {
                 if (help) { Validator.setInvalid(username); }
                 if (!new RegExp(/^[a-zA-Z0-9_]+$/).test(username.val())) {
                     if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_CHARACTERS)); }
@@ -187,7 +258,7 @@ export let Validator = {
                 $("#help-email").text("");
                 Validator.setNeutral(email);
             }
-            if (email.val() != "") {
+            if (email.val() !== "") {
                 if (help) { Validator.setInvalid(email); }
                 email.val(email.val().toLowerCase());
                 if (!new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g).test(email.val())) {
@@ -208,7 +279,7 @@ export let Validator = {
                 $("#help-password").text("");
                 Validator.setNeutral(password);
             }
-            if (password.val() != "") {
+            if (password.val() !== "") {
                 if (help) { Validator.setInvalid(password); }
                 if (password.val().length < 8) {
                     if (help) { $("#help-password").text(trans(VALIDATOR_PASSWORD_SIZE_MIN)); }
@@ -228,7 +299,7 @@ export let Validator = {
                 $("#help-confirmation").text("");
                 Validator.setInvalid(confirmation);
             }
-            if (confirmation.val() != password.val()) {
+            if (confirmation.val() !== password.val()) {
                 if (help) { $("#help-confirmation").text(trans(VALIDATOR_PASSWORD_CONFIRMATION)); }
             }
             else {
@@ -241,13 +312,14 @@ export let Validator = {
             if (help) {
                 Validator.setNeutral(height);
             }
-            if (help) { Validator.setInvalid(height); }
-            if (!new RegExp(/^(?=(?:\d,?){1,3}$)\d+(?:,\d{1,2})?$/).test(height.val())) {
-                if (help) { $("#help-measurement").text(trans(VALIDATOR_MEASUREMENT_HEIGHT)); }
-                return false;
-            }
-            else {
-                if (help) { Validator.setValid(height); }
+            if (height.val !== "") {
+                if (help) { Validator.setInvalid(height, true); }
+                if (!new RegExp(/^(?=(?:\d,?){1,3}$)\d+(?:,\d{1,2})?$/).test(height.val())) {
+                    return false;
+                }
+                else {
+                    if (help) { Validator.setValid(height, true); }
+                }
             }
             return true;
         },
@@ -255,17 +327,18 @@ export let Validator = {
             if (help) {
                 Validator.setNeutral(weight);
             }
-            if (help) { Validator.setInvalid(weight); }
-            if (!new RegExp(/^(?=(?:\d,?){2,4}$)\d+(?:,\d{1,1})?$/).test(weight.val())) {
-                if (help) { $("#help-measurement").text(trans(VALIDATOR_MEASUREMENT_WEIGHT)); }
-                return false;
-            }
-            else {
-                if (help) { Validator.setValid(weight); }
+            if (weight.val !== "") {
+                if (help) { Validator.setInvalid(weight, true); }
+                if (!new RegExp(/^(?=(?:\d,?){2,4}$)\d+(?:,\d{1,1})?$/).test(weight.val())) {
+                    return false;
+                }
+                else {
+                    if (help) { Validator.setValid(weight, true); }
+                }
             }
             return true;
         },
-        form: function(form) {
+        session_form: function(form) {
             let hide = false;
             $.each($("." + form + "-input-required"), function(index, input) {
                 if ($(input).val() === "" || !$(input).val().match(/^(?=(?:\d,?){0,6}$)\d+(?:,\d{1,2})?$/)) {
@@ -277,6 +350,39 @@ export let Validator = {
                 }
             });
             $("#button-" + form + "-set").attr("disabled", hide);
+        },
+        profile_form: function() {
+            let fullname = false;
+            if (Validator.verify.firstname($("#profile_firstname"),) && Validator.verify.surname($("#profile_surname"))) {
+                $("#help-fullname").html("");
+                fullname = true;
+            }
+            let email = Validator.verify.email($("#profile_email"), true);
+            let password = true;
+            if ($("#profile_password").val()) {
+                password = false;
+            }
+            if (Validator.verify.password($("#profile_password"), true)) {
+                $("#section-confirmation").prop("hidden", false);
+                if (Validator.verify.confirmation($("#profile_confirmation"), $("#profile_password"), true)) {
+                    password = true;
+                }
+            }
+            else {
+                $("#section-confirmation").prop("hidden", true);
+                $("#profile_confirmation").val("");
+            }
+            let measurement = false;
+            if ((Validator.verify.height($("#profile_height")) && Validator.verify.weight($("#profile_weight"))) || ($("#profile_height").val() === "" && $("#profile_weight").val() === "")) {
+                $("#help-measurement").html("");
+                if (($("#profile_height").val() === "" && $("#profile_weight").val() === "")) {
+                    Validator.setNeutral($("#profile_height"), true);
+                    Validator.setNeutral($("#profile_weight"), true);
+                }
+                measurement = true;
+            }
+            let submit = $("#profile_submit");
+            picture && fullname && email && password && measurement ? submit.prop("disabled", false) : submit.prop("disabled", true);
         }
     },
 };
@@ -346,7 +452,7 @@ export let Generator = {
             $("#session-exercices")
                 .append($("<article></article")
                     .attr("id", exercice_id)
-                    .addClass("mt-3 pt-1 pt-md-4")
+                    .addClass("mt-3 pt-1 pt-md-3")
                     .append($("<input>")
                         .attr("id", "exercice-" + exercice_index + "-sequence")
                         .val(exercice.sequence)
@@ -517,7 +623,7 @@ export let Generator = {
                         else {
                             Generator.render.edit_form_part(prefix, set_index);
                         }
-                        Validator.verify.form("edit");
+                        Validator.verify.session_form("edit");
                     })
                 ;
             }

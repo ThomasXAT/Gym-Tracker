@@ -124,7 +124,7 @@ main:
       list: Consulter l'historique
       edit:
         title: Édition des mesures
-        delete: Supprimer les mesures
+        delete: Supprimer
         submit: Éditer les mesures
       add: Ajouter des mesures
     sessions:
@@ -172,9 +172,9 @@ main:
     exercice:
       search: Saisissez un nom ou un muscle      
       choose:
-        title: Création d'un exercice
-        submit: Valider l'exercice
-        action: Sélectionner l'exercice
+        title: Sélection d'un exercice
+        submit: Sélectionner l'exercice
+        action: Sélectionner un exercice
         minimum: Un exercice au minimum est requis.
     set:
       new: Nouvelle série
@@ -194,6 +194,10 @@ dropset:
     add: Ajouter une dégressive
     delete: Supprimer
 validator:
+  title:
+    empty: "L'intitulé de la séance doit être renseigné."
+    size:
+      max: "Taille maximale : 64 caractères."
   firstname:
     characters: "Caractères valides : lettres, espaces et tirets."
     extremities: "Espaces et tirets interdits aux extrémités."

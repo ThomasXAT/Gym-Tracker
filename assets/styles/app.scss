@@ -1,6 +1,6 @@
 @import "~bootstrap/scss/bootstrap";
 
-.authentication > .content, #section-identity, #section-measurement {
+.authentication > .content, #section-identity {
     max-width: 420px !important;
 }
 
@@ -61,12 +61,17 @@ main.main > section.content {
 .not-allowed {
     cursor: not-allowed;
 }
+
+.default {
+    cursor: default;
+}
+
 .search-bar, input, select {
     outline: none !important;
     box-shadow: none !important;
 }
 
-.search-bar:focus {
+.search-bar:focus, .measurement-input:focus {
     border-color: var(--bs-border-color) !important;
 }
 
@@ -180,6 +185,22 @@ footer.main, .session-title, .session-date, .exercices-list-item {
 
 #exercice-list {
     height: 112px;
+}
+
+.measurement-unit {
+    width: 30px;
+}
+
+.measurement-label {
+    width: 66px;
+}
+
+.border-valid, .border-valid:focus {
+    border-color: var(--bs-form-valid-border-color) !important;
+}
+
+.border-invalid, .border-invalid:focus {
+    border-color: var(--bs-form-invalid-border-color) !important;
 }
 
 /* c5ced6 */

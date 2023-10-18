@@ -12,14 +12,14 @@
                         <div class="card mx-3 mx-lg-0">
                             <header class="card-header">
                                 <section id="section-picture" class="text-center py-1">
-                                    <img id="picture" width="175px" height="175px" class="profile-picture border p-1" src="{% if athlete.picture %}{{ asset(athlete.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}">
+                                    <img id="picture" width="175px" height="175px" class="profile-picture border p-1{% if athlete is defined and athlete == app.user %} pointer-only" data-bs-toggle="modal" data-bs-target="#_edit{% endif %}" src="{% if athlete.picture %}{{ asset(athlete.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}">
                                 </section>
                             </header>
-                            <main class="card-body justify-content-center align-items-center d-flex">
+                            <main class="card-body justify-content-center align-items-center d-flex{% if athlete is defined and athlete == app.user %} pointer-only" data-bs-toggle="modal" data-bs-target="#_edit"{% else %}"{% endif %}>
                                 <section id="section-identity" class="text-center w-100">
 {% if athlete.firstname or athlete.surname %}
                                     <section id="section-fullname" class="text-truncate">
-                                        <span id="fullname" class="profile-fullname">
+                                        <span id="fullname" class="profile-fullname{% if athlete is defined and athlete == app.user %} pointer-only" data-bs-toggle="modal" data-bs-target="#_edit{% endif %}">
 {% if athlete.firstname %}
                                             <span id="firstname">{{ athlete.firstname }}</span>
 {% if athlete.surname %}
@@ -33,7 +33,7 @@
                                     </section>
 {% endif %}
                                     <section id="section-username" class="text-truncate">
-                                        <span id="username"><a href="{{ path('profile', {'username': athlete.username}) }}" class="text-decoration-none">@{{ athlete.username }}</a></span>
+                                        <span id="username"><a class="text-decoration-none">@{{ athlete.username }}</a></span>
                                     </section>
                                 </section>
                             </main>
@@ -46,8 +46,8 @@
                                 </section>
 {% else %}
                                 <section id="section-no-measurement" class="d-flex justify-content-center align-items-center">
-    {% if app.user == athlete %}
-                                    <a class="text-decoration-none pointer-only" data-action="click->profile#measurement" data-bs-toggle="modal" data-bs-target="#_measurement"><i class="fa-solid fa-plus"></i> {{ 'main.profile.measurements.add'|trans }}</a>
+    {% if athlete is defined and athlete == app.user %}
+                                    <a class="text-decoration-none pointer-only" data-bs-toggle="modal" data-bs-target="#_edit"><i class="fa-solid fa-plus"></i> {{ 'main.profile.measurements.add'|trans }}</a>
     {% else %}
                                     <span>∅</span>
     {% endif %}
@@ -77,20 +77,20 @@
                             </header>
                             <main class="card-body">
                                 <div>
-                                    <table class="table table-dark table-striped text-center border mb-2{% if athlete == app.user %} pointer-only" data-action="click->profile#measurement" data-bs-toggle="modal" data-bs-target="#_measurement"{% else %}"{% endif %}>
+                                    <table class="table table-dark table-striped text-center border mb-2{% if athlete == app.user %} pointer-only" data-bs-toggle="modal" data-bs-target="#_edit"{% else %}"{% endif %}>
                                         <thead>
                                             <tr>
-                                                <th scope="col">{{ 'measurement.height'|trans }}</th>
-                                                <th scope="col">{{ 'measurement.weight'|trans }}</th>
-                                                <th scope="col">{{ 'measurement.bmi'|trans }}</th>
+                                                <th class="col" scope="col">{{ 'measurement.height'|trans }}</th>
+                                                <th class="col" scope="col">{{ 'measurement.weight'|trans }}</th>
+                                                <th class="col" scope="col">{{ 'measurement.bmi'|trans }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{{ athlete.height|replace({'.': ','}) }}</td>
-                                                <td>{{ athlete.weight|replace({'.': ','}) }}</td>
+                                                <td id="height">{{ athlete.height|replace({'.': ','}) }}</td>
+                                                <td id="weight">{{ athlete.weight|replace({'.': ','}) }}</td>
 {% set bmi = athlete.weight / (athlete.height * athlete.height)%}
-                                                <td class="fw-bold">{{ bmi|round(1)|replace({'.': ','}) }}</td>
+                                                <td id="bmi" class="fw-bold">{{ bmi|round(1)|replace({'.': ','}) }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -111,8 +111,9 @@
                     </div>
 {% endif %}
                 </section>
+{% if athlete.description or athlete.quotation %}
                 {# Description #}<section id="description" class="ps-md-2 p-2 mx-auto ms-lg-0">
-                    <div class="card flex-fill">
+                    <div class="card flex-fill{% if athlete is defined and athlete == app.user %} pointer-only" data-bs-toggle="modal" data-bs-target="#_edit{% endif %}">
                         <main class="card-body overflow-auto identifier">
                             {{ athlete.description|raw }}
                         </main>
@@ -130,10 +131,6 @@
 {% endif %}
                     </div>
                 </section>
-{% if athlete is defined and athlete == app.user %}
-                <div class="text-end">
-                    <a class="text-decoration-none pointer-only" data-action="click->profile#edit" data-bs-toggle="modal" data-bs-target="#_edit">{{ 'main.profile.edit.button'|trans }}</a>
-                </div>
 {% endif %}
 {% if sessions is defined and sessions %}
                 {# Sessions #}<section id="sessions" class="p-2">
@@ -147,7 +144,6 @@
             </div>
 {% if athlete is defined and athlete == app.user %}
 {{ include('main/profile/_edit.html.twig') }}
-{{ include('main/profile/_measurement.html.twig') }}
 {% endif %}
         </section>
 {% endblock %}

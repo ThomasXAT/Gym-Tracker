@@ -28,7 +28,7 @@
                                                     <article class="d-md-inline">{{ part.name ~ ' (' ~ part.equipment|trans ~ ')' }}{% if loop.index != exercice.exercices|length %},{% endif %}</article>
 {% endfor %}
 {% else %}
-                                                    <article>{{ exercice.name ~ ' (' ~ exercice.equipment|trans ~ ')' }}<article>
+                                                    <article>{{ exercice.name ~ ' (' ~ exercice.equipment|trans ~ ')' }}</article>
 {% endif %}
                                                 </li>
 {% endfor %}

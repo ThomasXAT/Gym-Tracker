@@ -13,7 +13,7 @@ export default class extends Controller {
             if (!$(event.target).closest($(".set-part")).length) {
                 $(".form-tempo").addClass("d-none");
             }
-            Validator.verify.form("add");
+            Validator.verify.session_form("add");
         });
         if ($("#_exercice").length) {
             $("#section-search-input").on("input", function() {
@@ -21,14 +21,14 @@ export default class extends Controller {
             });
         }
         if ($("#_add").length) {
-            Validator.verify.form("add");
+            Validator.verify.session_form("add");
             $("#button-select-exercice").on("click", function() {
                 $("#_exercice_validity").val(0);
             })
         }
         if ($("#_edit").length) {
             $("#_edit-form").on("input click change", function() {
-                Validator.verify.form("edit");
+                Validator.verify.session_form("edit");
             });
         }
         Generator.render.searchOutput();

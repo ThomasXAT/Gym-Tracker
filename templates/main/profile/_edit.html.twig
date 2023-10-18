@@ -6,7 +6,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </header>
                         <main class="modal-body">
-                            {{ form_start(edit_form) }}
+                            {{ form_start(form) }}
                                 <label for="section-picture" class="form-label fw-bold">{{ 'athlete.picture'|trans }}</label>
                                 <section id="section-picture" class="row mb-3">
                                     <div class="col-4 pe-1">
@@ -17,58 +17,77 @@
                                     <div class="col-8 ps-1 d-flex align-items-center">
                                         <div>
                                             <section id="section-file">
-                                                {{ form_widget(edit_form.file) }}
+                                                {{ form_widget(form.file) }}
                                             </section>
                                             <p id="help-file" class="form-text text-danger"></p>
                                             <a id="delete_picture" class="text-nowrap text-decoration-none pointer-only px-1">{{ 'main.profile.edit.picture.delete'|trans }}</a>
                                         </div>
                                     </div>
                                 </section> 
-                                {{ form_widget(edit_form._delete_picture) }}
+                                {{ form_widget(form._delete_picture) }}
                                 <label for="section-identity" class="form-label fw-bold">{{ 'main.profile.edit.identity.label'|trans }}</label>
                                 <section id="section-identity" class="mx-auto">
                                     <section id="section-fullname" class="mb-3">
                                         <div class="d-flex">
                                             <section id="section-firstname" class="form-floating col-6 pe-1">
-                                                {{ form_widget(edit_form.firstname) }}
-                                                {{ form_label(edit_form.firstname) }}
+                                                {{ form_widget(form.firstname) }}
+                                                {{ form_label(form.firstname) }}
                                             </section>
                                             <section id="section-surname" class="form-floating col-6 ms-1 pe-1">
-                                                {{ form_widget(edit_form.surname) }}
-                                                {{ form_label(edit_form.surname) }}
+                                                {{ form_widget(form.surname) }}
+                                                {{ form_label(form.surname) }}
                                             </section>
                                         </div>
                                         <p id="help-fullname" class="form-text text-danger"></p>
                                     </section>
                                     <section id="section-email" class="form-floating mb-3">
-                                        {{ form_widget(edit_form.email) }}
-                                        {{ form_label(edit_form.email) }}
+                                        {{ form_widget(form.email) }}
+                                        {{ form_label(form.email) }}
                                         <p id="help-email" class="form-text text-danger"></p>
                                     </section>
                                     <section id="section-password" class="form-floating mb-3">
-                                        {{ form_widget(edit_form.password) }}
-                                        {{ form_label(edit_form.password) }}
+                                        {{ form_widget(form.password) }}
+                                        {{ form_label(form.password) }}
                                         <p id="help-password" class="form-text text-danger"></p>
                                     </section>
                                     <section id="section-confirmation" class="form-floating mb-3" hidden>
-                                        {{ form_widget(edit_form.confirmation) }}
-                                        {{ form_label(edit_form.confirmation) }}
+                                        {{ form_widget(form.confirmation) }}
+                                        {{ form_label(form.confirmation) }}
                                         <p id="help-confirmation" class="form-text text-danger"></p>
                                     </section>
                                 </section>
+                                <label for="section-measurement" class="form-label fw-bold">{{ 'measurement.label'|trans }}</label>
+                                <section id="section-measurement" class="mb-3">
+                                    <div class="d-flex">
+                                        <section id="section-height" class="col-6 pe-1">
+                                            <div class="input-group flex-nowrap">
+                                                <span id="profile_height-before" class="input-group-text measurement-label justify-content-center">{{ 'measurement.height'|trans }}</span>
+                                                {{ form_widget(form.height) }}
+                                                <span id="profile_height-after" class="input-group-text measurement-unit border-start-0 bg-body ps-0 default">m</span>                                   
+                                            </div>
+                                        </section>
+                                        <section id="section-weight" class="col-6 ps-1">
+                                            <div class="input-group flex-nowrap">
+                                                <span id="profile_weight-before" class="input-group-text measurement-label justify-content-center">{{ 'measurement.weight'|trans }}</span>
+                                                {{ form_widget(form.weight) }}
+                                                <span id="profile_weight-after" class="input-group-text measurement-unit border-start-0 bg-body ps-0 default">kg</span>  
+                                            </div>
+                                        </section>
+                                    </div>
+                                </section>
                                 <label for="section-description" class="form-label fw-bold">{{ 'main.profile.edit.description.label'|trans }}</label>
                                 <section id="section-description" class="form-group mb-2">
-                                    {{ form_widget(edit_form.description) }}
+                                    {{ form_widget(form.description) }}
                                 </section>
                                 <section id="section-quotation" class="form-floating">
-                                    {{ form_widget(edit_form.quotation) }}
-                                    {{ form_label(edit_form.quotation) }}
+                                    {{ form_widget(form.quotation) }}
+                                    {{ form_label(form.quotation) }}
                                 </section>
-                                {{ form_widget(edit_form._token) }}
-                            {{ form_end(edit_form) }}
+                                {{ form_widget(form._token) }}
+                            {{ form_end(form) }}
                         </main>
                         <footer class="modal-footer">
-                            <button id="profile_submit" class="btn btn-success" disabled><i class="fa-solid fa-pen-to-square"></i> {{ 'main.profile.edit.submit'|trans }}</button>
+                            <button id="profile_submit" class="btn btn-success" data-action="click->profile#edit" disabled><i class="fa-solid fa-pen-to-square"></i> {{ 'main.profile.edit.submit'|trans }}</button>
                         </div>
                     </div>
                 </div>

@@ -80,6 +80,16 @@ class ProfileType extends AbstractType
                 'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.password.confirmation')],
                 'label_attr' => ['class' => 'form-label'],
             ])
+            ->add('height', NumberType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => ['class' => 'form-control text-end border-end-0 pe-1 measurement-input'],
+            ])
+            ->add('weight', NumberType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => ['class' => 'form-control text-end border-end-0 pe-1 measurement-input'],
+            ])
             ->add('description', TextareaType::class, [
                 'required' => false,
                 'attr' => ['class' => 'editor'],
