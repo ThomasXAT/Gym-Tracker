@@ -162,7 +162,7 @@ class SessionController extends AbstractController
         $search = isset($data['search']) ? $data['search']: null;
         $equipment = isset($data['equipment']) ? $data['equipment']: null;
         $result = array();
-        foreach ($exerciceRepository->findBySearch($search, $equipment) as $exercice) {
+        foreach ($exerciceRepository->findBySearch($this->getUser(), $search, $equipment) as $exercice) {
             $result[$exercice->getId()] = ['id' => $exercice->getId(), 'name' => $exercice->getName(), 'equipments' => $exercice->getEquipments()];
         }
         return $this->json($result);

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Culture\Quotation;
+use App\Entity\Training\Exercice;
 use App\Entity\Training\Session;
 use App\Repository\AthleteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -67,10 +68,14 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $unit = null;
 
+    #[ORM\OneToMany(mappedBy: 'athlete', targetEntity: Exercice::class)]
+    private Collection $exercices;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
         $this->measurements = new ArrayCollection();
+        $this->exercices = new ArrayCollection();
     }
 
     public function __toString()
@@ -356,6 +361,36 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUnit(string $unit): self
     {
         $this->unit = $unit;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Exercice>
+     */
+    public function getExercices(): Collection
+    {
+        return $this->exercices;
+    }
+
+    public function addExercice(Exercice $exercice): static
+    {
+        if (!$this->exercices->contains($exercice)) {
+            $this->exercices->add($exercice);
+            $exercice->setAthlete($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExercice(Exercice $exercice): static
+    {
+        if ($this->exercices->removeElement($exercice)) {
+            // set the owning side to null (unless already changed)
+            if ($exercice->getAthlete() === $this) {
+                $exercice->setAthlete(null);
+            }
+        }
 
         return $this;
     }
