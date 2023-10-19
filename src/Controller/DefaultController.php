@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Athlete;
 use App\Entity\Measurement;
 use App\Entity\Training\Exercice;
-use App\Form\MeasurementType;
 use App\Form\ProfileType;
 use App\Repository\AthleteRepository;
 use App\Repository\MeasurementRepository;
@@ -18,7 +17,6 @@ use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Form\Extension\Core\DataTransformer\DataTransformerChain;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -154,22 +152,6 @@ class DefaultController extends AbstractController
                         $athlete->setPicture(null);
                     }
                     $athleteRepository->save($athlete, true);
-                    
-                    // Measurement
-                    $oldHeight = $athlete->getHeight();
-                    $oldWeight = $athlete->getWeight();
-                    $newHeight = $form->get('height')->getData();
-                    $newWeight = $form->get('weight')->getData();
-                    if (($newHeight !== $oldHeight) || ($newWeight !== $oldWeight)) {
-                        $newMeasurement = new Measurement();
-                        $newMeasurement
-                            ->setHeight($newHeight)
-                            ->setWeight($newWeight)
-                            ->setAthlete($athlete)
-                            ->setDate(new DateTime())
-                        ;
-                        $measurementRepository->save($newMeasurement, true);
-                    }
                     if ($newPassword) {
                         return $this->redirectToRoute('authentication_logout');
                     }

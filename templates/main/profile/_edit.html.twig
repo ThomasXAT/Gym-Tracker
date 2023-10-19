@@ -56,25 +56,6 @@
                                         <p id="help-confirmation" class="form-text text-danger"></p>
                                     </section>
                                 </section>
-                                <label for="section-measurement" class="form-label fw-bold">{{ 'measurement.label'|trans }}</label>
-                                <section id="section-measurement" class="mb-3">
-                                    <div class="d-flex">
-                                        <section id="section-height" class="col-6 pe-1">
-                                            <div class="input-group flex-nowrap">
-                                                <span id="profile_height-before" class="input-group-text measurement-label justify-content-center">{{ 'measurement.height'|trans }}</span>
-                                                {{ form_widget(form.height) }}
-                                                <span id="profile_height-after" class="input-group-text measurement-unit border-start-0 bg-body ps-0 default">m</span>                                   
-                                            </div>
-                                        </section>
-                                        <section id="section-weight" class="col-6 ps-1">
-                                            <div class="input-group flex-nowrap">
-                                                <span id="profile_weight-before" class="input-group-text measurement-label justify-content-center">{{ 'measurement.weight'|trans }}</span>
-                                                {{ form_widget(form.weight) }}
-                                                <span id="profile_weight-after" class="input-group-text measurement-unit border-start-0 bg-body ps-0 default">kg</span>  
-                                            </div>
-                                        </section>
-                                    </div>
-                                </section>
                                 <label for="section-description" class="form-label fw-bold">{{ 'main.profile.edit.description.label'|trans }}</label>
                                 <section id="section-description" class="form-group mb-2">
                                     {{ form_widget(form.description) }}

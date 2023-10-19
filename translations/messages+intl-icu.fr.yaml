@@ -45,6 +45,7 @@ month:
   12: décembre
 app: Gym-Tracker
 return: Retour
+save: Enregistrer
 loading: Chargement
 all: Tous
 settings: Paramètres

@@ -27,8 +27,6 @@ import {
     VALIDATOR_PASSWORD_SIZE_MIN,
     VALIDATOR_PASSWORD_SIZE_MAX,
     VALIDATOR_PASSWORD_CONFIRMATION,
-    VALIDATOR_profile_HEIGHT,
-    VALIDATOR_profile_WEIGHT,
     SET,
     SYMMETRY_LABEL,
     SYMMETRY_UNILATERAL,
@@ -86,80 +84,28 @@ export let Translator = {
 };    
 
 export let Validator = {
-    setValid: function(input, measurement = false) {
-        if (measurement) {
-            let id = input.attr("id");
-            let before = $("#" + id + "-before");
-            let after = $("#" + id + "-after");
-            if (input.hasClass("border-invalid")) {
-                before.removeClass("border-invalid").addClass("border-valid");
-                input.removeClass("border-invalid").addClass("border-valid");
-                after.removeClass("border-invalid").addClass("border-valid");
-            }
-            else {
-                before.addClass("border-valid");
-                input.addClass("border-valid");
-                after.addClass("border-valid");
-            }
+    setValid: function(input) {
+        if (input.hasClass("is-invalid")) {
+            input.removeClass("is-invalid").addClass("is-valid");
         }
         else {
-            if (input.hasClass("is-invalid")) {
-                input.removeClass("is-invalid").addClass("is-valid");
-            }
-            else {
-                input.addClass("is-valid");
-            }
+            input.addClass("is-valid");
         }
     },
-    setInvalid: function(input, measurement = false) {
-        if (measurement) {
-            let id = input.attr("id");
-            let before = $("#" + id + "-before");
-            let after = $("#" + id + "-after");
-            if (input.hasClass("border-valid")) {
-                before.removeClass("border-valid").addClass("border-invalid");
-                input.removeClass("border-valid").addClass("border-invalid");
-                after.removeClass("border-valid").addClass("border-invalid");
-            }
-            else {
-                before.addClass("border-invalid");
-                input.addClass("border-invalid");
-                after.addClass("border-invalid");
-            }
+    setInvalid: function(input) {
+        if (input.hasClass("is-valid")) {
+            input.removeClass("is-valid").addClass("is-invalid");
         }
         else {
-            if (input.hasClass("is-valid")) {
-                input.removeClass("is-valid").addClass("is-invalid");
-            }
-            else {
-                input.addClass("is-invalid");
-            }
+            input.addClass("is-invalid");
         }
     },
-    setNeutral: function(input, measurement = false) {
-        if (measurement) {
-            let id = input.attr("id");
-            let before = $("#" + id + "-before");
-            let after = $("#" + id + "-after");
-            if (input.hasClass("border-valid")) {
-                before.removeClass("border-valid");
-                input.removeClass("border-valid");
-                after.removeClass("border-valid");
-            }
-            if (input.hasClass("border-invalid")) {
-                before.removeClass("border-invalid");
-                input.removeClass("border-invalid");
-                after.removeClass("border-invalid");
-            }
-
+    setNeutral: function(input) {
+        if (input.hasClass("is-valid")) {
+            input.removeClass("is-valid");
         }
-        else {
-            if (input.hasClass("is-valid")) {
-                input.removeClass("is-valid");
-            }
-            if (input.hasClass("is-invalid")) {
-                input.removeClass("is-invalid");
-            }
+        if (input.hasClass("is-invalid")) {
+            input.removeClass("is-invalid");
         }
     },
     verify: {
@@ -177,6 +123,24 @@ export let Validator = {
                     Validator.setValid(title);
                     return true;
                 }
+            }
+            return false;
+        },
+        measurement: function(height, weight) {
+            let height_value = parseFloat(height.val().replace(",", "."));
+            let weight_value = parseFloat(weight.val().replace(",", "."));
+            if (
+                (
+                    !height_value && 
+                    !weight_value
+                ) || (
+                    height_value >= 1.2 &&
+                    height_value <= 2.2 &&
+                    weight_value >= 20 &&
+                    weight_value <= 200
+                )
+            ) {
+                return true;
             }
             return false;
         },
@@ -308,36 +272,6 @@ export let Validator = {
             }
             return false;
         },
-        height: function(height, help = false) {
-            if (help) {
-                Validator.setNeutral(height);
-            }
-            if (height.val !== "") {
-                if (help) { Validator.setInvalid(height, true); }
-                if (!new RegExp(/^(?=(?:\d,?){1,3}$)\d+(?:,\d{1,2})?$/).test(height.val())) {
-                    return false;
-                }
-                else {
-                    if (help) { Validator.setValid(height, true); }
-                }
-            }
-            return true;
-        },
-        weight: function(weight, help = false) {
-            if (help) {
-                Validator.setNeutral(weight);
-            }
-            if (weight.val !== "") {
-                if (help) { Validator.setInvalid(weight, true); }
-                if (!new RegExp(/^(?=(?:\d,?){2,4}$)\d+(?:,\d{1,1})?$/).test(weight.val())) {
-                    return false;
-                }
-                else {
-                    if (help) { Validator.setValid(weight, true); }
-                }
-            }
-            return true;
-        },
         session_form: function(form) {
             let hide = false;
             $.each($("." + form + "-input-required"), function(index, input) {
@@ -372,23 +306,37 @@ export let Validator = {
                 $("#section-confirmation").prop("hidden", true);
                 $("#profile_confirmation").val("");
             }
-            let measurement = false;
-            if ((Validator.verify.height($("#profile_height")) && Validator.verify.weight($("#profile_weight"))) || ($("#profile_height").val() === "" && $("#profile_weight").val() === "")) {
-                $("#help-measurement").html("");
-                if (($("#profile_height").val() === "" && $("#profile_weight").val() === "")) {
-                    Validator.setNeutral($("#profile_height"), true);
-                    Validator.setNeutral($("#profile_weight"), true);
-                }
-                measurement = true;
-            }
             let submit = $("#profile_submit");
-            picture && fullname && email && password && measurement ? submit.prop("disabled", false) : submit.prop("disabled", true);
+            picture && fullname && email && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
         }
     },
 };
 
 export let Generator = {
     render: {
+        bmi: function() {
+            let height_value = parseFloat($("#measurement_height").val().replace(',', '.'));
+            let weight_value = parseFloat($("#measurement_weight").val().replace(',', '.'));
+            if (
+                $("#measurement_height").val() != "" &&
+                $("#measurement_weight").val() != "" &&
+                height_value >= 1.2 &&
+                height_value <= 2.2 &&
+                weight_value >= 20 &&
+                weight_value <= 200
+            ) {   
+                let bmi = weight_value / (height_value * height_value);
+                if (
+                    $("#measurement_height").val() != "" &&
+                    $("#measurement_weight").val() != ""
+                ) {
+                    $("#measurement_bmi").val((Math.ceil(bmi * 10) / 10).toString().replace('.', ','));
+                }
+            }
+            else {
+                $("#measurement_bmi").val("");
+            }
+        },
         session: function(id) {
             $.ajax({
                 url: "/api/session?id=" + id,

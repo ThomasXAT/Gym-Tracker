@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { Validator } from "./common";
+import { Generator } from "./common";
 
 export default class extends Controller {
     connect() {
@@ -13,19 +14,11 @@ export default class extends Controller {
             Validator.verify.firstname($("#profile_firstname"), true);
             Validator.verify.surname($("#profile_surname"), true);
         });
-        $("#profile_height").val($("#height").text());
-        $("#profile_weight").val($("#weight").text());
-        Validator.verify.height($("#profile_height"), true);
-        Validator.verify.weight($("#profile_weight"), true);
-        $("#section-height").on("input click keyup", function() {
-            Validator.verify.weight($("#profile_weight"), true);
-            Validator.verify.height($("#profile_height"), true);
-            $("#profile_height").val($("#profile_height").val().replace(".", ",").replace(/[^0-9,]/g, ""))
-        });
-        $("#section-weight").on("input click keyup", function() {
-            Validator.verify.height($("#profile_height"), true);
-            Validator.verify.weight($("#profile_weight"), true);
-            $("#profile_weight").val($("#profile_weight").val().replace(".", ",").replace(/[^0-9,]/g, ""))
+        $("#section-measurement").on("input", function() {
+            Generator.render.bmi();
+            $("#measurement_height").val($("#measurement_height").val().replace(".", ",").replace(/[^0-9,]/g, ""));
+            $("#measurement_weight").val($("#measurement_weight").val().replace(".", ",").replace(/[^0-9,]/g, ""));
+            $("#measurement_submit").attr("disabled", !Validator.verify.measurement($("#measurement_height"), $("#measurement_weight")));
         });
         Validator.verify.profile_form();
         let picture = true;
@@ -73,6 +66,7 @@ export default class extends Controller {
         $("#form-profile").on("input click keyup", function() {
             Validator.verify.profile_form();
         });
+        Generator.render.bmi();
     }
     recto() {
         $("#verso").removeClass("d-flex").addClass("d-none");
@@ -84,5 +78,22 @@ export default class extends Controller {
     }
     edit() {
         $("#form-profile").submit();
+    }
+    measurement() {
+        let height = $("#measurement_height");
+        let weight = $("#measurement_weight");
+        $.ajax({
+            type: "POST",
+            url: "/measurement/add",
+            data: {
+                height: height.val(),
+                weight: weight.val(),
+            },
+            success: function(response) {
+                $("#measurement_submit").attr("disabled", true);
+                $("#measurements-list").removeClass("d-none");
+                Generator.render.bmi();
+            },
+        });
     }
 }
