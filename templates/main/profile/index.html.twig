@@ -60,14 +60,14 @@
                                         <div class="input-group flex-nowrap">
                                             <span id="measurement_height-before" class="input-group-text measurement-label justify-content-center">{{ 'measurement.height'|trans }}</span>
                                             <input id="measurement_height" name="measurement[height]" placeholder="?" class="form-control text-end border-end-0 pe-1 measurement-input text-white" inputmode="decimal"{% if athlete.height %} value="{{ athlete.height|replace({'.': ','}) }}"{% endif %}{% if athlete != app.user %} readonly{% endif %}>
-                                            </a><span id="measurement_height-after" class="input-group-text measurement-unit border-start-0 bg-body ps-0">m</span>
+                                            <label for="measurement_height" id="measurement_height-after" class="input-group-text measurement-unit border-start-0 bg-body ps-0 text">m</label>
                                         </div>
                                     </section>
                                     <section id="section-weight" class="mb-2">
                                         <div class="input-group flex-nowrap">
                                             <span id="measurement_weight-before" class="input-group-text measurement-label justify-content-center">{{ 'measurement.weight'|trans }}</span>
                                             <input id="measurement_weight" name="measurement[weight]" placeholder="?" class="form-control text-end border-end-0 pe-1 measurement-input text-white" inputmode="decimal"{% if athlete.weight %} value="{{ athlete.weight|replace({'.': ','}) }}"{% endif %}{% if athlete != app.user %} readonly{% endif %}>
-                                            <span id="measurement_weight-after" class="input-group-text measurement-unit border-start-0 bg-body ps-0">kg</span>  
+                                            <label for="measurement_weight" id="measurement_weight-after" class="input-group-text measurement-unit border-start-0 bg-body ps-0 text">kg</label>  
                                         </div>
                                     </section>
                                     <section id="section-bmi" class="mb-2">
@@ -99,7 +99,7 @@
                         <span data-action="click->profile#recto" class="pointer d-lg-none"><i class="fa-solid fa-arrow-right fa-lg"></i></span>
                     </div>
                 </section>
-                {# Description #}<section id="description" class="ps-md-2 p-2 mx-auto ms-lg-0{% if not athlete.description or not athlete.quotation %} d-none d-md-block{% endif %}">
+                {# Description #}<section id="description" class="ps-md-2 p-2 mx-auto ms-lg-0{% if not athlete.description and not athlete.quotation %} d-none d-lg-block{% endif %}">
                     <div class="card flex-fill{% if athlete == app.user %} pointer-only" data-bs-toggle="modal" data-bs-target="#_edit{% endif %}">
                         <main class="card-body overflow-auto identifier">
                             {{ athlete.description|raw }}
@@ -119,7 +119,7 @@
                     </div>
                 </section>
 {% if sessions is defined and sessions %}
-                {# Sessions #}<section id="sessions" class="p-2">
+                {# Sessions #}<section id="sessions" class="p-2 mt-1">
                     <h3 class="text-white">{{ 'main.profile.sessions.label'|trans }}</h3>
 {{ include('main/profile/_sessions.html.twig') }}
                     <div class="text-end">

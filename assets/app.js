@@ -114,7 +114,7 @@ import { Modal } from 'bootstrap'
 if (document.getElementById("_add")) {
     let buttons_new_set = document.querySelectorAll(".button-new-set");
     let modal_add = new Modal(document.getElementById("_add"));
-    let modal_exercice = new Modal(document.getElementById("_exercice"));
+    let modal_exercice = new Modal(document.getElementById("_select_exercice"));
     buttons_new_set.forEach(function(button) {
         button.addEventListener("click", function() {
             let exercices = document.getElementById("_add-form").children.length;

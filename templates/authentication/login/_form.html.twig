@@ -1,10 +1,18 @@
             {{ form_start(form) }}
                 <section id="section-username" class="form-floating mb-3">
+{% if error %}
+                    {{ form_widget(form.username, { 'attr': {'class': 'form-control border-invalid'} }) }}
+{% else %}
                     {{ form_widget(form.username) }}
+{% endif %}
                     {{ form_label(form.username) }}
                 </section>
                 <section id="section-password" class="form-floating mb-3">
-                    {{ form_widget(form.password) }}
+{% if error %}
+                    {{ form_widget(form.password, { 'attr': {'class': 'form-control border-invalid'} }) }}
+{% else %}
+                   {{ form_widget(form.password) }}
+{% endif %}
                     {{ form_label(form.password) }}
                 </section>
                 <section id="section-remember_me" class="form-check mb-3">

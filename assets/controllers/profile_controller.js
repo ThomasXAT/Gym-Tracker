@@ -1,6 +1,12 @@
 import { Controller } from "@hotwired/stimulus";
-import { Validator } from "./common";
-import { Generator } from "./common";
+import { 
+    Validator,
+    Generator 
+} from "./common";
+import {
+    trans,
+    VALIDATOR_FILE_SIZE_MAX,
+} from '../translator';
 
 export default class extends Controller {
     connect() {
@@ -26,10 +32,10 @@ export default class extends Controller {
             let file = this.files[0];
             if (file) {
                 $("#profile__delete_picture").prop("checked", false);
-                if (file.size > 2 * 1024 * 1024) {
+                if (file.size > 5 * 1024 * 1024) {
                     Validator.setInvalid($("#profile_file"));
-                    $("#profile_picture").attr("src", "images/bulking-jay.jpg");
-                    $("#help-file").text("Fichier trop lourd. Taille maximale : 2 Mo.");
+                    $("#profile_picture").attr("src", "images/dirtybulk-jaycutler.jpg");
+                    $("#help-file").text(trans(VALIDATOR_FILE_SIZE_MAX));
                     picture = false;
                 }
                 else {

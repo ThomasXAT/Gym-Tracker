@@ -8,18 +8,13 @@ import {
 export default class extends Controller {
     connect() {
         Generator.render.session($("#session-identifier").text());
-        $("#button-choose").attr("disabled", $("#minimum-message").hasClass("d-none") ? false: true);
+        $("#button-choose-exercice").attr("disabled", $("#minimum-message").hasClass("d-none") ? false: true);
         $(document).on("click keyup", function(event) {
             if (!$(event.target).closest($(".set-part")).length) {
                 $(".form-tempo").addClass("d-none");
             }
             Validator.verify.session_form("add");
         });
-        if ($("#_exercice").length) {
-            $("#section-search-input").on("input", function() {
-                Generator.render.searchOutput($("#exercice-search").val(), $("#exercice-equipment").val());
-            });
-        }
         if ($("#_add").length) {
             Validator.verify.session_form("add");
             $("#button-select-exercice").on("click", function() {
@@ -31,8 +26,6 @@ export default class extends Controller {
                 Validator.verify.session_form("edit");
             });
         }
-        Generator.render.searchOutput();
-        $("#exercice-equipment").val("");
     }
     edit() {
         $.each($(".edit-input-required"), function(index, input) {
@@ -51,10 +44,6 @@ export default class extends Controller {
                 });
             },
         });
-    }
-    choose() {
-        $("#_exercice_validity").val(1);
-        Generator.render.add_form();
     }
     add() {
         $.each($(".add-input-required"), function(index, input) {

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Athlete;
 use App\Entity\Measurement;
 use App\Entity\Training\Exercice;
+use App\Form\ExerciceType;
 use App\Form\ProfileType;
 use App\Repository\AthleteRepository;
 use App\Repository\MeasurementRepository;
@@ -36,12 +37,12 @@ class DefaultController extends AbstractController
         $user = $this->getUser();
         if ($user->isWorkingOut()) {
             $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
-            $exercices = $session->getExercices();        
             return $this->render('main/session/index.html.twig', [
                 'page' => 'session',
                 'session' => $session,
                 'equipments' => Exercice::EQUIPMENTS,
                 'exercices' => $exerciceRepository->findAll(),
+                'form' => $this->createForm(ExerciceType::class),
             ]);
         }
         if (isset($_GET["search"])) {

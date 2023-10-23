@@ -9,7 +9,7 @@
     color: var(--bs-danger) !important;
 }
 
-main.main, footer.main, .modal-body, .accordion-collapse, .authentication {
+main.main, .modal-body, .accordion-collapse, .authentication {
     background-color: #1b1f22 !important;
 }
 
@@ -44,18 +44,20 @@ main.main > section.content {
     max-width: 925px;
 }
 
-.pointer:hover {
+.pointer, .pointer-only, .pointer-text {
     cursor: pointer;
+}
+
+.pointer:hover, .pointer-text:hover {
     color: #fff !important;
+}
+
+.pointer:hover, .pointer:hover > main > section > img {
     border-color: #fff !important;
 }
 
-.pointer:hover > main > section > img {
-    border-color: #fff !important;
-}
-
-.pointer-only {
-    cursor: pointer;
+.text {
+    cursor: text;
 }
 
 .not-allowed {
@@ -73,10 +75,6 @@ main.main > section.content {
 
 .search-bar:focus, .measurement-input:focus {
     border-color: var(--bs-border-color) !important;
-}
-
-.ck-editor {
-    border-color: red !important;
 }
 
 #logo {
@@ -137,7 +135,7 @@ main.main > section.content {
     }
 }
 
-footer.main, .session-title, .session-date, .exercices-list-item {
+footer.main, .session-title, .session-date, .exercices-list-item, .exercice-list {
     background-color: #262A2E !important;
 }
 
@@ -183,8 +181,8 @@ footer.main, .session-title, .session-date, .exercices-list-item {
     box-shadow: none !important;
 }
 
-#exercice-list {
-    height: 112px;
+#section-exercice-list {
+    max-height: 164px !important;
 }
 
 .measurement-unit {
@@ -201,6 +199,16 @@ footer.main, .session-title, .session-date, .exercices-list-item {
 
 .border-invalid, .border-invalid:focus {
     border-color: var(--bs-form-invalid-border-color) !important;
+}
+
+.edit-exercice {
+    width: 32px;
+}
+
+#authentication-title {
+    @media screen and (max-width: 767px) {
+        font-size: calc(1.350rem + 1.5vw) !important;
+    }
 }
 
 /* c5ced6 */

@@ -63,6 +63,7 @@ class ProfileType extends AbstractType
             ])  
             ->add('email', EmailType::class, [
                 'label' => $this->translator->trans('athlete.email'),
+                'required' => false,
                 'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.email')],
                 'label_attr' => ['class' => 'form-label'],
             ]) 

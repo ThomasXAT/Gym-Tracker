@@ -2,12 +2,9 @@
 {% block body %}
         <section class="content container" {{ stimulus_controller('register') }}>
             <div id="title" class="text-center py-3">
-                <h2 class="text-white">{{ 'authentication.register.form'|trans }}</h2>
-                <p class="required">{{ 'required'|trans }}</p>
+                <h2 id="authentication-title" class="text-white mb-0">{{ 'authentication.register.form'|trans }}</h2>
+                <a class="text-decoration-none" href="{{ path('authentication_login') }}"><i class="fa-solid fa-right-to-bracket"></i> {{ 'authentication.login.form'|trans }}</a>
             </div>
-{{ include('authentication/register/_form.html.twig') }} 
-            <div class="py-2 text-center">
-                <a class="btn btn-link" href="{{ path('authentication_login') }}">{{ 'authentication.register.login'|trans }}</a>
-            </div>
+{{ include('authentication/register/_form.html.twig') }}
         </section>
 {% endblock %}

@@ -13,6 +13,8 @@ import {
     trans,
     VALIDATOR_TITLE_EMPTY,
     VALIDATOR_TITLE_SIZE_MAX,
+    VALIDATOR_NAME_EMPTY,
+    VALIDATOR_NAME_SIZE_MAX,
     VALIDATOR_FIRSTNAME_CHARACTERS,
     VALIDATOR_FIRSTNAME_EXTREMITIES,
     VALIDATOR_FIRSTNAME_SIZE_MAX,
@@ -126,6 +128,23 @@ export let Validator = {
             }
             return false;
         },
+        name: function(name, help = false) {
+            if (help) {
+                $("#help-name").text(trans(VALIDATOR_NAME_EMPTY));
+                Validator.setInvalid(name);
+            }
+            if (name.val() !== "") {
+                if (name.val().length > 48) {
+                    $("#help-name").text(trans(VALIDATOR_NAME_SIZE_MAX));
+                }
+                else {
+                    $("#help-name").text("");
+                    Validator.setValid(name);
+                    return true;
+                }
+            }
+            return false;
+        },
         measurement: function(height, weight) {
             let height_value = parseFloat(height.val().replace(",", "."));
             let weight_value = parseFloat(weight.val().replace(",", "."));
@@ -217,12 +236,12 @@ export let Validator = {
             }
             return false;
         },
-        email: function(email, help = false) {
+        email: function(email, help = false, edit = false) {
             if (help) {
                 $("#help-email").text("");
                 Validator.setNeutral(email);
             }
-            if (email.val() !== "") {
+            if (email.val() !== "" || edit) {
                 if (help) { Validator.setInvalid(email); }
                 email.val(email.val().toLowerCase());
                 if (!new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g).test(email.val())) {
@@ -276,11 +295,11 @@ export let Validator = {
             let hide = false;
             $.each($("." + form + "-input-required"), function(index, input) {
                 if ($(input).val() === "" || !$(input).val().match(/^(?=(?:\d,?){0,6}$)\d+(?:,\d{1,2})?$/)) {
-                    $(input).addClass("border-white");
+                    $(input).removeClass("border-valid").addClass("border-invalid");
                     hide = true;
                 }
                 else {
-                    $(input).removeClass("border-white");
+                    $(input).removeClass("border-invalid").addClass("border-valid");
                 }
             });
             $("#button-" + form + "-set").attr("disabled", hide);
@@ -291,7 +310,7 @@ export let Validator = {
                 $("#help-fullname").html("");
                 fullname = true;
             }
-            let email = Validator.verify.email($("#profile_email"), true);
+            let email = Validator.verify.email($("#profile_email"), true, true);
             let password = true;
             if ($("#profile_password").val()) {
                 password = false;
@@ -367,7 +386,7 @@ export let Generator = {
                     $.each(session.exercices, function(i, exercice) {
                         Generator.render.exercice(i + 1, exercice, response)
                     });
-                    if (Object.keys(response).length && $("#_exercice").length) {
+                    if (Object.keys(response).length && $("#_select_exercice").length) {
                         $.ajax({
                             type: "POST",
                             url: "/api/exercice",
@@ -930,17 +949,38 @@ export let Generator = {
                     equipment: equipment,
                 },
                 success: function(response) {
+                    if (!Object.keys(response).length) {
+                        $("#empty-list").removeClass("d-none")
+                    }
+                    else {
+                        $("#empty-list").addClass("d-none")
+                    }
                     $("#exercice-list").empty();
                     $.each(response, function(id, exercice) {
                         $("#exercice-list")
-                            .append($("<article></article>")
-                                .addClass("pointer")
-                                .val(id)
-                                .text("+ " + exercice.name)
-                                .on("click", function() {
-                                    let equipment = $("#exercice-equipment").val() !== "" ? $("#exercice-equipment").val(): null;
-                                    Selector.select.exercice(exercice, equipment);
-                                })
+                            .append($("<tr></tr>")
+                                .addClass("pointer-only")
+                                .append($("<td></td>")
+                                    .addClass("text-body pointer-text")
+                                    .val(id)
+                                    .text(exercice.name)
+                                    .on("click", function() {
+                                        let equipment = $("#exercice-equipment").val() !== "" ? $("#exercice-equipment").val(): null;
+                                        Selector.select.exercice(exercice, equipment);
+                                    })
+                                )
+                                .append($("<td></td>")
+                                    .addClass("text-end align-middle edit-exercice text-nowrap")
+                                    .append($("<a></a>")
+                                        .addClass("text-decoration-none")
+                                        .append($("<i></i>")
+                                            .addClass("fa-solid fa-pen-to-square")
+                                        )
+                                        .on("click", function() {
+                                            alert("ok");
+                                        })
+                                    )
+                                )
                             )
                         ;
                     });
@@ -955,7 +995,7 @@ export let Selector = {
         exercice: function(exercice, equipment = null) {
             if (!$("#minimum-message").hasClass("d-none")) {
                 $("#minimum-message").addClass("d-none");
-                $("#button-choose").attr("disabled", false);
+                $("#button-choose-exercice").attr("disabled", false);
             }
             let uniqueId = Date.now();
             $("#section-selected-exercices")
@@ -984,7 +1024,7 @@ export let Selector = {
                             if ($("#section-selected-exercices").children().length < 1) {
                                 if ($("#minimum-message").hasClass("d-none")) {
                                     $("#minimum-message").removeClass("d-none");
-                                    $("#button-choose").attr("disabled", true);
+                                    $("#button-choose-exercice").attr("disabled", true);
                                 }
                             }
                         })

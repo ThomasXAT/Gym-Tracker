@@ -95,20 +95,26 @@ measurement:
   height: Taille
   weight: Poids
   bmi: IMC
+exercice:
+  label: Exercice
+  name: Nom de l'exercice
+  equipments: Équipements utilisables
 authentication:
   login:
     title: Connexion
     form: Formulaire de connexion
     remember_me: Se souvenir de moi
     submit: Se connecter
-    register: Je ne possède pas de compte
+    register: Je ne possède pas de compte.
+    error: Identifiants invalides.
+    forgotten: Mot de passe oublié ?
   logout:
     submit: Se déconnecter
   register:
     title: Inscription
     form: Formulaire d'inscription
     submit: S'inscrire
-    login: Je possède déjà un compte
+    login: Je possède déjà un compte.
 main:  
   home:
     title: Accueil
@@ -171,11 +177,16 @@ main:
     muscles: Muscles sollicités
     exercices: Exercices
     exercice:
+      create:
+        title: Création d'un exercice
+        submit: Créer l'exercice
+        action: Créer un exercice
       search: Saisissez un nom ou un muscle      
+      empty: Aucun enregistrement correspondant.
       choose:
-        title: Sélection d'un exercice
-        submit: Sélectionner l'exercice
-        action: Sélectionner un exercice
+        title: Création d'un enchaînement
+        submit: Valider la sélection
+        action: Sélectionner les exercices
         minimum: Un exercice au minimum est requis.
     set:
       new: Nouvelle série
@@ -199,6 +210,13 @@ validator:
     empty: "L'intitulé de la séance doit être renseigné."
     size:
       max: "Taille maximale : 64 caractères."
+  name:
+    empty: "Le nom de l'exercice doit être renseigné."
+    size:
+      max: "Taille maximale : 48 caractères."
+  file:
+    size:
+      max: "Taille maximale : 5 Mo."
   firstname:
     characters: "Caractères valides : lettres, espaces et tirets."
     extremities: "Espaces et tirets interdits aux extrémités."
