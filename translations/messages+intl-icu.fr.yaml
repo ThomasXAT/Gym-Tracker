@@ -218,25 +218,29 @@ validator:
     size:
       max: "Taille maximale : 5 Mo."
   firstname:
-    characters: "Caractères valides : lettres, espaces et tirets."
-    extremities: "Espaces et tirets interdits aux extrémités."
+    characters: "Caractères valides : lettres, espaces et traits d'union."
+    extremities: "Espaces et traits d'union interdits aux extrémités."
     size:
       max: "Taille maximale : 24 caractères."
   surname:
-    characters: "Caractères valides : lettres, espaces et tirets."
-    extremities: "Espaces et tirets interdits aux extrémités."
+    characters: "Caractères valides : lettres, espaces et traits d'union."
+    extremities: "Espaces et traits d'union interdits aux extrémités."
     size:
       max: "Taille maximale : 24 caractères."
   username:
-    characters: "Caractères autorisés : lettres, espaces et tirets bas."
+    empty: "Le nom d'utilisateur doit être renseigné."
+    characters: "Caractères autorisés : lettres, chiffres et tirets bas."
     size:
       min: "Taille minimale : 2 caractères."
       max: "Taille maximale : 16 caractères."
+    taken: "Ce nom d'utilisateur n'est pas disponible."
   email:
+    empty: "L'adresse e-mail doit être renseignée."
     format: "Le format de l'adresse est incorrect."
     size:
       max: "Taille maximale : 128 caractères."
   password:
+    empty: "Le mot de passe doit être renseigné."
     size:
       min: "Taille minimale : 8 caractères."
       max: "Taille maximale : 48 caractères."

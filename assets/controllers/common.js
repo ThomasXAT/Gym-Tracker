@@ -21,11 +21,15 @@ import {
     VALIDATOR_SURNAME_CHARACTERS,
     VALIDATOR_SURNAME_EXTREMITIES,
     VALIDATOR_SURNAME_SIZE_MAX,
+    VALIDATOR_USERNAME_EMPTY,
     VALIDATOR_USERNAME_CHARACTERS,
     VALIDATOR_USERNAME_SIZE_MIN,
     VALIDATOR_USERNAME_SIZE_MAX,
+    VALIDATOR_USERNAME_TAKEN,
+    VALIDATOR_EMAIL_EMPTY,
     VALIDATOR_EMAIL_FORMAT,
     VALIDATOR_EMAIL_SIZE_MAX,
+    VALIDATOR_PASSWORD_EMPTY,
     VALIDATOR_PASSWORD_SIZE_MIN,
     VALIDATOR_PASSWORD_SIZE_MAX,
     VALIDATOR_PASSWORD_CONFIRMATION,
@@ -218,53 +222,58 @@ export let Validator = {
                 $("#help-username").text("");
                 Validator.setNeutral(username);
             }
-            if (username.val() !== "") {
-                if (help) { Validator.setInvalid(username); }
-                if (!new RegExp(/^[a-zA-Z0-9_]+$/).test(username.val())) {
-                    if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_CHARACTERS)); }
-                }
-                else if (username.val().length < 2) {
-                    if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_SIZE_MIN)); }
-                }
-                else if (username.val().length > 16) {
-                    if (help) { $("#help-username").text(VALIDATOR_USERNAME_SIZE_MAX); }
-                }
-                else {
-                    if (help) { Validator.setValid(username); }
-                    return true;
-                }
+            if (help) { Validator.setInvalid(username); }
+            if (username.val() === "") {
+                if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_EMPTY)); }
+            }
+            else if (!new RegExp(/^[a-zA-Z0-9_]+$/).test(username.val())) {
+                if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_CHARACTERS)); }
+            }
+            else if (username.val().length < 2) {
+                if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_SIZE_MIN)); }
+            }
+            else if (username.val().length > 16) {
+                if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_SIZE_MAX)); }
+            }
+            else {
+                if (help) { Validator.setValid(username); }
+                return true;
             }
             return false;
         },
-        email: function(email, help = false, edit = false) {
+        email: function(email, help = false) {
             if (help) {
                 $("#help-email").text("");
                 Validator.setNeutral(email);
             }
-            if (email.val() !== "" || edit) {
-                if (help) { Validator.setInvalid(email); }
-                email.val(email.val().toLowerCase());
-                if (!new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g).test(email.val())) {
-                    if (help) { $("#help-email").text(trans(VALIDATOR_EMAIL_FORMAT)); }
-                }
-                else if (email.val().length > 128) {
-                    if (help) { $("#help-email").text(VALIDATOR_EMAIL_SIZE_MAX); }
-                }
-                else {
-                    if (help) { Validator.setValid(email); }
-                    return true;
-                }
+            if (help) { Validator.setInvalid(email); }
+            email.val(email.val().toLowerCase());
+            if (email.val() === "") {
+                if (help) { $("#help-email").text(trans(VALIDATOR_EMAIL_EMPTY)); }
+            }
+            else if (!new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g).test(email.val())) {
+                if (help) { $("#help-email").text(trans(VALIDATOR_EMAIL_FORMAT)); }
+            }
+            else if (email.val().length > 128) {
+                if (help) { $("#help-email").text(trans(VALIDATOR_EMAIL_SIZE_MAX)); }
+            }
+            else {
+                if (help) { Validator.setValid(email); }
+                return true;
             }
             return false;
         },
-        password: function(password, help = false) {
+        password: function(password, help = false, edit = false) {
             if (help) {
                 $("#help-password").text("");
                 Validator.setNeutral(password);
             }
-            if (password.val() !== "") {
+            if (!edit || password.val() !== "") {
                 if (help) { Validator.setInvalid(password); }
-                if (password.val().length < 8) {
+                if (password.val() === "") {
+                    if (help) { $("#help-password").text(trans(VALIDATOR_PASSWORD_EMPTY)); }
+                }
+                else if (password.val().length < 8) {
                     if (help) { $("#help-password").text(trans(VALIDATOR_PASSWORD_SIZE_MIN)); }
                 }
                 else if (password.val().length > 48) {
@@ -310,12 +319,12 @@ export let Validator = {
                 $("#help-fullname").html("");
                 fullname = true;
             }
-            let email = Validator.verify.email($("#profile_email"), true, true);
+            let email = Validator.verify.email($("#profile_email"), true);
             let password = true;
             if ($("#profile_password").val()) {
                 password = false;
             }
-            if (Validator.verify.password($("#profile_password"), true)) {
+            if (Validator.verify.password($("#profile_password"), true, true)) {
                 $("#section-confirmation").prop("hidden", false);
                 if (Validator.verify.confirmation($("#profile_confirmation"), $("#profile_password"), true)) {
                     password = true;
@@ -327,6 +336,47 @@ export let Validator = {
             }
             let submit = $("#profile_submit");
             picture && fullname && email && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
+        },
+        login_form: function() {
+            let username = $("#login_username").val() !== "";
+            let password = $("#login_password").val() !== "";
+            let submit = $("#login_submit");
+            username && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
+        },
+        register_form: function(response) {
+            let fullname = false;
+            if (Validator.verify.firstname($("#register_firstname")) && Validator.verify.surname($("#register_surname"))) {
+                $("#help-fullname").html("");
+                fullname = true;
+            }
+            let username = false;
+            let available = true;
+            $.each(response, function(i, athlete) {
+                if ($("#register_username").val().toLowerCase() === athlete.username.toLowerCase()) {
+                    available = false;
+                }
+            }); 
+            if (!available) {
+                $("#help-username").html(trans(VALIDATOR_USERNAME_TAKEN));
+                Validator.setInvalid($("#register_username"));
+            }
+            else {
+                username = Validator.verify.username($("#register_username"), true);
+            }
+            let email = Validator.verify.email($("#register_email"), true);
+            let password = false;
+            if (Validator.verify.password($("#register_password"), true)) {
+                $("#section-confirmation").prop("hidden", false);
+                if (Validator.verify.confirmation($("#register_confirmation"), $("#register_password"), true)) {
+                    password = true;
+                }
+            }
+            else {
+                $("#section-confirmation").prop("hidden", true);
+                $("#register_confirmation").val("");
+            }
+            let submit = $("#register_submit");
+            fullname && username && email && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
         }
     },
 };
