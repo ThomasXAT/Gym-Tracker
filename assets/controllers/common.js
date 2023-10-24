@@ -436,256 +436,42 @@ export let Generator = {
                     $.each(session.exercices, function(i, exercice) {
                         Generator.render.exercice(i + 1, exercice, response)
                     });
-                    if (Object.keys(response).length && $("#_select_exercice").length) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/api/exercice",
-                            success: function(response) {
-                                let last_exercice = $("#session-exercices").children().last();
-                                let last_exercice_id = last_exercice.attr("id");
-                                let sequence = $("#" + last_exercice_id + "-sequence").val();
-                                if (sequence === "true") {
-                                    let parts = $("#" + last_exercice_id).children().length - 2;
-                                    for (let part = 1; part <= parts; part++) {
-                                        let id = $("#" + last_exercice_id + "-part-" + part + "-id").val();
-                                        let equipment = $("#" + last_exercice_id + "-part-" + part + "-equipment").val();
-                                        Selector.select.exercice(response[id], equipment);
-                                    }
-                                }
-                                else {
-                                    let id = $("#" + last_exercice_id + "-id").val();
-                                    let equipment = $("#" + last_exercice_id + "-equipment").val();
-                                    Selector.select.exercice(response[id], equipment);
-                                }
-                                Generator.render.add_form();
-                            },
-                        });
-                    }
                 }
             });
         },
-        exercice: function(exercice_index, exercice, sets) {
-            let exercice_id = "exercice-" + exercice_index;
+        exercice: function(index, exercice, response) {
             $("#session-exercices")
-                .append($("<article></article")
-                    .attr("id", exercice_id)
-                    .addClass("mt-3 pt-1 pt-md-3")
-                    .append($("<input>")
-                        .attr("id", "exercice-" + exercice_index + "-sequence")
-                        .val(exercice.sequence)
-                        .attr("hidden", true)
-                    )
-                    .append(!exercice.sequence ? $("<input>")
-                        .attr("id", "exercice-" + exercice_index + "-id")
-                        .val(exercice.id)
-                        .attr("hidden", true): null
-                    )
-                    .append(!exercice.sequence ? $("<input>")
-                        .attr("id", "exercice-" + exercice_index + "-equipment")
-                        .val(exercice.equipment)
-                        .attr("hidden", true): null
-                    )
-                    .append($("<h5></h5>")
-                        .attr("id", "exercice-" + exercice_index + "-title")
-                        .addClass("text-white")
-                    )
-                )
-            ;
-            if (exercice.sequence) {
-                $.each(exercice.exercices, function(j, exercice_part) {
-                    let exercice_part_index = j + 1;
-                    let exercice_part_id = exercice_id + "-part-" + exercice_part_index;
-                    let exercice_part_title = exercice_part.fullname;
-                    $("#exercice-" + exercice_index)
-                        .append($("<article></article>")
-                            .attr("id", exercice_part_id)
-                            .addClass("px-2 mx-md-3")
-                            .append($("<input>")
-                                .attr("id", exercice_part_id + "-id")
-                                .val(exercice_part.id)
-                                .attr("hidden", true)
+                .append($("<tr></tr>")
+                    .attr("id", "exercice-" + index)
+                    .append($("<table></table>")
+                        .append($("<tbody></tbody>")
+                            .append($("<tr></tr>")
+                                .attr("id", "exercice-" + index + "-title")
+                                .text(exercice.fullname)
                             )
-                            .append($("<input>")
-                                .attr("id", exercice_part_id + "-equipment")
-                                .val(exercice_part.equipment)
-                                .attr("hidden", true)
+                            .append($("<tr></tr>")
+                                .append($("<span></span>")
+                                    .attr("id", "exercice-" + index + "-sequence")
+                                    .attr("hidden", true)
+                                    .val(exercice.sequence ? 1: 0)
+                                )
                             )
-                            .append($("<h6></h6>")
-                                .attr("id", exercice_part_id + "-title")
-                                .text(exercice_part_title)
+                            .append(exercice.sequence ? 
+                                $("<tr></tr>")
+                                    .append($("<table></table>")
+                                        .append($("<tbody></tbody>")
+                                            .attr("id", "exercice-" + index + "-parts")
+                                        )
+                                    ):
+                                $("<tr></tr>")
+                                    .append($("<table></table>")
+                                        .append($("<tbody></tbody>")
+                                            .attr("id", "exercice-" + index + "-sets")
+                                        )
+                                    )
                             )
                         )
-                    ;
-                    Generator.render.exercice_part(exercice_part_id, exercice_part, sets)
-                });
-            }
-            else {
-                Generator.render.exercice_part(exercice_id, exercice, sets)
-            }
-            $("#exercice-" + exercice_index + "-title").text(exercice.fullname);
-        },
-        exercice_part: function(prefix, exercice, sets) {
-            $("#" + prefix)
-                .append($("<table></table>")
-                    .addClass("table table-dark table-striped")
-                    .append($("<thead></thead>")
-                        .attr("id", prefix + "-head")
                     )
-                    .append($("<tbody></tbody>")
-                        .attr("id", prefix + "-body")
-                    )
-                )
-            ;
-            $("#" + prefix + "-head")
-                .append($("<tr></tr>")
-                    .append($("<th></th>")
-                        .attr("scope", "col")
-                        .addClass("text-center text-body")
-                        .text("#")
-                    )
-                    .append($("<th></th>")
-                        .attr("scope", "col")
-                        .addClass("text-center text-body")
-                        .text(trans(SYMMETRY_LABEL))
-                    )
-                    .append($("<th></th>")
-                        .attr("scope", "col")
-                        .addClass("text-center text-body")
-                        .text(trans(REPETITIONS))
-                    )
-                    .append($("<th></th>")
-                        .attr("scope", "col")
-                        .addClass("text-center text-body")
-                        .text(trans(WEIGHT))
-                    )
-                    .append($("<th></th>")
-                        .attr("scope", "col")
-                        .attr("colspan", 3)
-                        .addClass("text-center text-body")
-                        .text(trans(TEMPO_LABEL))
-                    )
-                )
-            ;
-            $.each(exercice.sets, function(i, set) {
-                Generator.render.set(prefix, i + 1, set, sets);
-            });
-        },
-        set: function(prefix, set_index, set, sets) {
-            let set_id = prefix + "-set-" + set_index;
-            $("#" + prefix + "-body")
-                .append($("<tr></tr>")
-                    .attr("id", set_id)
-                    .append($("<th></th>")
-                        .attr("scope", "row")
-                        .addClass("align-middle text-center")
-                        .append($("<p></p>")
-                            .addClass("mb-0 text-white")
-                            .text(set_index)
-                        )
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-symmetry")
-                        .addClass("text-center")
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-repetitions")
-                        .addClass("text-center")
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-weight")
-                        .addClass("text-center")
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-tempo")
-                        .addClass("text-center")
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-id")
-                        .attr("hidden", "")
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-dropping")
-                        .attr("hidden", "")
-                    )
-                )
-            ;
-            $.each(set, function(j, set_part_id) {
-                Generator.render.set_part(set_id, set_part_id, sets);
-            });
-            if ($("#_edit").length) {
-                $("#" + set_id)
-                    .attr("data-bs-toggle", "modal")
-                    .attr("data-bs-target", "#_edit")
-                    .addClass("pointer-only")
-                    .on("click", function() {
-                        let exercice_index = set_id.split("-")[1];
-                        let forms = $(".form-tempo");
-                        forms.addClass("d-none");
-                        $("#_edit-form")
-                            .empty()
-                            .append($("<h5></h5>")
-                                .addClass("text-white")
-                                .text($("#exercice-" + exercice_index + "-title").text())
-                            )
-                        ;               
-                        if (set_id.split("-")[2] === "part") {
-                            let exercice_part_index = 1;
-                            let next_exists = true;
-                            while (next_exists) {
-                                Generator.render.edit_form_part("exercice-" + exercice_index + "-part-" + exercice_part_index, set_index, true);
-                                exercice_part_index++;
-                                next_exists = $("#exercice-" + exercice_index + "-part-" + exercice_part_index + "-set-" + set_index).length ? true: false;
-                            }
-                        }
-                        else {
-                            Generator.render.edit_form_part(prefix, set_index);
-                        }
-                        Validator.verify.session_form("edit");
-                    })
-                ;
-            }
-        },
-        set_part: function(set_id, set_part_id, sets) {
-            let set_part = sets[set_part_id];
-            $("#" + set_id + "-symmetry")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-symmetry")
-                    .addClass("mb-0 text-white")
-                    .text(Translator.translate.symmetry(set_part.symmetry))
-                )
-            ;
-            $("#" + set_id + "-repetitions")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-repetitions")
-                    .addClass("mb-0 text-white")
-                    .text(set_part.repetitions)
-                )
-            ;
-            $("#" + set_id + "-weight")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-weight")
-                    .addClass("mb-0 text-white")
-                    .text(String(Math.floor(($("#athlete-unit").text() === "lbs" ? set_part.weight / 0.45359237: set_part.weight) * 100) / 100).replace(".", ","))
-                )
-            ;
-            $("#" + set_id + "-tempo")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-tempo")
-                    .addClass("mb-0 text-white")
-                )
-            ;
-            Generator.render.tempo(set_part_id, set_part.concentric, set_part.isometric, set_part.eccentric);
-            $("#" + set_id + "-id")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-id")
-                    .text(set_part.id)
-                )
-            ;
-            $("#" + set_id + "-dropping")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-dropping")
-                    .addClass("mb-0 text-white")
-                    .text(set_part.dropping)
                 )
             ;
         },

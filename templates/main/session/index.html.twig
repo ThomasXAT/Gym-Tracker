@@ -7,7 +7,7 @@
             <span hidden id="session-identifier">{{ session.id }}</span>
             <div class="row">
 {% if session.current == false %}
-                <section id="breadcrumb" class="mb-1 mb-md-2 p-2 mx-auto d-flex justify-content-end align-items-center">
+                <section id="breadcrumb" class="mb-md-2 p-2 mx-auto d-flex justify-content-end align-items-center">
                     <div class="col-3 text-white fw-bold fs-3">
                         <span class="d-md-none">{{ position }}</span>
                         <span class="d-none d-md-inline">{{ ('main.' ~ page ~ '.title')|trans ~ ' ' ~ position }}</span>
@@ -23,8 +23,8 @@
                     </div>
                 </section>
 {% endif %}
-                <section id="session" class="mx-auto{% if session.current %} mt-2 {% if session.current %}mt-mb-0{% else %}mt-md-3{% endif %}{% endif %}">
-                    <section class="mt-1 mt-md-2 mb-3 mb-md-0 text-center">
+                <section id="session" class="p-2 mx-auto">
+                    <section class="text-center">
                         <h3 class="text-white identifier text-break">{{ session.title }}</h3>
                         <span><span>{{ 'main.session.at_date'|trans }}</span> <span class="text-white">{{ ('day.' ~ session.start|date('d'))|trans }} {{ ('month.' ~ session.start|date('m'))|trans }} {{ session.start|date('Y') }}</span> <span>{{ 'main.session.at_time'|trans }}</span> <span class="text-white">{{ session.start|date('H:i') }}</span></span>
                     </section>
@@ -34,9 +34,14 @@
                     <div id="welcome" class="text-center" hidden>
                         <p class="py-5">{{ 'main.session.welcome'|trans }}</p>
                     </div>
-                    <section id="session-muscles"></section>
-                    <section id="session-exercices"></section>
-{% if app.user == session.athlete and session.current == false %}
+                    <section class="mt-3 mt-md-4">
+                        <table class="table mb-0">
+                            <tbody id="session-exercices">
+
+                            </tbody>
+                        </table>
+                    </section>
+{% if app.user == session.athlete and not session.current %}
                     <div id="session-delete" class="text-center py-2 py-md-3 mb-2 mb-md-0" hidden>
                         <a href="{{ path('session_delete', { 'id': session.id }) }}"><button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i> {{ 'main.session.delete'|trans }}</button></a>
                     </div>
