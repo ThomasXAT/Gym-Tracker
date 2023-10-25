@@ -56,13 +56,13 @@ export default class extends Controller {
             success: (response) => {
                 Generator.render.add_form();
                 let exercice_index = 0;
-                if ($("#session-exercices").children().length > 0) {
-                    exercice_index = parseInt($("#session-exercices").children().last().attr("id").replace("exercice-", ""));
+                if ($("#exercices").children().length > 0) {
+                    exercice_index = parseInt($("#exercices").children().last().attr("id").replace("exercice-", ""));
                 }
                 if (response.new) {
                     exercice_index++;
                     Generator.render.exercice(exercice_index, response.last, response.sets);
-                    $("#session-exercices").find(":last").remove();
+                    $("#exercices").find(":last").remove();
                 }
                 else {
                     let sequence = response.last.sequence;
@@ -99,7 +99,7 @@ export default class extends Controller {
                 if (!$("#" + prefix + "-body").children().length) {
                     exercice.remove();
                 }
-                if ($("#session-exercices").children().length === 0) {
+                if ($("#exercices").children().length === 0) {
                     $("#welcome").attr("hidden", false);
                 }
             },

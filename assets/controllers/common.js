@@ -52,6 +52,7 @@ import {
     CABLE,
     SMITH,
     MACHINE,
+    SEQUENCE_LABEL,
 } from '../translator';
 
 export let Translator = {
@@ -433,44 +434,97 @@ export let Generator = {
                     if ($("#session-delete").length) {
                         $("#session-delete").attr("hidden", false);
                     }
+                    $("#session-exercices")
+                        .append($("<table></table>")
+                            .addClass("table border-bottom")
+                            .append($("<tbody></tbody>")
+                                .attr("id", "exercices")
+                            )
+                        )
+                    ;
                     $.each(session.exercices, function(i, exercice) {
                         Generator.render.exercice(i + 1, exercice, response)
                     });
                 }
             });
         },
-        exercice: function(index, exercice, response) {
-            $("#session-exercices")
+        exercice: function(index, exercice, response, part = false, parent_index = null) {
+            $("#" + (!part ? "exercices": "exercice-" + parent_index + "-parts"))
                 .append($("<tr></tr>")
-                    .attr("id", "exercice-" + index)
-                    .append($("<table></table>")
-                        .append($("<tbody></tbody>")
-                            .append($("<tr></tr>")
-                                .attr("id", "exercice-" + index + "-title")
-                                .text(exercice.fullname)
-                            )
-                            .append($("<tr></tr>")
-                                .append($("<span></span>")
-                                    .attr("id", "exercice-" + index + "-sequence")
-                                    .attr("hidden", true)
-                                    .val(exercice.sequence ? 1: 0)
+                    .attr("id", "exercice-" + (part ? parent_index + "-part-": "") + index)
+                    .addClass("border-bottom-0")
+                    .append($("<td></td>")
+                        .addClass("p-0 border-bottom-0")
+                        .append($("<table></table>")
+                            .addClass("table mb-0" + (!exercice.sequence ? " border-start": "") + (!part ? " border-end": ""))
+                            .append($("<tbody></tbody>")
+                                .append($("<tr></tr>")
+                                    .addClass("border-bottom-0")
+                                    .append($("<td></td>")
+                                        .attr("id", "exercice-" + (part ? parent_index + "-part-": "") + index + "-title")
+                                        .attr("colspan", exercice.sequence ? 2: 1)
+                                        .addClass("" + (!exercice.sequence ? " border-bottom-0" + ((part && index !== 1) || !part ? " border-top": ""): " border-top border-start") + " exercice-title" + (!part ? " text-white": " text-body"))
+                                        .text(exercice.fullname)
+                                    )
+                                )
+                                .append(!part && exercice.sequence ? 
+                                    $("<tr></tr>")
+                                        .addClass("border-bottom-0")
+                                        .append(!part ? $("<td></td>")
+                                            .addClass("align-middle text-center set-index p-0 border-bottom-0")
+                                            .append($("<div></div>")
+                                                .addClass("text-vertical")
+                                                .text(trans(SEQUENCE_LABEL))
+                                            ): ""
+                                        )
+                                        .append($("<td></td>")
+                                            .addClass("p-0 border-bottom-0")
+                                            .append($("<table></table>")
+                                                .addClass("table mb-0")
+                                                .append($("<tbody></tbody>")
+                                                    .attr("id", "exercice-" + index + "-parts")
+                                                )
+                                            )
+                                        ):
+                                    $("<tr></tr>")
+                                        .addClass("border-bottom-0")
+                                        .append($("<table></table>")
+                                            .addClass("table mb-0")
+                                            .append($("<tbody></tbody>")
+                                                .attr("id", "exercice-" + (part ? parent_index + "-part-": "") + index + "-sets")
+                                                .addClass("exercice-sets")
+                                            )
+                                        )
                                 )
                             )
-                            .append(exercice.sequence ? 
-                                $("<tr></tr>")
-                                    .append($("<table></table>")
-                                        .append($("<tbody></tbody>")
-                                            .attr("id", "exercice-" + index + "-parts")
-                                        )
-                                    ):
-                                $("<tr></tr>")
-                                    .append($("<table></table>")
-                                        .append($("<tbody></tbody>")
-                                            .attr("id", "exercice-" + index + "-sets")
-                                        )
-                                    )
-                            )
                         )
+                    )
+                )
+            ;
+            if (!part && exercice.sequence) {
+                $.each(exercice.exercices, function(j, exercice_part) {
+                    Generator.render.exercice(j + 1, exercice_part, response, true, index)
+                });
+            }
+            else {
+                $.each(exercice.sets, function(j, set) {
+                    Generator.render.set(j + 1, set, response, "exercice-" + (part ? parent_index + "-part-": "") + index);
+                });
+            }
+        },
+        set: function(index, set, response, exercice_id) {
+            $("#" + exercice_id + "-sets")
+                .append($("<tr></tr>")
+                    .attr("id", exercice_id + "-set-" + index)
+                    .addClass("border-bottom-0" + (index == 1 ? " border-top": ""))
+                    .append($("<td></td>")
+                        .attr("id", exercice_id + "-set-" + index + "-index")
+                        .addClass("align-middle text-center text-body px-0 border-bottom-0 border-end set-index")
+                        .text(index)
+                    )
+                    .append($("<td></td>")
+                        .attr("id", exercice_id + "-set-" + index + "-parts")
+                        .addClass("border-bottom-0 border-top")
                     )
                 )
             ;
@@ -550,7 +604,7 @@ export let Generator = {
                         .val(title)
                     )
                     .append($("<input>")
-                        .attr("id", "size")
+                        .attr("iited", "size")
                         .attr("name", "size")
                         .attr("hidden", true)
                         .val(size)

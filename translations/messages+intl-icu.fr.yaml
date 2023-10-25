@@ -95,6 +95,8 @@ measurement:
   height: Taille
   weight: Poids
   bmi: IMC
+sequence:
+  label: Enchaînement
 exercice:
   label: Exercice
   name: Nom de l'exercice
