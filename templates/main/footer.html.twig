@@ -4,9 +4,8 @@
                     <p class="mb-0">Thomas JORGE &copy; {{ 'now'|date('Y') }}</p>
                 </section>
                 <section>
-                    <a href="{{ path('authentication_logout') }}">
-                        <button class="btn btn-outline-danger text-nowrap">{{ 'authentication.logout.submit'|trans }}</button>
-                    </a>
+                    <button class="btn btn-outline-light text-nowrap" data-bs-toggle="modal" data-bs-target="#_settings"><i class="fa-solid fa-gear"></i> {{ 'main.settings.button'|trans }}</button>
                 </section>
             </div>
         </section>
+

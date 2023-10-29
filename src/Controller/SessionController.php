@@ -48,7 +48,7 @@ class SessionController extends AbstractController
     }
 
     #[Route(path:'/stop', name: 'stop')]
-    public function stop(SessionRepository $sessionRepository, SequenceRepository $sequenceRepository): Response
+    public function stop(SessionRepository $sessionRepository, SequenceRepository $sequenceRepository, SetRepository $setRepository): Response
     {
         /**
          * @var Athlete $user
@@ -56,9 +56,10 @@ class SessionController extends AbstractController
         $user = $this->getUser();
         if ($session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
             if (sizeof($session->getExercices())) {
+                $lastSet = $setRepository->findOneBy(['session' => $session], ['date' => 'desc']);
                 $session
                     ->setCurrent(false)
-                    ->setEnd(new DateTime())
+                    ->setEnd($lastSet->getDate())
                 ;
                 $sessionRepository->save($session, true);
             }

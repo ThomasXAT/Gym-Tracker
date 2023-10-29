@@ -43,15 +43,13 @@ month:
   10: octobre
   11: novembre
   12: décembre
-app: Gym-Tracker
+app: Gym Tracker
 return: Retour
 save: Enregistrer
 loading: Chargement
-all: Tous
-settings: Paramètres
-required: Champs obligatoires
 delete: Supprimer
 hi: Salut
+all: Tous
 bodyweight: poids du corps
 band: élastique
 barbell: barre
@@ -120,6 +118,19 @@ authentication:
     submit: S'inscrire
     login: Je possède déjà un compte.
 main:  
+  settings:
+    button: Paramètres
+    title: Paramètres
+    measurements:
+      label: Mesures anthropométriques
+      visibility:
+        label: Partager les mesures en public
+    training:
+      label: Carnet d'entraînement
+      unit:
+        label: Unité de masse
+        kg: Système métrique (kilogrammes)
+        lbs: Système impérial (livres)
   home:
     title: Accueil
   repertory:

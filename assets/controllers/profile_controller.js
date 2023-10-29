@@ -33,7 +33,7 @@ export default class extends Controller {
                 Validator.verify.firstname($("#profile_firstname"), true);
                 Validator.verify.surname($("#profile_surname"), true);
             });
-            $("#section-measurement").on("input", function() {
+            $("#section-measurements").on("input", function() {
                 Generator.render.bmi();
                 $("#measurement_height").val($("#measurement_height").val().replace(".", ",").replace(/[^0-9,]/g, ""));
                 $("#measurement_weight").val($("#measurement_weight").val().replace(".", ",").replace(/[^0-9,]/g, ""));
@@ -85,8 +85,8 @@ export default class extends Controller {
             $("#form-profile").on("input click keyup", function() {
                 Validator.verify.profile_form();
             });
+            Generator.render.bmi();
         }
-        Generator.render.bmi();
     }
     recto() {
         $("#verso").removeClass("d-flex").addClass("d-none");

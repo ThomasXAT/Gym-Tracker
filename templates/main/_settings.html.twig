@@ -1,0 +1,41 @@
+    <aside id="_settings" class="modal fade" {{ stimulus_controller('settings') }}>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <p class="modal-title fs-5">{{ 'main.settings.title'|trans }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </header>
+                <main class="modal-body">
+                    <form id="form-settings" name="settings">
+                        <label for="section-measurements" class="form-label fw-bold">{{ 'main.settings.measurements.label'|trans }}</label>
+                        <section id="section-measurements" class="mb-3">
+                            <section id="section-visibility" class="form-check form-switch">
+                                <input class="form-check-input" name="settings[measurement]" type="checkbox" id="settings_measurement"{% if app.user.settings.measurement %} checked{% endif %}>
+                                <label class="form-check-label" for="settings_measurement">{{ 'main.settings.measurements.visibility.label'|trans }}</label>
+                            </section>
+                        </section>
+                        <label for="section-training" class="form-label fw-bold">{{ 'main.settings.training.label'|trans }}</label>
+                        <section id="section-training">
+                            <section id="section-unit" class="form-floating">
+                                <select id="settings_unit" name="settings[unit]" class="form-select" placeholder="{{ 'main.settings.training.unit.label'|trans }}">
+                                    <option value="kg">{{ 'main.settings.training.unit.kg'|trans }}</option>
+                                    <option value="lbs"{% if app.user.settings.unit =='lbs' %} selected{% endif %}>{{ 'main.settings.training.unit.lbs'|trans }}</option>
+                                </select>
+                                <label class="form-label required" for="settings_unit">{{ 'main.settings.training.unit.label'|trans }}</label>
+                            </section>
+                        </section>
+                    </form>
+                </main>
+                <footer class="modal-footer">
+                    <div class="d-flex w-100 align-items-center">
+                        <div class="col-6 text-start">
+                            <a class="btn btn-outline-danger text-nowrap" href="{{ path('authentication_logout') }}">{{ 'authentication.logout.submit'|trans }}</a>                            
+                        </div>
+                        <div class="col-6 text-end">
+                            <button id="session-start" type="submit" class="btn btn-success text-nowrap" data-action="click->settings#update"><i class="fa-solid fa-save"></i> {{ 'save'|trans }}</button>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </aside>

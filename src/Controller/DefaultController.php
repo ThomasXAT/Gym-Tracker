@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Athlete;
-use App\Entity\Measurement;
 use App\Entity\Training\Exercice;
 use App\Form\ExerciceType;
 use App\Form\ProfileType;
@@ -12,7 +11,6 @@ use App\Repository\MeasurementRepository;
 use App\Repository\Training\ExerciceRepository;
 use App\Repository\Training\SessionRepository;
 use App\Repository\Training\SetRepository;
-use DateTime;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\Point;

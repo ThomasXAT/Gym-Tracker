@@ -60,7 +60,6 @@ class SecurityController extends AbstractController
             $athlete = new Athlete();
             $form = $this->createForm(RegisterType::class, $athlete);
             $form->handleRequest($request);
-
             if ($form->isSubmitted() && $form->isValid()) {
                 /**
                  * @var Settings $settings
@@ -68,7 +67,6 @@ class SecurityController extends AbstractController
                 $settings = new Settings();
                 $settings->setUnit("kg");
                 $settings->setMeasurement(false);
-
                 $athlete->setPassword(
                     $userPasswordHasher->hashPassword(
                         $athlete,
@@ -77,7 +75,7 @@ class SecurityController extends AbstractController
                 );
                 $athlete
                     ->setRegistration(new DateTime())
-                    ->setDescription('<p>Je suis nouveau sur <strong>Gym-Tracker</strong> !</p>')
+                    ->setDescription('<p>Je suis nouveau sur <strong>Gym Tracker</strong> !</p>')
                     ->setSettings($settings)
                 ;
                 $athleteRepository->save($athlete, true);
@@ -87,7 +85,7 @@ class SecurityController extends AbstractController
             else {
                 return $this->render('authentication/register/index.html.twig', [
                     'page' => 'register',
-                    'form' => $form->createView(),
+                    'form' => $form,
                 ]);
             }
         }

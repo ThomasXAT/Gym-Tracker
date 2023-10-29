@@ -48,14 +48,12 @@
                     {# Verso #}<div id="verso" class="justify-content-center align-items-center d-none">
                         <span data-action="click->profile#recto" class="pointer d-lg-none"><i class="fa-solid fa-arrow-left fa-lg"></i></span>
                         <div class="card mx-3 mx-lg-0">
-{% if athlete == app.user or athlete.measurement %}
                             <header class="card-header">
                                 <div class="text-center">{{ 'measurement.label'|trans }}</div>
                             </header>
-{% endif %}
                             <main class="card-body">
-{% if athlete == app.user or athlete.measurement %}
-                                <section id="section-measurement">
+{% if athlete == app.user or athlete.settings.measurement %}
+                                <section id="section-measurements">
                                     <section id="section-height" class="mb-2">
                                         <div id="input-height" class="input-group flex-nowrap">
                                             <span id="measurement_height-before" class="input-group-text measurement-label justify-content-center">{{ 'measurement.height'|trans }}</span>
@@ -80,6 +78,10 @@
                                 </section>
                                 <div id="measurements-list" class="text-end{% if not athlete.measurements|length %} d-none{% endif %}">
                                     <a href="{{ path('measurements', {'username': athlete.username}) }}" class="text-decoration-none">{{ 'main.profile.measurements.list'|trans }}</a>
+                                </div>
+{% else %}
+                                <div class="text-center">
+                                    <span class="badge bg-danger"><i class="fa-solid fa-eye-slash"></i> {{ 'main.profile.measurements.private'|trans }}</span>
                                 </div>
 {% endif %}
                             </main>
