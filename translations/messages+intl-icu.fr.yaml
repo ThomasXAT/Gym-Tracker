@@ -64,7 +64,9 @@ symmetry:
   label: Symétrie
   unilateral: Unilatéral
   bilateral: Bilatéral
-repetitions: Répts
+repetitions: 
+  label: répétitions
+  short: Répts
 weight: Poids
 tempo:
   label: Tempo

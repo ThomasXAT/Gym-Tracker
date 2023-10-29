@@ -135,7 +135,7 @@ main.main > section.content {
     }
 }
 
-footer.main, .session-title, .session-date, .exercices-list-item, .exercice-list, .exercice-title, .exercice-set {
+footer.main, .session-title, .session-date, .exercices-list-item, .exercice-list, .set-index, .exercice-title, .exercice-set {
     background-color: #262A2E !important;
 }
 
@@ -174,7 +174,7 @@ footer.main, .session-title, .session-date, .exercices-list-item, .exercice-list
     font-size: 1.75em !important;
 }
 
-.accordion-button, .accordion-body, .exercice-part-title, .exercice-sets {
+.accordion-button, .accordion-body, .exercice-sets {
     background-color: #212529 !important;
     color: #fff !important;
     outline: none !important;
@@ -216,11 +216,23 @@ footer.main, .session-title, .session-date, .exercices-list-item, .exercice-list
     transform: rotate(180deg);
 }
 
-.set-index {
+.set-index, .sequence-label {
     width: 25px;
 }
 
-.exercice-title {
+.input-plaintext {
+    display: block;
+    padding: $input-padding-y 0;
+    margin-bottom: 0;
+    line-height: $input-line-height;
+    color: $input-plaintext-color;
+    background-color: transparent;
+    border: solid transparent;
+    border-width: $input-border-width 0;
+    appearance: none;
+}
+
+.border-body {
     border-color: var(--bs-border-color);
 }
 

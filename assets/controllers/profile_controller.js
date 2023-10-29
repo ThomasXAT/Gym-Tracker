@@ -10,68 +10,70 @@ import {
 
 export default class extends Controller {
     connect() {
-        Validator.verify.firstname($("#profile_firstname"), true);
-        Validator.verify.surname($("#profile_surname"), true);
-        $("#section-firstname").on("input click keyup", function() {
-            Validator.verify.surname($("#profile_surname"), true);
-            Validator.verify.firstname($("#profile_firstname"), true);
-        });
-        $("#section-surname").on("input click keyup", function() {
+        if ($("#form-profile").length) {
             Validator.verify.firstname($("#profile_firstname"), true);
             Validator.verify.surname($("#profile_surname"), true);
-        });
-        $("#section-measurement").on("input", function() {
-            Generator.render.bmi();
-            $("#measurement_height").val($("#measurement_height").val().replace(".", ",").replace(/[^0-9,]/g, ""));
-            $("#measurement_weight").val($("#measurement_weight").val().replace(".", ",").replace(/[^0-9,]/g, ""));
-            $("#measurement_submit").attr("disabled", !Validator.verify.measurement($("#measurement_height"), $("#measurement_weight")));
-        });
-        Validator.verify.profile_form();
-        let picture = true;
-        $("#profile_file").on("change", function() {
-            let file = this.files[0];
-            if (file) {
-                $("#profile__delete_picture").prop("checked", false);
-                if (file.size > 5 * 1024 * 1024) {
-                    Validator.setInvalid($("#profile_file"));
-                    $("#profile_picture").attr("src", "images/dirtybulk-jaycutler.jpg");
-                    $("#help-file").text(trans(VALIDATOR_FILE_SIZE_MAX));
-                    picture = false;
-                }
-                else {
-                    Validator.setValid($("#profile_file"));
-                    $("#help-file").text("");
-                    picture = true;
-                    let img = new Image();
-                    img.onload = function() {
-                        let width = this.width;
-                        let height = this.height;
-                        let size = Math.min(width, height);
-                        let x = (width - size) / 2;
-                        let y = (height - size) / 2;
-                        let canvas = document.createElement("canvas");
-                        let context = canvas.getContext("2d");
-                        canvas.width = size;
-                        canvas.height = size;
-                        context.drawImage(img, x, y, size, size, 0, 0, size, size);
-                        let croppedImageDataURL = canvas.toDataURL("image/jpeg");
-                        $("#profile_picture").attr("src", croppedImageDataURL);
-                    };
-                    img.src = URL.createObjectURL(file);
-                }
-            }
-        });
-        $("#delete_picture").on("click", function() {
-            picture = true;
-            $("#profile_picture").attr("src", "images/placeholder-athlete.jpg");
-            Validator.setNeutral($("#profile_file"));
-            $("#profile_file").val("");
-            $("#help-file").text("");
-            $("#profile__delete_picture").prop("checked", true);
-        })
-        $("#form-profile").on("input click keyup", function() {
+            $("#section-firstname").on("input click keyup", function() {
+                Validator.verify.surname($("#profile_surname"), true);
+                Validator.verify.firstname($("#profile_firstname"), true);
+            });
+            $("#section-surname").on("input click keyup", function() {
+                Validator.verify.firstname($("#profile_firstname"), true);
+                Validator.verify.surname($("#profile_surname"), true);
+            });
+            $("#section-measurement").on("input", function() {
+                Generator.render.bmi();
+                $("#measurement_height").val($("#measurement_height").val().replace(".", ",").replace(/[^0-9,]/g, ""));
+                $("#measurement_weight").val($("#measurement_weight").val().replace(".", ",").replace(/[^0-9,]/g, ""));
+                $("#measurement_submit").attr("disabled", !Validator.verify.measurement($("#measurement_height"), $("#measurement_weight")));
+            });
             Validator.verify.profile_form();
-        });
+            let picture = true;
+            $("#profile_file").on("change", function() {
+                let file = this.files[0];
+                if (file) {
+                    $("#profile__delete_picture").prop("checked", false);
+                    if (file.size > 5 * 1024 * 1024) {
+                        Validator.setInvalid($("#profile_file"));
+                        $("#profile_picture").attr("src", "images/dirtybulk-jaycutler.jpg");
+                        $("#help-file").text(trans(VALIDATOR_FILE_SIZE_MAX));
+                        picture = false;
+                    }
+                    else {
+                        Validator.setValid($("#profile_file"));
+                        $("#help-file").text("");
+                        picture = true;
+                        let img = new Image();
+                        img.onload = function() {
+                            let width = this.width;
+                            let height = this.height;
+                            let size = Math.min(width, height);
+                            let x = (width - size) / 2;
+                            let y = (height - size) / 2;
+                            let canvas = document.createElement("canvas");
+                            let context = canvas.getContext("2d");
+                            canvas.width = size;
+                            canvas.height = size;
+                            context.drawImage(img, x, y, size, size, 0, 0, size, size);
+                            let croppedImageDataURL = canvas.toDataURL("image/jpeg");
+                            $("#profile_picture").attr("src", croppedImageDataURL);
+                        };
+                        img.src = URL.createObjectURL(file);
+                    }
+                }
+            });
+            $("#delete_picture").on("click", function() {
+                picture = true;
+                $("#profile_picture").attr("src", "images/placeholder-athlete.jpg");
+                Validator.setNeutral($("#profile_file"));
+                $("#profile_file").val("");
+                $("#help-file").text("");
+                $("#profile__delete_picture").prop("checked", true);
+            })
+            $("#form-profile").on("input click keyup", function() {
+                Validator.verify.profile_form();
+            });
+        }
         Generator.render.bmi();
     }
     recto() {

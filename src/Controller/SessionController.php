@@ -79,15 +79,17 @@ class SessionController extends AbstractController
         $data = $_POST;
         foreach ($data['sets'] as $id => $edited) {
             $set = $setRepository->findOneBy(['id' => $id]);
-            $set
-                ->setSymmetry($edited['symmetry'])
-                ->setRepetitions(isset($edited['repetitions']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
-                ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? ($set->getSession()->getAthlete()->getUnit() === 'lbs' ? $edited['weight'] * 0.45359237: $edited['weight']): 0)
-                ->setConcentric(isset($edited['concentric']) && $edited['concentric'] > 1 ? $edited['concentric']: 1)
-                ->setIsometric(isset($edited['isometric']) && $edited['isometric'] > 1 ? $edited['isometric']: 1)
-                ->setEccentric(isset($edited['eccentric']) && $edited['eccentric'] > 1 ? $edited['eccentric']: 1)
-            ;
-            $setRepository->save($set, true);
+            if ($this->getUser() === $set->getSession()->getAthlete()) {
+                $set
+                    ->setSymmetry($edited['symmetry'])
+                    ->setRepetitions(isset($edited['repetitions']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
+                    ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? ($set->getSession()->getAthlete()->getUnit() === 'lbs' ? $edited['weight'] * 0.45359237: $edited['weight']): 0)
+                    ->setConcentric(isset($edited['concentric']) && $edited['concentric'] > 1 ? $edited['concentric']: 1)
+                    ->setIsometric(isset($edited['isometric']) && $edited['isometric'] > 1 ? $edited['isometric']: 1)
+                    ->setEccentric(isset($edited['eccentric']) && $edited['eccentric'] > 1 ? $edited['eccentric']: 1)
+                ;
+                $setRepository->save($set, true);
+            }
         }
         return $this->json($data);
     }

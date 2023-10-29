@@ -2,7 +2,6 @@ import { Controller } from "@hotwired/stimulus";
 import { 
     Generator,
     Validator,
-    Translator,
 } from "./common";
 
 export default class extends Controller {
@@ -21,29 +20,6 @@ export default class extends Controller {
                 $("#_exercice_validity").val(0);
             })
         }
-        if ($("#_edit").length) {
-            $("#_edit-form").on("input click change", function() {
-                Validator.verify.session_form("edit");
-            });
-        }
-    }
-    edit() {
-        $.each($(".edit-input-required"), function(index, input) {
-            $(input).val($(this).val().replace(",", "."));
-        });
-        $.ajax({
-            type: "POST",
-            url: "/session/set/edit",
-            data: $("#_edit-form").serialize(),
-            success: (response) => {
-                $.each(response["sets"], function(id, set) {
-                    $("#" + id + "-symmetry").text(Translator.translate.symmetry(set.symmetry));
-                    $("#" + id + "-repetitions").text(set.repetitions ? set.repetitions: 0);
-                    $("#" + id + "-weight").text(String(set.weight ? set.weight.replace(".", ","): 0));
-                    Generator.render.tempo(id, set.concentric, set.isometric, set.eccentric);
-                });
-            },
-        });
     }
     add() {
         $.each($(".add-input-required"), function(index, input) {
@@ -86,22 +62,7 @@ export default class extends Controller {
             url: "/session/set/delete",
             data: $("#_edit-form").serialize(),
             success: (response) => {
-                let sets = $("#_edit-form").children().slice(1);
-                let splitted_first_set_id = sets.first().attr("id").replace("_edit-", "").split("-");
-                let exercice_id = splitted_first_set_id[0] + "-" + splitted_first_set_id[1];
-                let exercice = $("#" + exercice_id);
-                let sequence = splitted_first_set_id.length === 6 ? true: false;
-                $.each(sets, function(i, set) {
-                    let set_id = set.id.replace("_edit-", "");
-                    $("#" + set_id).remove();
-                });
-                let prefix = sequence ? exercice.children().last().attr("id"): exercice_id;
-                if (!$("#" + prefix + "-body").children().length) {
-                    exercice.remove();
-                }
-                if ($("#exercices").children().length === 0) {
-                    $("#welcome").attr("hidden", false);
-                }
+                
             },
         });
     }

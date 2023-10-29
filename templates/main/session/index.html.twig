@@ -3,8 +3,10 @@
         <section class="content container" {{ stimulus_controller('session') }}>
             <h2 id="athlete-username" hidden>{{ session.athlete.username }}</h2>
             <span hidden id="athlete-identifier">{{ session.athlete.id }}</span>
-            <span hidden id="athlete-unit">{{ session.athlete.unit }}</span>
+            <span hidden id="user-identifier">{{ app.user.id }}</span>
+            <span hidden id="user-unit">{{ app.user.unit }}</span>
             <span hidden id="session-identifier">{{ session.id }}</span>
+            <span id="draft"></span>
             <div class="row">
 {% if session.current == false %}
                 <section id="breadcrumb" class="mb-md-2 p-2 mx-auto d-flex justify-content-end align-items-center">
@@ -30,12 +32,11 @@
                     </section>
                     <section id="session-exercices"></section>
 {% if app.user == session.athlete and not session.current %}
-                    <section id="session-delete" class="text-center" hidden>
+                    <section id="session-delete" class="text-center pt-md-2" hidden>
                         <a href="{{ path('session_delete', { 'id': session.id }) }}"><button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i> {{ 'main.session.delete'|trans }}</button></a>
                     </section>
 {% endif %}
 {% if session.current %}
-{{ include('main/session/_edit.html.twig') }}
 {{ include('main/session/_add.html.twig') }}
 {% endif %}
                 </section>
