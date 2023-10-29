@@ -62,14 +62,11 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $registration = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $measurement = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $unit = null;
-
     #[ORM\OneToMany(mappedBy: 'athlete', targetEntity: Exercice::class)]
     private Collection $exercices;
+
+    #[ORM\OneToOne(mappedBy: 'athlete', cascade: ['persist', 'remove'])]
+    private ?Settings $settings = null;
 
     public function __construct()
     {
@@ -311,18 +308,6 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isMeasurement(): ?bool
-    {
-        return $this->measurement;
-    }
-
-    public function setMeasurement(bool $measurement): self
-    {
-        $this->measurement = $measurement;
-
-        return $this;
-    }
-
     public function isWorkingOut(): bool
     {
         if ($session = $this->getSessions()[$this->getSessions()->count()-1]) {
@@ -353,18 +338,6 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
         return null;
     }
 
-    public function getUnit(): ?string
-    {
-        return $this->unit;
-    }
-
-    public function setUnit(string $unit): self
-    {
-        $this->unit = $unit;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Exercice>
      */
@@ -391,6 +364,28 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
                 $exercice->setAthlete(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSettings(): ?Settings
+    {
+        return $this->settings;
+    }
+
+    public function setSettings(?Settings $settings): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($settings === null && $this->settings !== null) {
+            $this->settings->setAthlete(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($settings !== null && $settings->getAthlete() !== $this) {
+            $settings->setAthlete($this);
+        }
+
+        $this->settings = $settings;
 
         return $this;
     }

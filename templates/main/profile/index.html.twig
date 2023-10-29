@@ -57,14 +57,14 @@
 {% if athlete == app.user or athlete.measurement %}
                                 <section id="section-measurement">
                                     <section id="section-height" class="mb-2">
-                                        <div class="input-group flex-nowrap">
+                                        <div id="input-height" class="input-group flex-nowrap">
                                             <span id="measurement_height-before" class="input-group-text measurement-label justify-content-center">{{ 'measurement.height'|trans }}</span>
                                             <input id="measurement_height" name="measurement[height]" placeholder="?" class="form-control text-end border-end-0 pe-1 measurement-input text-white" inputmode="decimal"{% if athlete.height %} value="{{ athlete.height|replace({'.': ','}) }}"{% endif %}{% if athlete != app.user %} readonly{% endif %}>
                                             <label for="measurement_height" id="measurement_height-after" class="input-group-text measurement-unit border-start-0 bg-body ps-0 text">m</label>
                                         </div>
                                     </section>
                                     <section id="section-weight" class="mb-2">
-                                        <div class="input-group flex-nowrap">
+                                        <div id="input-weight" class="input-group flex-nowrap">
                                             <span id="measurement_weight-before" class="input-group-text measurement-label justify-content-center">{{ 'measurement.weight'|trans }}</span>
                                             <input id="measurement_weight" name="measurement[weight]" placeholder="?" class="form-control text-end border-end-0 pe-1 measurement-input text-white" inputmode="decimal"{% if athlete.weight %} value="{{ athlete.weight|replace({'.': ','}) }}"{% endif %}{% if athlete != app.user %} readonly{% endif %}>
                                             <label for="measurement_weight" id="measurement_weight-after" class="input-group-text measurement-unit border-start-0 bg-body ps-0 text">kg</label>  

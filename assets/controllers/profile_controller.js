@@ -11,6 +11,18 @@ import {
 export default class extends Controller {
     connect() {
         if ($("#form-profile").length) {
+            $("#input-height").on("click", function() {
+                $("#measurement_height").select();
+            });
+            $("#input-weight").on("click", function() {
+                $("#measurement_weight").select();
+            });
+            $("#measurement_height").on("focus", function() {
+                $(this).select();
+            });
+            $("#measurement_weight").on("focus", function() {
+                $(this).select();
+            });
             Validator.verify.firstname($("#profile_firstname"), true);
             Validator.verify.surname($("#profile_surname"), true);
             $("#section-firstname").on("input click keyup", function() {

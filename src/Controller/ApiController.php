@@ -23,8 +23,8 @@ class ApiController extends AbstractController
             $result[$athletes[$i]->getId()]['surname'] = $athletes[$i]->getSurname();
             $result[$athletes[$i]->getId()]['email'] = $athletes[$i]->getEmail();
             $result[$athletes[$i]->getId()]['picture'] = $athletes[$i]->getPicture();
-            $result[$athletes[$i]->getId()]['measurement'] = $athletes[$i]->isMeasurement();
-            if ($athletes[$i]->isMeasurement()) {
+            $result[$athletes[$i]->getId()]['measurement'] = $athletes[$i]->getSettings()->isMeasurement();
+            if ($athletes[$i]->getSettings()->isMeasurement()) {
                 $result[$athletes[$i]->getId()]['height'] = $athletes[$i]->getHeight();
                 $result[$athletes[$i]->getId()]['weight'] = $athletes[$i]->getWeight();
             }

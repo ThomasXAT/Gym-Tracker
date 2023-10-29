@@ -237,7 +237,7 @@ class DefaultController extends AbstractController
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
             $measurements = $measurementRepository->findBy(['athlete' => $athlete], ['date' => 'desc']);
-            if ($measurements && ($athlete->isMeasurement() || $athlete === $user && $athlete->getHeight() && $athlete->getWeight())) {
+            if ($measurements && ($athlete->getSettings()->isMeasurement() || $athlete === $user && $athlete->getHeight() && $athlete->getWeight())) {
                 return $this->render('main/profile/measurements/index.html.twig', [
                     'page' => 'measurements',
                     'athlete' => $athlete,

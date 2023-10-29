@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Athlete;
+use App\Entity\Settings;
 use App\Form\LoginType;
 use App\Form\RegisterType;
 use App\Repository\AthleteRepository;
@@ -61,6 +62,13 @@ class SecurityController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+                /**
+                 * @var Settings $settings
+                 */
+                $settings = new Settings();
+                $settings->setUnit("kg");
+                $settings->setMeasurement(false);
+
                 $athlete->setPassword(
                     $userPasswordHasher->hashPassword(
                         $athlete,
@@ -69,9 +77,8 @@ class SecurityController extends AbstractController
                 );
                 $athlete
                     ->setRegistration(new DateTime())
-                    ->setMeasurement(false)
                     ->setDescription('<p>Je suis nouveau sur <strong>Gym-Tracker</strong> !</p>')
-                    ->setUnit('kg')
+                    ->setSettings($settings)
                 ;
                 $athleteRepository->save($athlete, true);
                 // do anything else you need here, like send an email
