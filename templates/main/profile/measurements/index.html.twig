@@ -24,7 +24,9 @@
                                 <th scope="col">{{ 'main.measurements.datetime'|trans }}</th>
                                 <th scope="col">{{ 'measurement.height'|trans }}</th>
                                 <th scope="col">{{ 'measurement.weight'|trans }}</th>
+{% if athlete.settings.bmi %}
                                 <th scope="col" class="d-none d-sm-table-cell">{{ 'measurement.bmi'|trans }}</th>
+{% endif %}
 {% if athlete == app.user %}
                                 <th scope="col"></th>
 {% endif %}
@@ -37,8 +39,10 @@
                                 <td><span class="d-sm-none">{{ measurement.date|date('d/m/Y') }}</span><span class="d-none d-md-inline"><span class="text-body">{{ 'main.measurements.at_date'|trans }}</span> </span><span class="d-none d-sm-inline">{{ ('day.' ~ measurement.date|date('d'))|trans }} {{ ('month.' ~ measurement.date|date('m'))|trans }} {{ measurement.date|date('Y') }}</span> <span class="text-body d-none d-md-inline">{{ 'main.measurements.at_time'|trans }}</span> {{ measurement.date|date('H:i') }}</td>
                                 <td>{{ measurement.height|replace({'.': ','}) }}<span class="d-none d-md-inline text-body"> m</span></td>
                                 <td>{{ measurement.weight|replace({'.': ','}) }}<span class="d-none d-md-inline text-body"> kg</span></td>
+{% if athlete.settings.bmi %}
 {% set bmi = measurement.weight / (measurement.height * measurement.height)%}
                                 <td class="fw-bold d-none d-sm-table-cell">{{ bmi|round(1)|replace({'.': ','}) }}<span class="d-none d-md-inline text-body"> kg/m²</span></td>
+{% endif %}
 {% if athlete == app.user %}
                                 <td><button id="delete-measurement-{{ measurement.id }}" class="btn btn-outline-danger delete-measurement"><i class="fa-solid fa-trash"></i><span class="d-none d-md-inline"> {{ 'delete'|trans }}</span></td>
 {% endif %}

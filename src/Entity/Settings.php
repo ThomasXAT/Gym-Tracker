@@ -22,6 +22,12 @@ class Settings
     #[ORM\Column(nullable: true)]
     private ?bool $measurement = null;
 
+    #[ORM\Column]
+    private ?bool $bmi = null;
+
+    #[ORM\Column]
+    private ?bool $timer = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +65,30 @@ class Settings
     public function setMeasurement(bool $measurement): self
     {
         $this->measurement = $measurement;
+
+        return $this;
+    }
+
+    public function isBmi(): ?bool
+    {
+        return $this->bmi;
+    }
+
+    public function setBmi(bool $bmi): static
+    {
+        $this->bmi = $bmi;
+
+        return $this;
+    }
+
+    public function isTimer(): ?bool
+    {
+        return $this->timer;
+    }
+
+    public function setTimer(bool $timer): static
+    {
+        $this->timer = $timer;
 
         return $this;
     }

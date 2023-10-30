@@ -123,14 +123,18 @@ main:
     title: Paramètres
     measurements:
       label: Mesures anthropométriques
+      bmi:
+        label: Calculer l'indice de masse corporelle
       visibility:
         label: Partager les mesures en public
     training:
       label: Carnet d'entraînement
       unit:
         label: Unité de masse
-        kg: Système métrique (kilogrammes)
-        lbs: Système impérial (livres)
+        kg: Système métrique (kilogramme)
+        lbs: Système impérial (livre)
+      timer:
+        label: Afficher le chronomètre
   home:
     title: Accueil
   repertory:

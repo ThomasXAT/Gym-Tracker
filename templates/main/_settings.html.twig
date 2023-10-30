@@ -8,20 +8,28 @@
                 <main class="modal-body">
                     <form id="form-settings" name="settings">
                         <label for="section-measurements" class="form-label fw-bold">{{ 'main.settings.measurements.label'|trans }}</label>
-                        <section id="section-measurements" class="mb-3">
+                        <section id="section-measurements" class="px-2 mb-3">
+                            <section id="section-bmi-calculation" class="form-check form-switch mb-3">
+                                <input class="form-check-input" name="settings[bmi]" type="checkbox" id="settings_bmi"{% if app.user.settings.bmi %} checked{% endif %}>
+                                <label class="form-check-label" for="settings_bmi">{{ 'main.settings.measurements.bmi.label'|trans }}</label>
+                            </section>
                             <section id="section-visibility" class="form-check form-switch">
                                 <input class="form-check-input" name="settings[measurement]" type="checkbox" id="settings_measurement"{% if app.user.settings.measurement %} checked{% endif %}>
                                 <label class="form-check-label" for="settings_measurement">{{ 'main.settings.measurements.visibility.label'|trans }}</label>
                             </section>
                         </section>
                         <label for="section-training" class="form-label fw-bold">{{ 'main.settings.training.label'|trans }}</label>
-                        <section id="section-training">
-                            <section id="section-unit" class="form-floating">
+                        <section id="section-training" class="px-2">
+                            <section id="section-unit" class="form-floating mb-3">
                                 <select id="settings_unit" name="settings[unit]" class="form-select" placeholder="{{ 'main.settings.training.unit.label'|trans }}">
                                     <option value="kg">{{ 'main.settings.training.unit.kg'|trans }}</option>
                                     <option value="lbs"{% if app.user.settings.unit =='lbs' %} selected{% endif %}>{{ 'main.settings.training.unit.lbs'|trans }}</option>
                                 </select>
                                 <label class="form-label required" for="settings_unit">{{ 'main.settings.training.unit.label'|trans }}</label>
+                            </section>
+                            <section id="section-timer" class="form-check form-switch">
+                                <input class="form-check-input" name="settings[timer]" type="checkbox" id="settings_timer"{% if app.user.settings.timer %} checked{% endif %}>
+                                <label class="form-check-label" for="settings_timer">{{ 'main.settings.training.timer.label'|trans }}</label>
                             </section>
                         </section>
                     </form>
