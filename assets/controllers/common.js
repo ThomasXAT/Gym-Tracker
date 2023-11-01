@@ -1,10 +1,15 @@
-let set_suffixes = [
+const SET_SUFFIXES = [
     "repetitions",
     "weight",
     "concentric",
     "isometric",
     "eccentric",
 ];
+
+const HEIGHT_MIN = 1;
+const HEIGHT_MAX = 3;
+const WEIGHT_MIN = 20;
+const WEIGHT_MAX = 500;
 
 import {
     trans,
@@ -153,13 +158,10 @@ export let Validator = {
             let weight_value = parseFloat(weight.val().replace(",", "."));
             if (
                 (
-                    !height_value && 
-                    !weight_value
-                ) || (
-                    height_value >= 1.2 &&
-                    height_value <= 2.2 &&
-                    weight_value >= 20 &&
-                    weight_value <= 200
+                    height_value >= HEIGHT_MIN &&
+                    height_value <= HEIGHT_MAX &&
+                    weight_value >= WEIGHT_MIN &&
+                    weight_value <= WEIGHT_MAX
                 )
             ) {
                 return true;
@@ -383,26 +385,16 @@ export let Validator = {
 export let Generator = {
     render: {
         bmi: function() {
-            let height_value = parseFloat($("#measurement_height").val().replace(',', '.'));
-            let weight_value = parseFloat($("#measurement_weight").val().replace(',', '.'));
-            if (
-                $("#measurement_height").val() != "" &&
-                $("#measurement_weight").val() != "" &&
-                height_value >= 1.2 &&
-                height_value <= 2.2 &&
-                weight_value >= 20 &&
-                weight_value <= 200
-            ) {   
-                let bmi = weight_value / (height_value * height_value);
-                if (
-                    $("#measurement_height").val() != "" &&
-                    $("#measurement_weight").val() != ""
-                ) {
-                    $("#measurement_bmi").val((Math.ceil(bmi * 10) / 10).toString().replace('.', ','));
+            if ($("#measurement_bmi").length) {
+                let height = parseFloat($("#measurement_height").val().replace(',', '.'));
+                let weight = parseFloat($("#measurement_weight").val().replace(',', '.'));
+                let bmi = weight / (height * height);
+                if (!isNaN(height) && !isNaN(weight) && Validator.verify.measurement($("#measurement_height"), $("#measurement_weight"))) {
+                    $("#measurement_bmi").val((Math.round(bmi * 10) / 10).toString().replace('.', ','));
                 }
-            }
-            else {
-                $("#measurement_bmi").val("");
+                else {
+                    $("#measurement_bmi").val("");
+                }
             }
         },
         session: function(id) {
@@ -793,7 +785,7 @@ export let Generator = {
                     )
                 )
             ;
-            set_suffixes.forEach(suffix => {
+            SET_SUFFIXES.forEach(suffix => {
                 let id = set_part.id + "-" + suffix;
                 document.getElementById(id).setAttribute("inputmode", "decimal");
                 $("#draft").text($("#" + id).val());
@@ -1039,7 +1031,7 @@ export let Generator = {
                     )
                 )
             ;
-            set_suffixes.forEach(suffix => {
+            SET_SUFFIXES.forEach(suffix => {
                 let input = document.getElementById(form_set_part_id + "-" + suffix);
                 input.setAttribute("inputmode", "decimal");
             });

@@ -21,23 +21,16 @@ class MeasurementController extends AbstractController
          * @var Athlete $user
          */
         $user = $this->getUser();
-        $oldHeight = $user->getHeight();
-        $oldWeight = $user->getWeight();
-        $newHeight = (float)str_replace(',', '.', $data['height']);
-        $newWeight = (float)str_replace(',', '.', $data['weight']);
-        if (($newHeight !== $oldHeight) || ($newWeight !== $oldWeight)) {
-            $newMeasurement = new Measurement();
-            $newMeasurement
-                ->setHeight($newHeight ? $newHeight: null)
-                ->setWeight($newWeight ? $newWeight: null)
+        if ($data['height'] && $data['weight']) {
+            $measurement = new Measurement();
+            $measurement
+                ->setHeight($data['height'])
+                ->setWeight($data['weight'])
                 ->setAthlete($user)
                 ->setDate(new DateTime())
             ;
-            foreach($measurementRepository->findBy(['height' => null, 'weight' => null]) as $measurement) {
-                $measurementRepository->remove($measurement, true);
-            }
-            if (sizeof($user->getMeasurements()) || ($newMeasurement->getHeight() && $newMeasurement->getWeight())) {
-                $measurementRepository->save($newMeasurement, true);
+            if (sizeof($user->getMeasurements()) || ($measurement->getHeight() && $measurement->getWeight())) {
+                $measurementRepository->save($measurement, true);
             }
         }
         return $this->json($data);
@@ -50,9 +43,6 @@ class MeasurementController extends AbstractController
         $athlete = $measurement->getAthlete();
         if ($this->getUser() === $athlete) {
             $measurementRepository->remove($measurement, true);
-            if (sizeof($athlete->getMeasurements()) === 1 && !($athlete->getHeight() && $athlete->getWeight())) {
-                $measurementRepository->remove($athlete->getMeasurements()[0], true);
-            }
             return $this->redirectToRoute('measurements', ['username' => $measurement->getAthlete()->getUsername()]);
         }
         return $this->redirectToRoute('home');
