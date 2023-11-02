@@ -1,0 +1,56 @@
+        <aside id="_select_exercice" class="modal fade">
+            <input id="_exercice_validity" value="1" hidden>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <header id="_select_exercice-header" class="modal-header">
+                        <p class="modal-title fs-5">{{ 'main.session.exercice.choose.title'|trans }}</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </header>
+                    <main id="_select_exercice-body" class="modal-body">
+                        <section id="section-search-input" class="d-flex flex-wrap">
+                            <div class="col-12 col-md-8 pe-0 pe-md-1 mb-2">
+                                <div class="input-group">
+                                    <span class="input-group-text pointer-only"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                    <input id="exercice-search" inputmode="search" class="form-control search-bar" placeholder="{{ 'main.session.exercice.search'|trans }}">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 ps-0 ps-md-1 mb-3">
+                                <select id="exercice-equipment" class="form-select">
+                                    <option value="">{{ 'all'|trans }}</option>                
+{% for equipment in equipments %}
+                                    <option value="{{ equipment }}">{{ equipment|trans|capitalize }}</option>
+{% endfor %}                      
+                                </select>
+                            </div>
+                        </section>
+                        <section id="section-search-output" class="mb-3 overflow-auto">
+                            <section id="section-exercice-list">
+                                <table class="table table-dark table-striped mb-0">
+                                    <tbody id="empty-list">
+                                        <tr id="empty-list">
+                                            <td class="text-body text-center">{{ 'main.session.exercice.empty'|trans }}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody id="exercice-list">
+                                    </tbody>
+                                </table>
+                            </section>
+                        </section>
+                        <section id="section-selected-exercices"></section>
+                        <div id="minimum-message" class="text-center text-danger">
+                            {{ "main.session.exercice.choose.minimum"|trans }}
+                        </div>
+                    </main>
+                    <footer id="_select_exercice-footer" class="modal-footer">
+                        <div class="d-flex w-100 align-items-center">
+                            <div class="col-4 text-start">
+                                <a id="button-form-exercice" class="text-decoration-none text-nowrap pointer-only" data-bs-target="#_form_exercice" data-bs-toggle="modal">{{ 'main.session.exercice.create.action'|trans }}</a>
+                            </div>
+                            <div class="col-8 text-end">
+                                <button id="button-choose-exercice" data-action="click->exercice#select" data-bs-target="#_add" data-bs-toggle="modal" class="btn btn-success text-nowrap">{{ 'main.session.exercice.choose.submit'|trans }}</button>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </aside>

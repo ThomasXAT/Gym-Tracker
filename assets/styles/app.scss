@@ -1,6 +1,6 @@
 @import "~bootstrap/scss/bootstrap";
 
-.authentication > .content, #section-identity, #section-measurement {
+.authentication > .content, #section-identity {
     max-width: 420px !important;
 }
 
@@ -9,7 +9,7 @@
     color: var(--bs-danger) !important;
 }
 
-main.main, footer.main, .modal-body, .accordion-collapse, .authentication {
+body, .modal-body, .accordion-collapse, .authentication {
     background-color: #1b1f22 !important;
 }
 
@@ -44,34 +44,37 @@ main.main > section.content {
     max-width: 925px;
 }
 
-.pointer:hover {
+.pointer, .pointer-only, .pointer-text {
     cursor: pointer;
+}
+
+.pointer:hover, .pointer-text:hover {
     color: #fff !important;
+}
+
+.pointer:hover, .pointer:hover > main > section > img {
     border-color: #fff !important;
 }
 
-.pointer:hover > main > section > img {
-    border-color: #fff !important;
-}
-
-.pointer-only {
-    cursor: pointer;
+.text {
+    cursor: text;
 }
 
 .not-allowed {
     cursor: not-allowed;
 }
+
+.default {
+    cursor: default;
+}
+
 .search-bar, input, select {
     outline: none !important;
     box-shadow: none !important;
 }
 
-.search-bar:focus {
+.search-bar:focus, .measurement-input:focus {
     border-color: var(--bs-border-color) !important;
-}
-
-.ck-editor {
-    border-color: red !important;
 }
 
 #logo {
@@ -132,7 +135,7 @@ main.main > section.content {
     }
 }
 
-footer.main, .session-title, .session-date, .exercices-list-item {
+footer.main, .session-title, .session-date, .exercices-list-item, .exercice-list, .set-index, .exercice-title, .exercice-set {
     background-color: #262A2E !important;
 }
 
@@ -144,14 +147,6 @@ footer.main, .session-title, .session-date, .exercices-list-item {
     max-width: 412px;
 }
 
-#section-measurement > section > div > .form-control {
-    width: 28% !important;
-}
-
-#section-measurement > section > div > .form-range {
-    width: 64% !important;
-}
-
 #new-session {
     max-width: 720px;
 }
@@ -160,7 +155,7 @@ footer.main, .session-title, .session-date, .exercices-list-item {
     width: 75% !important;
 }
 
-#main {
+#main.main {
     min-height: calc(100vh - 110px);
     @media screen and (min-width: 768px) {
         min-height: calc(100vh - 154px);
@@ -171,15 +166,66 @@ footer.main, .session-title, .session-date, .exercices-list-item {
     font-size: 1.75em !important;
 }
 
-.accordion-button, .accordion-body {
+.accordion-button, .accordion-body, .exercice-sets {
     background-color: #212529 !important;
     color: #fff !important;
     outline: none !important;
     box-shadow: none !important;
 }
 
-#exercice-list {
-    height: 112px;
+#section-exercice-list {
+    max-height: 164px !important;
+}
+
+.measurement-unit {
+    width: 30px;
+}
+
+.measurement-label {
+    width: 66px;
+}
+
+.border-valid, .border-valid:focus {
+    border-color: var(--bs-form-valid-border-color) !important;
+}
+
+.border-invalid, .border-invalid:focus {
+    border-color: var(--bs-form-invalid-border-color) !important;
+}
+
+.edit-exercice {
+    width: 32px;
+}
+
+#authentication-title {
+    @media screen and (max-width: 767px) {
+        font-size: calc(1.350rem + 1.5vw) !important;
+    }
+}
+
+.text-vertical {
+    writing-mode: tb-rl;
+    transform: rotate(180deg);
+}
+
+.set-index, .sequence-label {
+    width: 25px;
+}
+
+.input-plaintext {
+    display: block;
+    padding: $input-padding-y 0;
+    margin-bottom: 0;
+    line-height: $input-line-height;
+    color: $input-plaintext-color;
+    background-color: transparent;
+    border: solid transparent;
+    border-width: $input-border-width 0;
+    appearance: none;
+}
+
+.border-body {
+    border-color: var(--bs-border-color);
 }
 
 /* c5ced6 */

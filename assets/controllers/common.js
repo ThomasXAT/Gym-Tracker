@@ -1,37 +1,45 @@
-let translations = [];
-translations["bilateral"] = "Bilatéral";
-translations["unilateral"] = "Unilatéral";
-translations["bodyweight"] = "poids du corps";
-translations["band"] = "élastique";
-translations["barbell"] = "barre";
-translations["dumbbell"] = "haltères";
-translations["cable"] = "poulie";
-translations["smith"] = "barre guidée";
-translations["machine"] = "machine";
+const SET_SUFFIXES = [
+    "repetitions",
+    "weight",
+    "concentric",
+    "isometric",
+    "eccentric",
+];
+
+const HEIGHT_MIN = 1;
+const HEIGHT_MAX = 3;
+const WEIGHT_MIN = 20;
+const WEIGHT_MAX = 500;
 
 import {
     trans,
+    VALIDATOR_TITLE_EMPTY,
+    VALIDATOR_TITLE_SIZE_MAX,
+    VALIDATOR_NAME_EMPTY,
+    VALIDATOR_NAME_SIZE_MAX,
     VALIDATOR_FIRSTNAME_CHARACTERS,
     VALIDATOR_FIRSTNAME_EXTREMITIES,
     VALIDATOR_FIRSTNAME_SIZE_MAX,
     VALIDATOR_SURNAME_CHARACTERS,
     VALIDATOR_SURNAME_EXTREMITIES,
     VALIDATOR_SURNAME_SIZE_MAX,
+    VALIDATOR_USERNAME_EMPTY,
     VALIDATOR_USERNAME_CHARACTERS,
     VALIDATOR_USERNAME_SIZE_MIN,
     VALIDATOR_USERNAME_SIZE_MAX,
+    VALIDATOR_USERNAME_TAKEN,
+    VALIDATOR_EMAIL_EMPTY,
     VALIDATOR_EMAIL_FORMAT,
     VALIDATOR_EMAIL_SIZE_MAX,
+    VALIDATOR_PASSWORD_EMPTY,
     VALIDATOR_PASSWORD_SIZE_MIN,
     VALIDATOR_PASSWORD_SIZE_MAX,
     VALIDATOR_PASSWORD_CONFIRMATION,
-    VALIDATOR_MEASUREMENT_HEIGHT,
-    VALIDATOR_MEASUREMENT_WEIGHT,
     SET,
     SYMMETRY_LABEL,
     SYMMETRY_UNILATERAL,
     SYMMETRY_BILATERAL,
-    REPETITIONS,
+    REPETITIONS_LABEL,
     WEIGHT,
     TEMPO_LABEL,
     TEMPO_CONCENTRIC,
@@ -46,6 +54,10 @@ import {
     CABLE,
     SMITH,
     MACHINE,
+    SEQUENCE_LABEL,
+    EXERCICE_NAME,
+    MAIN_SESSION_EXERCICE_EDIT_TITLE,
+    MAIN_SESSION_EXERCICE_EDIT_SUBMIT,
 } from '../translator';
 
 export let Translator = {
@@ -109,18 +121,67 @@ export let Validator = {
         }
     },
     verify: {
+        title: function(title, help = false) {
+            if (help) {
+                $("#help-title").text(trans(VALIDATOR_TITLE_EMPTY));
+                Validator.setInvalid(title);
+            }
+            if (title.val() !== "") {
+                if (title.val().length > 64) {
+                    $("#help-title").text(trans(VALIDATOR_TITLE_SIZE_MAX));
+                }
+                else {
+                    $("#help-title").text("");
+                    Validator.setValid(title);
+                    return true;
+                }
+            }
+            return false;
+        },
+        name: function(name, help = false) {
+            if (help) {
+                $("#help-name").text(trans(VALIDATOR_NAME_EMPTY));
+                Validator.setInvalid(name);
+            }
+            if (name.val() !== "") {
+                if (name.val().length > 48) {
+                    $("#help-name").text(trans(VALIDATOR_NAME_SIZE_MAX));
+                }
+                else {
+                    $("#help-name").text("");
+                    Validator.setValid(name);
+                    return true;
+                }
+            }
+            return false;
+        },
+        measurement: function(height, weight) {
+            let height_value = parseFloat(height.val().replace(",", "."));
+            let weight_value = parseFloat(weight.val().replace(",", "."));
+            if (
+                (
+                    height_value >= HEIGHT_MIN &&
+                    height_value <= HEIGHT_MAX &&
+                    weight_value >= WEIGHT_MIN &&
+                    weight_value <= WEIGHT_MAX
+                )
+            ) {
+                return true;
+            }
+            return false;
+        },
         firstname: function(firstname, help = false) {
             if (help) {
                 Validator.setNeutral(firstname);
             }
-            if (firstname.val() != "") {
+            if (firstname.val() !== "") {
                 if (help) { Validator.setInvalid(firstname); }
                 firstname.val(firstname.val().split(new RegExp(/(\s|-)+/)).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(""));
                 if (!new RegExp(/^[a-zA-Zà-üÀ-Ü-\s]+$/).test(firstname.val())) {
                     if (help) { $("#help-fullname").text(trans(VALIDATOR_FIRSTNAME_CHARACTERS)); }
                     return false;
                 }
-                else if (firstname.val() != firstname.val().trim().replace(/^-+|-+$/g, '')) {
+                else if (firstname.val() !== firstname.val().trim().replace(/^-+|-+$/g, '')) {
                     if (help) { $("#help-fullname").text(trans(VALIDATOR_FIRSTNAME_EXTREMITIES)); }
                     return false;
                 }
@@ -138,14 +199,14 @@ export let Validator = {
             if (help) {
                 Validator.setNeutral(surname);
             }
-            if (surname.val() != "") {
+            if (surname.val() !== "") {
                 if (help) { Validator.setInvalid(surname); }
                 surname.val(surname.val().split(new RegExp(/(\s|-)+/)).map(word => word.toUpperCase()).join(""));
                 if (!new RegExp(/^[a-zA-Zà-üÀ-Ü-\s]+$/).test(surname.val())) {
                     if (help) { $("#help-fullname").text(trans(VALIDATOR_SURNAME_CHARACTERS)); }
                     return false;
                 }
-                else if (surname.val() != surname.val().trim().replace(/^-+|-+$/g, '')) {
+                else if (surname.val() !== surname.val().trim().replace(/^-+|-+$/g, '')) {
                     if (help) { $("#help-fullname").text(trans(VALIDATOR_SURNAME_EXTREMITIES)); }
                     return false;
                 }
@@ -164,21 +225,22 @@ export let Validator = {
                 $("#help-username").text("");
                 Validator.setNeutral(username);
             }
-            if (username.val() != "") {
-                if (help) { Validator.setInvalid(username); }
-                if (!new RegExp(/^[a-zA-Z0-9_]+$/).test(username.val())) {
-                    if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_CHARACTERS)); }
-                }
-                else if (username.val().length < 2) {
-                    if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_SIZE_MIN)); }
-                }
-                else if (username.val().length > 16) {
-                    if (help) { $("#help-username").text(VALIDATOR_USERNAME_SIZE_MAX); }
-                }
-                else {
-                    if (help) { Validator.setValid(username); }
-                    return true;
-                }
+            if (help) { Validator.setInvalid(username); }
+            if (username.val() === "") {
+                if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_EMPTY)); }
+            }
+            else if (!new RegExp(/^[a-zA-Z0-9_]+$/).test(username.val())) {
+                if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_CHARACTERS)); }
+            }
+            else if (username.val().length < 2) {
+                if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_SIZE_MIN)); }
+            }
+            else if (username.val().length > 16) {
+                if (help) { $("#help-username").text(trans(VALIDATOR_USERNAME_SIZE_MAX)); }
+            }
+            else {
+                if (help) { Validator.setValid(username); }
+                return true;
             }
             return false;
         },
@@ -187,30 +249,34 @@ export let Validator = {
                 $("#help-email").text("");
                 Validator.setNeutral(email);
             }
-            if (email.val() != "") {
-                if (help) { Validator.setInvalid(email); }
-                email.val(email.val().toLowerCase());
-                if (!new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g).test(email.val())) {
-                    if (help) { $("#help-email").text(trans(VALIDATOR_EMAIL_FORMAT)); }
-                }
-                else if (email.val().length > 128) {
-                    if (help) { $("#help-email").text(VALIDATOR_EMAIL_SIZE_MAX); }
-                }
-                else {
-                    if (help) { Validator.setValid(email); }
-                    return true;
-                }
+            if (help) { Validator.setInvalid(email); }
+            email.val(email.val().toLowerCase());
+            if (email.val() === "") {
+                if (help) { $("#help-email").text(trans(VALIDATOR_EMAIL_EMPTY)); }
+            }
+            else if (!new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g).test(email.val())) {
+                if (help) { $("#help-email").text(trans(VALIDATOR_EMAIL_FORMAT)); }
+            }
+            else if (email.val().length > 128) {
+                if (help) { $("#help-email").text(trans(VALIDATOR_EMAIL_SIZE_MAX)); }
+            }
+            else {
+                if (help) { Validator.setValid(email); }
+                return true;
             }
             return false;
         },
-        password: function(password, help = false) {
+        password: function(password, help = false, edit = false) {
             if (help) {
                 $("#help-password").text("");
                 Validator.setNeutral(password);
             }
-            if (password.val() != "") {
+            if (!edit || password.val() !== "") {
                 if (help) { Validator.setInvalid(password); }
-                if (password.val().length < 8) {
+                if (password.val() === "") {
+                    if (help) { $("#help-password").text(trans(VALIDATOR_PASSWORD_EMPTY)); }
+                }
+                else if (password.val().length < 8) {
                     if (help) { $("#help-password").text(trans(VALIDATOR_PASSWORD_SIZE_MIN)); }
                 }
                 else if (password.val().length > 48) {
@@ -228,7 +294,7 @@ export let Validator = {
                 $("#help-confirmation").text("");
                 Validator.setInvalid(confirmation);
             }
-            if (confirmation.val() != password.val()) {
+            if (confirmation.val() !== password.val()) {
                 if (help) { $("#help-confirmation").text(trans(VALIDATOR_PASSWORD_CONFIRMATION)); }
             }
             else {
@@ -237,52 +303,102 @@ export let Validator = {
             }
             return false;
         },
-        height: function(height, help = false) {
-            if (help) {
-                Validator.setNeutral(height);
-            }
-            if (help) { Validator.setInvalid(height); }
-            if (!new RegExp(/^(?=(?:\d,?){1,3}$)\d+(?:,\d{1,2})?$/).test(height.val())) {
-                if (help) { $("#help-measurement").text(trans(VALIDATOR_MEASUREMENT_HEIGHT)); }
-                return false;
-            }
-            else {
-                if (help) { Validator.setValid(height); }
-            }
-            return true;
-        },
-        weight: function(weight, help = false) {
-            if (help) {
-                Validator.setNeutral(weight);
-            }
-            if (help) { Validator.setInvalid(weight); }
-            if (!new RegExp(/^(?=(?:\d,?){2,4}$)\d+(?:,\d{1,1})?$/).test(weight.val())) {
-                if (help) { $("#help-measurement").text(trans(VALIDATOR_MEASUREMENT_WEIGHT)); }
-                return false;
-            }
-            else {
-                if (help) { Validator.setValid(weight); }
-            }
-            return true;
-        },
-        form: function(form) {
+        add_form: function() {
             let hide = false;
-            $.each($("." + form + "-input-required"), function(index, input) {
+            $.each($(".add-input-required"), function(index, input) {
                 if ($(input).val() === "" || !$(input).val().match(/^(?=(?:\d,?){0,6}$)\d+(?:,\d{1,2})?$/)) {
-                    $(input).addClass("border-white");
+                    $(input).removeClass("border-valid").addClass("border-invalid");
                     hide = true;
                 }
                 else {
-                    $(input).removeClass("border-white");
+                    $(input).removeClass("border-invalid").addClass("border-valid");
                 }
             });
-            $("#button-" + form + "-set").attr("disabled", hide);
+            $("#button-add-set").attr("disabled", hide);
+        },
+        profile_form: function() {
+            let fullname = false;
+            if (Validator.verify.firstname($("#profile_firstname"),) && Validator.verify.surname($("#profile_surname"))) {
+                $("#help-fullname").html("");
+                fullname = true;
+            }
+            let email = Validator.verify.email($("#profile_email"), true);
+            let password = true;
+            if ($("#profile_password").val()) {
+                password = false;
+            }
+            if (Validator.verify.password($("#profile_password"), true, true)) {
+                $("#section-confirmation").prop("hidden", false);
+                if (Validator.verify.confirmation($("#profile_confirmation"), $("#profile_password"), true)) {
+                    password = true;
+                }
+            }
+            else {
+                $("#section-confirmation").prop("hidden", true);
+                $("#profile_confirmation").val("");
+            }
+            let submit = $("#profile_submit");
+            picture && fullname && email && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
+        },
+        login_form: function() {
+            let username = $("#login_username").val() !== "";
+            let password = $("#login_password").val() !== "";
+            let submit = $("#login_submit");
+            username && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
+        },
+        register_form: function(response) {
+            let fullname = false;
+            if (Validator.verify.firstname($("#register_firstname")) && Validator.verify.surname($("#register_surname"))) {
+                $("#help-fullname").html("");
+                fullname = true;
+            }
+            let username = false;
+            let available = true;
+            $.each(response, function(i, athlete) {
+                if ($("#register_username").val().toLowerCase() === athlete.username.toLowerCase()) {
+                    available = false;
+                }
+            }); 
+            if (!available) {
+                $("#help-username").html(trans(VALIDATOR_USERNAME_TAKEN));
+                Validator.setInvalid($("#register_username"));
+            }
+            else {
+                username = Validator.verify.username($("#register_username"), true);
+            }
+            let email = Validator.verify.email($("#register_email"), true);
+            let password = false;
+            if (Validator.verify.password($("#register_password"), true)) {
+                $("#section-confirmation").prop("hidden", false);
+                if (Validator.verify.confirmation($("#register_confirmation"), $("#register_password"), true)) {
+                    password = true;
+                }
+            }
+            else {
+                $("#section-confirmation").prop("hidden", true);
+                $("#register_confirmation").val("");
+            }
+            let submit = $("#register_submit");
+            fullname && username && email && password ? submit.prop("disabled", false) : submit.prop("disabled", true);
         }
     },
 };
 
 export let Generator = {
     render: {
+        bmi: function() {
+            if ($("#measurement_bmi").length) {
+                let height = parseFloat($("#measurement_height").val().replace(',', '.'));
+                let weight = parseFloat($("#measurement_weight").val().replace(',', '.'));
+                let bmi = weight / (height * height);
+                if (!isNaN(height) && !isNaN(weight) && Validator.verify.measurement($("#measurement_height"), $("#measurement_weight"))) {
+                    $("#measurement_bmi").val((Math.round(bmi * 10) / 10).toString().replace('.', ','));
+                }
+                else {
+                    $("#measurement_bmi").val("");
+                }
+            }
+        },
         session: function(id) {
             $.ajax({
                 url: "/api/session?id=" + id,
@@ -307,315 +423,399 @@ export let Generator = {
                     if (response.length === 0) {
                         $("#welcome").attr("hidden", false);
                     }
+                    else {
+                        $("#delete-set").attr("hidden", false);
+                    }
                     if ($("#session-delete").length) {
                         $("#session-delete").attr("hidden", false);
                     }
+                    $("#session-exercices")
+                        .append($("<table></table>")
+                            .addClass("table mb-0")
+                            .append($("<tbody></tbody>")
+                                .attr("id", "exercices")
+                            )
+                        )
+                    ;
                     $.each(session.exercices, function(i, exercice) {
                         Generator.render.exercice(i + 1, exercice, response)
                     });
-                    if (Object.keys(response).length && $("#_exercice").length) {
+                    if ($("#_add").length && Object.keys(session.exercices).length) {
                         $.ajax({
-                            type: "POST",
-                            url: "/api/exercice",
+                            url: "/api/exercice?athlete=" + $("#athlete-identifier").text(),
+                            type: "GET",
+                            dataType: "json",
                             success: function(response) {
-                                let last_exercice = $("#session-exercices").children().last();
-                                let last_exercice_id = last_exercice.attr("id");
-                                let sequence = $("#" + last_exercice_id + "-sequence").val();
-                                if (sequence === "true") {
-                                    let parts = $("#" + last_exercice_id).children().length - 2;
-                                    for (let part = 1; part <= parts; part++) {
-                                        let id = $("#" + last_exercice_id + "-part-" + part + "-id").val();
-                                        let equipment = $("#" + last_exercice_id + "-part-" + part + "-equipment").val();
-                                        Selector.select.exercice(response[id], equipment);
-                                    }
-                                }
+                                let last_exercice = session.exercices[session.exercices.length - 1];
+                                if (last_exercice.sequence) {
+                                    $.each(last_exercice.exercices, function(i, last_exercice_part) {
+                                        Selector.select.exercice(response[last_exercice_part.id], last_exercice_part.equipment);
+                                    });
+                                } 
                                 else {
-                                    let id = $("#" + last_exercice_id + "-id").val();
-                                    let equipment = $("#" + last_exercice_id + "-equipment").val();
-                                    Selector.select.exercice(response[id], equipment);
+                                    Selector.select.exercice(response[last_exercice.id], last_exercice.equipment);   
                                 }
                                 Generator.render.add_form();
-                            },
+                            }
                         });
                     }
                 }
             });
         },
-        exercice: function(exercice_index, exercice, sets) {
-            let exercice_id = "exercice-" + exercice_index;
-            $("#session-exercices")
-                .append($("<article></article")
+        exercice: function(index, exercice, response, part = false, parent_index = null) {
+            let exercice_id = "exercice-" + (part ? parent_index + "-part-": "") + index;
+            $("#" + (!part ? "exercices": "exercice-" + parent_index + "-parts"))
+                .append($("<tr></tr>")
                     .attr("id", exercice_id)
-                    .addClass("mt-3 pt-1 pt-md-4")
-                    .append($("<input>")
-                        .attr("id", "exercice-" + exercice_index + "-sequence")
-                        .val(exercice.sequence)
-                        .attr("hidden", true)
-                    )
-                    .append(!exercice.sequence ? $("<input>")
-                        .attr("id", "exercice-" + exercice_index + "-id")
-                        .val(exercice.id)
-                        .attr("hidden", true): null
-                    )
-                    .append(!exercice.sequence ? $("<input>")
-                        .attr("id", "exercice-" + exercice_index + "-equipment")
-                        .val(exercice.equipment)
-                        .attr("hidden", true): null
-                    )
-                    .append($("<h5></h5>")
-                        .attr("id", "exercice-" + exercice_index + "-title")
-                        .addClass("text-white")
+                    .addClass("border-bottom-0")
+                    .append($("<td></td>")
+                        .addClass("border-body p-0" + (!part && index !== 1 ? " pt-3": "") + (exercice.sequence || part ? " border-bottom-0": ""))
+                        .append($("<table></table>")
+                            .addClass("table mb-0" + (!exercice.sequence ? " border-start": "") + (!part ? " border-end": ""))
+                            .append($("<tbody></tbody>")
+                                .append($("<tr></tr>")
+                                    .addClass("border-bottom-0")
+                                    .append($("<td></td>")
+                                        .attr("id", exercice_id + "-title")
+                                        .attr("colspan", exercice.sequence ? 2: 1)
+                                        .addClass("fw-bold" + (!exercice.sequence ? " border-bottom-0" + ((part && index !== 1) || !part ? " border-top": ""): " border-top border-start") + " exercice-title border-body" + (!part ? " text-white": " text-body"))
+                                        .text(exercice.fullname)
+                                    )
+                                )
+                                .append(!part && exercice.sequence ? 
+                                    $("<tr></tr>")
+                                        .addClass("border-bottom-0")
+                                        .append(!part ? $("<td></td>")
+                                            .addClass("align-middle text-center sequence-label p-0 border-bottom-0")
+                                            .append($("<div></div>")
+                                                .addClass("text-vertical")
+                                                .text(trans(SEQUENCE_LABEL))
+                                            ): ""
+                                        )
+                                        .append($("<td></td>")
+                                            .addClass("p-0 border-body")
+                                            .append($("<table></table>")
+                                                .addClass("table mb-0")
+                                                .append($("<tbody></tbody>")
+                                                    .attr("id", exercice_id + "-parts")
+                                                )
+                                            )
+                                        ):
+                                    $("<tr></tr>")
+                                        .addClass("border-bottom-0")
+                                        .append($("<table></table>")
+                                            .addClass("table mb-0")
+                                            .append($("<tbody></tbody>")
+                                                .attr("id", exercice_id + "-sets")
+                                                .addClass("exercice-sets")
+                                            )
+                                        )
+                                )
+                            )
+                        )
                     )
                 )
             ;
-            if (exercice.sequence) {
-                $.each(exercice.exercices, function(j, exercice_part) {
-                    let exercice_part_index = j + 1;
-                    let exercice_part_id = exercice_id + "-part-" + exercice_part_index;
-                    let exercice_part_title = exercice_part.fullname;
-                    $("#exercice-" + exercice_index)
-                        .append($("<article></article>")
-                            .attr("id", exercice_part_id)
-                            .addClass("px-2 mx-md-3")
-                            .append($("<input>")
-                                .attr("id", exercice_part_id + "-id")
-                                .val(exercice_part.id)
-                                .attr("hidden", true)
-                            )
-                            .append($("<input>")
-                                .attr("id", exercice_part_id + "-equipment")
-                                .val(exercice_part.equipment)
-                                .attr("hidden", true)
-                            )
-                            .append($("<h6></h6>")
-                                .attr("id", exercice_part_id + "-title")
-                                .text(exercice_part_title)
-                            )
-                        )
-                    ;
-                    Generator.render.exercice_part(exercice_part_id, exercice_part, sets)
+            if (!part && exercice.sequence) {
+                $.each(exercice.exercices, function(i, exercice_part) {
+                    Generator.render.exercice(i + 1, exercice_part, response, true, index)
                 });
             }
             else {
-                Generator.render.exercice_part(exercice_id, exercice, sets)
+                $.each(exercice.sets, function(i, set) {
+                    Generator.render.set(i + 1, set, response, "exercice-" + (part ? parent_index + "-part-": "") + index);
+                });
             }
-            $("#exercice-" + exercice_index + "-title").text(exercice.fullname);
         },
-        exercice_part: function(prefix, exercice, sets) {
-            $("#" + prefix)
-                .append($("<table></table>")
-                    .addClass("table table-dark table-striped")
-                    .append($("<thead></thead>")
-                        .attr("id", prefix + "-head")
-                    )
-                    .append($("<tbody></tbody>")
-                        .attr("id", prefix + "-body")
-                    )
-                )
-            ;
-            $("#" + prefix + "-head")
-                .append($("<tr></tr>")
-                    .append($("<th></th>")
-                        .attr("scope", "col")
-                        .addClass("text-center text-body")
-                        .text("#")
-                    )
-                    .append($("<th></th>")
-                        .attr("scope", "col")
-                        .addClass("text-center text-body")
-                        .text(trans(SYMMETRY_LABEL))
-                    )
-                    .append($("<th></th>")
-                        .attr("scope", "col")
-                        .addClass("text-center text-body")
-                        .text(trans(REPETITIONS))
-                    )
-                    .append($("<th></th>")
-                        .attr("scope", "col")
-                        .addClass("text-center text-body")
-                        .text(trans(WEIGHT))
-                    )
-                    .append($("<th></th>")
-                        .attr("scope", "col")
-                        .attr("colspan", 3)
-                        .addClass("text-center text-body")
-                        .text(trans(TEMPO_LABEL))
-                    )
-                )
-            ;
-            $.each(exercice.sets, function(i, set) {
-                Generator.render.set(prefix, i + 1, set, sets);
-            });
-        },
-        set: function(prefix, set_index, set, sets) {
-            let set_id = prefix + "-set-" + set_index;
-            $("#" + prefix + "-body")
+        set: function(index, set, response, exercice_id) {
+            let set_id = exercice_id + "-set-" + index;
+            $("#" + exercice_id + "-sets")
                 .append($("<tr></tr>")
                     .attr("id", set_id)
-                    .append($("<th></th>")
-                        .attr("scope", "row")
-                        .addClass("align-middle text-center")
-                        .append($("<p></p>")
-                            .addClass("mb-0 text-white")
-                            .text(set_index)
+                    .addClass("border-bottom-0 border-top")
+                    .append($("<td></td>")
+                        .attr("id", set_id + "-index")
+                        .addClass("align-middle text-center text-body px-0 border-bottom-0 border-end set-index")
+                        .text(index)
+                    )
+                    .append($("<td></td>")
+                        .addClass("border-bottom-0 px-0")
+                        .append($("<table></table>")
+                            .addClass("table mb-0")
+                            .append($("<tbody></tbody>")
+                                .attr("id", set_id + "-parts")
+                            )
+                        )        
+                    )
+                )
+            ;
+            $.each(set, function(i, set_part_id) {
+                let set_part = response[set_part_id];
+                Generator.render.set_part(i + 1, set_part, set_id);
+            });
+        },
+        set_part: function(index, set_part, set_id) {
+            let set_part_id = set_id + "-part-" + index;
+            let timer;
+            $("#" + set_id + "-parts")
+                .append($("<tr></tr>")
+                    .attr("id", set_part_id)
+                    .append($("<td></td>")
+                        .addClass("p-0 border-bottom-0")
+                        .append($("<form></form>")
+                            .attr("id", set_part.id)
+                            .addClass("d-flex align-items-center")
+                            .on("change input", function() {
+                                clearTimeout(timer);
+                                timer = setTimeout(function() {
+                                    if (
+                                        $("#" + set_part.id + "-symmetry").val() != set_part.symmetry ||
+                                        $("#" + set_part.id + "-repetitions").val() != set_part.repetitions ||
+                                        $("#" + set_part.id + "-weight").val() != set_part.weight ||
+                                        $("#" + set_part.id + "-concentric").val() != set_part.concentric ||
+                                        $("#" + set_part.id + "-isometric").val() != set_part.isometric ||
+                                        $("#" + set_part.id + "-eccentric").val() != set_part.eccentric
+                                    ) {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/session/set/edit",
+                                            data: $("#" + set_part.id).serialize().replace("%2C", "."),
+                                            success: (response) => {
+                                                if ($("#" + set_part.id + "-weight").val().charAt($("#" + set_part.id + "-weight").val().length - 1) === ",") {
+                                                    $("#" + set_part.id + "-weight").val($("#" + set_part.id + "-weight").val().slice(0, -1));
+                                                    $("#draft").text($("#" + set_part.id + "-weight").val());
+                                                    $("#" + set_part.id + "-weight").width($("#draft").width() > 0 ? $("#draft").width(): 0);
+                                                    $("#draft").text("");
+                                                }
+                                                set_part.symmetry = $("#" + set_part.id + "-symmetry").addClass("text-white").val();
+                                                set_part.repetitions = $("#" + set_part.id + "-repetitions").addClass("text-white").val();
+                                                set_part.weight = $("#" + set_part.id + "-weight").addClass("text-white").val();
+                                                set_part.concentric = $("#" + set_part.id + "-concentric").addClass("text-white").val();
+                                                set_part.isometric = $("#" + set_part.id + "-isometric").addClass("text-white").val();
+                                                set_part.eccentric = $("#" + set_part.id + "-eccentric").addClass("text-white").val();
+                                            },
+                                        });
+                                    }
+                                }, 500);
+                            })
+                            .append($("<div></div>")
+                                .addClass("col-4 d-flex justify-content-center align-items-center")
+                                .append($("<select></select>")
+                                    .attr("id", set_part.id + "-symmetry")
+                                    .attr("name", "sets[" + set_part.id + "][symmetry]")
+                                    .prop("disabled", $("#athlete-identifier").text() !== $("#user-identifier").text())
+                                    .addClass("p-0 input-plaintext text-center text-white" + ($("#athlete-identifier").text() === $("#user-identifier").text() ? " pointer-only": ""))
+                                    .append($("<option></option>")
+                                        .val("unilateral")
+                                        .text(trans(SYMMETRY_UNILATERAL))
+                                    )
+                                    .append($("<option></option>")
+                                        .val("bilateral")
+                                        .text(trans(SYMMETRY_BILATERAL))
+                                    )
+                                    .val(set_part.symmetry)
+                                    .on("change", function() {
+                                        if ($(this).val() != set_part.symmetry) {
+                                            $(this).removeClass("text-white");
+                                        }
+                                        else {
+                                            $(this).addClass("text-white");
+                                            clearTimeout(timer);
+                                        }
+                                    })
+                                )
+                            )
+                            .append($("<div></div>")
+                                .addClass("col-4 d-flex justify-content-center align-items-center")
+                                .append($("<input></input>")
+                                    .attr("id", set_part.id + "-repetitions")
+                                    .attr("name", "sets[" + set_part.id + "][repetitions]")
+                                    .prop("disabled", $("#athlete-identifier").text() !== $("#user-identifier").text())
+                                    .addClass("p-0 form-control-plaintext text-white")
+                                    .val(set_part.repetitions)
+                                    .on("focus", function() {
+                                        $(this).select();
+                                    })
+                                    .on("input", function() {
+                                        if ($(this).val() != set_part.repetitions) {
+                                            $(this).removeClass("text-white");
+                                        }
+                                        else {
+                                            $(this).addClass("text-white");
+                                            clearTimeout(timer);
+                                        }
+                                        $(this).val($(this).val().replace(/[^0-9]/g, "").substring(0, 4));
+                                        if (!$(this).val().length) {
+                                            $(this).val(0)
+                                            if ($(this).val() == set_part.repetitions) {
+                                                $(this).addClass("text-white");
+                                                clearTimeout(timer);
+                                            }
+                                            $(this).select();
+                                        }
+                                        $("#draft").text($(this).val());
+                                        $(this).width($("#draft").width() > 0 ? $("#draft").width(): 0);
+                                        $("#draft").text("");
+                                    })
+                                )
+                                .append($("<div></div>")
+                                    .addClass("mx-1")
+                                    .text("×")
+                                )
+                                .append($("<input></input>")
+                                    .attr("id", set_part.id + "-weight")
+                                    .attr("name", "sets[" + set_part.id + "][weight]")
+                                    .prop("disabled", $("#athlete-identifier").text() !== $("#user-identifier").text())
+                                    .addClass("p-0 form-control-plaintext text-white")
+                                    .val(String(Math.floor(($("#user-unit").text() === "lbs" ? set_part.weight / 0.45359237: set_part.weight) * 100) / 100).replace(".", ","))
+                                    .on("focus", function() {
+                                        $(this).select();
+                                    })
+                                    .on("input", function() {
+                                        if ($(this).val().replace(",", ".") != set_part.weight) {
+                                            $(this).removeClass("text-white");
+                                        }
+                                        else {
+                                            $(this).addClass("text-white");
+                                            clearTimeout(timer);
+                                        }
+                                        $(this).val($(this).val().replace(".", ","));                                   
+                                        $(this).val($(this).val().replace(".", ",").replace(/[^0-9,]/g, ""));
+                                        let integer_part = $(this).val().split(",")[0];
+                                        let decimal_part = $(this).val().replace(integer_part, "");
+                                        let max_length = $(this).val().includes(",") ? integer_part.length + 3: 4;
+                                        $(this).val((integer_part + (decimal_part.length ? "," + decimal_part.replace(/[^0-9]/g, ""): "")).substring(0, max_length));
+                                        if (!$(this).val().length) {
+                                            $(this).val(0)
+                                            if ($(this).val() == set_part.weight) {
+                                                $(this).addClass("text-white");
+                                                clearTimeout(timer);
+                                            }
+                                            $(this).select();
+                                        }
+                                        $("#draft").text($(this).val());
+                                        $(this).width($("#draft").width() > 0 ? $("#draft").width(): 0);
+                                        $("#draft").text("");
+                                    })
+                                )
+                                .append($("<div></div>")
+                                    .addClass("ps-1")
+                                    .text($("#user-unit").text())
+                                )
+                            )
+                            .append($("<div></div>")
+                                .addClass("col-4 d-flex justify-content-center align-items-center")
+                                .append($("<input></input>")
+                                    .attr("id", set_part.id + "-concentric")
+                                    .attr("name", "sets[" + set_part.id + "][concentric]")
+                                    .prop("disabled", $("#athlete-identifier").text() !== $("#user-identifier").text())
+                                    .addClass("p-0 form-control-plaintext text-white")
+                                    .val(set_part.concentric)
+                                    .on("focus", function() {
+                                        $(this).select();
+                                    })
+                                    .on("input", function() {
+                                        if ($(this).val() != set_part.concentric) {
+                                            $(this).removeClass("text-white");
+                                        }
+                                        else {
+                                            $(this).addClass("text-white");
+                                            clearTimeout(timer);
+                                        }
+                                        $(this).val($(this).val().replace(/[^0-9]/g, "").substring(0, 3));
+                                        if (!$(this).val().length || $(this).val() === "0") {
+                                            $(this).val(1)
+                                            if ($(this).val() == set_part.concentric) {
+                                                $(this).addClass("text-white");
+                                                clearTimeout(timer);
+                                            }
+                                            $(this).select();
+                                        }
+                                        $("#draft").text($(this).val());
+                                        $(this).width($("#draft").width() > 0 ? $("#draft").width(): 0);
+                                        $("#draft").text("");
+                                    })
+                                )
+                                .append($("<div></div>")
+                                    .text("-")
+                                )
+                                .append($("<input></input>")
+                                    .attr("id", set_part.id + "-isometric")
+                                    .attr("name", "sets[" + set_part.id + "][isometric]")
+                                    .prop("disabled", $("#athlete-identifier").text() !== $("#user-identifier").text())
+                                    .addClass("p-0 form-control-plaintext text-white")
+                                    .val(set_part.isometric)
+                                    .on("focus", function() {
+                                        $(this).select();
+                                    })
+                                    .on("input", function() {
+                                        if ($(this).val() != set_part.isometric) {
+                                            $(this).removeClass("text-white");
+                                        }
+                                        else {
+                                            $(this).addClass("text-white");
+                                            clearTimeout(timer);
+                                        }
+                                        $(this).val($(this).val().replace(/[^0-9]/g, "").substring(0, 3));
+                                        if (!$(this).val().length || $(this).val() === "0") {
+                                            $(this).val(1)
+                                            if ($(this).val() == set_part.isometric) {
+                                                $(this).addClass("text-white");
+                                                clearTimeout(timer);
+                                            }
+                                            $(this).select();
+                                        }
+                                        $("#draft").text($(this).val());
+                                        $(this).width($("#draft").width() > 0 ? $("#draft").width(): 0);
+                                        $("#draft").text("");
+                                    })
+                                )
+                                .append($("<div></div>")
+                                    .text("-")
+                                )
+                                .append($("<input></input>")
+                                    .attr("id", set_part.id + "-eccentric")
+                                    .attr("name", "sets[" + set_part.id + "][eccentric]")
+                                    .prop("disabled", $("#athlete-identifier").text() !== $("#user-identifier").text())
+                                    .addClass("p-0 form-control-plaintext text-white")
+                                    .val(set_part.eccentric)
+                                    .on("focus", function() {
+                                        $(this).select();
+                                    })
+                                    .on("input", function() {
+                                        if ($(this).val() != set_part.eccentric) {
+                                            $(this).removeClass("text-white");
+                                        }
+                                        else {
+                                            $(this).addClass("text-white");
+                                            clearTimeout(timer);
+                                        }
+                                        $(this).val($(this).val().replace(/[^0-9]/g, "").substring(0, 3));
+                                        if (!$(this).val().length || $(this).val() === "0") {
+                                            $(this).val(1)
+                                            if ($(this).val() == set_part.eccentric) {
+                                                $(this).addClass("text-white");
+                                                clearTimeout(timer);
+                                            }
+                                            $(this).select();
+                                        }
+                                        $("#draft").text($(this).val());
+                                        $(this).width($("#draft").width() > 0 ? $("#draft").width(): 0);
+                                        $("#draft").text("");
+                                    })
+                                )
+                            )
                         )
                     )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-symmetry")
-                        .addClass("text-center")
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-repetitions")
-                        .addClass("text-center")
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-weight")
-                        .addClass("text-center")
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-tempo")
-                        .addClass("text-center")
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-id")
-                        .attr("hidden", "")
-                    )
-                    .append($("<td></td>")
-                        .attr("id", set_id + "-dropping")
-                        .attr("hidden", "")
-                    )
                 )
             ;
-            $.each(set, function(j, set_part_id) {
-                Generator.render.set_part(set_id, set_part_id, sets);
+            SET_SUFFIXES.forEach(suffix => {
+                let id = set_part.id + "-" + suffix;
+                document.getElementById(id).setAttribute("inputmode", "decimal");
+                $("#draft").text($("#" + id).val());
+                $("#" + id).width($("#draft").width());
             });
-            if ($("#_edit").length) {
-                $("#" + set_id)
-                    .attr("data-bs-toggle", "modal")
-                    .attr("data-bs-target", "#_edit")
-                    .addClass("pointer-only")
-                    .on("click", function() {
-                        let exercice_index = set_id.split("-")[1];
-                        let forms = $(".form-tempo");
-                        forms.addClass("d-none");
-                        $("#_edit-form")
-                            .empty()
-                            .append($("<h5></h5>")
-                                .addClass("text-white")
-                                .text($("#exercice-" + exercice_index + "-title").text())
-                            )
-                        ;               
-                        if (set_id.split("-")[2] === "part") {
-                            let exercice_part_index = 1;
-                            let next_exists = true;
-                            while (next_exists) {
-                                Generator.render.edit_form_part("exercice-" + exercice_index + "-part-" + exercice_part_index, set_index, true);
-                                exercice_part_index++;
-                                next_exists = $("#exercice-" + exercice_index + "-part-" + exercice_part_index + "-set-" + set_index).length ? true: false;
-                            }
-                        }
-                        else {
-                            Generator.render.edit_form_part(prefix, set_index);
-                        }
-                        Validator.verify.form("edit");
-                    })
-                ;
-            }
-        },
-        set_part: function(set_id, set_part_id, sets) {
-            let set_part = sets[set_part_id];
-            $("#" + set_id + "-symmetry")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-symmetry")
-                    .addClass("mb-0 text-white")
-                    .text(Translator.translate.symmetry(set_part.symmetry))
-                )
-            ;
-            $("#" + set_id + "-repetitions")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-repetitions")
-                    .addClass("mb-0 text-white")
-                    .text(set_part.repetitions)
-                )
-            ;
-            $("#" + set_id + "-weight")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-weight")
-                    .addClass("mb-0 text-white")
-                    .text(String(Math.floor(($("#athlete-unit").text() === "lbs" ? set_part.weight / 0.45359237: set_part.weight) * 100) / 100).replace(".", ","))
-                )
-            ;
-            $("#" + set_id + "-tempo")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-tempo")
-                    .addClass("mb-0 text-white")
-                )
-            ;
-            Generator.render.tempo(set_part_id, set_part.concentric, set_part.isometric, set_part.eccentric);
-            $("#" + set_id + "-id")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-id")
-                    .text(set_part.id)
-                )
-            ;
-            $("#" + set_id + "-dropping")
-                .append($("<p></p>")
-                    .attr("id", set_part_id + "-dropping")
-                    .addClass("mb-0 text-white")
-                    .text(set_part.dropping)
-                )
-            ;
-        },
-        tempo: function(set_part_id, concentric, isometric, eccentric) {
-            let tempo = (concentric && concentric > 1) || (isometric && isometric > 1) || (eccentric && eccentric > 1);
-            $("#" + set_part_id + "-tempo")
-                .empty()
-                .append($("<span></span>")
-                    .attr("id", set_part_id + "-concentric")
-                    .addClass("d-inline-block")
-                    .text(tempo ? (concentric ? concentric: 1): null)
-                )
-                .append(tempo ? "-": null)
-                .append($("<span></span>")
-                    .attr("id", set_part_id + "-isometric")
-                    .addClass("d-inline-block")
-                    .text(tempo ? (isometric ? isometric: 1): null)
-                )
-                .append(tempo ? "-": null)
-                .append($("<span></span>")
-                    .attr("id", set_part_id + "-eccentric")
-                    .addClass("d-inline-block")
-                    .text(tempo ? (eccentric ? eccentric: 1): null)
-                )
-                .append(tempo ? null: "∅")
-            ;
-        },
-        edit_form_part: function(prefix, set_index, sequence = false) {
-            let edit_set_id = "_edit-" + prefix + "-set-" + set_index;
-            $("#_edit-form")
-                .append($("<article></article>")
-                    .attr("id", edit_set_id)
-                )
-            ;
-            if (sequence) {
-                $("#" + edit_set_id)
-                    .addClass("px-1 px-md-2")
-                    .append($("<h6></h6>")
-                        .addClass("mt-2 mb-1")
-                        .attr("id", edit_set_id + "-title")
-                        .text($("#" + prefix + "-title").text())
-                    )
-                ;
-            }
-            $("#" + edit_set_id)
-                .append($("<section></section>")
-                    .attr("id", edit_set_id + "-parts")
-                )
-            ;
-            $.each($("#" + prefix + "-set-" + set_index + "-id").children(), function(i, set_part) {
-                let set_part_id = set_part.innerText;
-                Generator.render.form_set_part(edit_set_id, set_part_id, $("#" + set_part_id + "-dropping").text() === "true");
-            });
+            $("#draft").text("");
         },
         add_form: function() {
             let size = $("#section-selected-exercices").children().length;
@@ -641,7 +841,7 @@ export let Generator = {
                         .val(title)
                     )
                     .append($("<input>")
-                        .attr("id", "size")
+                        .attr("iited", "size")
                         .attr("name", "size")
                         .attr("hidden", true)
                         .val(size)
@@ -739,7 +939,7 @@ export let Generator = {
                                 .attr("id", form_set_part_id + "-repetitions")
                                 .attr("name", "sets[" + set_part_id + "][repetitions]")
                                 .addClass("form-control text-center" + (is_new ? " add-input-required": " edit-input-required"))
-                                .attr("placeholder", trans(REPETITIONS))
+                                .attr("placeholder", trans(REPETITIONS_LABEL))
                                 .val($("#" + set_part_id + "-repetitions").text())
                                 .on("input", function() {
                                     $(this).val($(this).val().replace(/[^0-9]/g, "").substring(0, 4));
@@ -855,19 +1055,27 @@ export let Generator = {
                     )
                 )
             ;
-            let suffixes = [
-                "repetitions",
-                "weight",
-                "concentric",
-                "isometric",
-                "eccentric",
-            ];
-            suffixes.forEach(suffix => {
+            SET_SUFFIXES.forEach(suffix => {
                 let input = document.getElementById(form_set_part_id + "-" + suffix);
                 input.setAttribute("inputmode", "decimal");
             });
         },
-        searchOutput: function(search = null, equipment = null) {
+        edit_exercice_form: function(id, name, equipments) {
+            console.log(equipments);
+            $("#exercice-form-title").text(trans(MAIN_SESSION_EXERCICE_EDIT_TITLE));
+            $("#exercice-form-submit").text(trans(MAIN_SESSION_EXERCICE_EDIT_SUBMIT)).attr("data-action", "click->exercice#edit");
+            $("#exercice_id").val(id);
+            $("#exercice_name").val(name);
+            $.each($("#section-equipments").find('input[type="checkbox"]'), function(i, input) {
+                if (equipments.includes(input.value) && input.value) {
+                    console.log("ok");
+                    $(input).prop("checked", true);
+                }
+            });
+            Validator.verify.name($("#exercice_name"), true);
+            $("#exercice-form-submit").prop("disabled", false);
+        },
+        search_output: function(search = null, equipment = null) {
             $.ajax({
                 type: "POST",
                 url: "/session/exercice/search",
@@ -876,17 +1084,40 @@ export let Generator = {
                     equipment: equipment,
                 },
                 success: function(response) {
+                    if (!Object.keys(response).length) {
+                        $("#empty-list").removeClass("d-none")
+                    }
+                    else {
+                        $("#empty-list").addClass("d-none")
+                    }
                     $("#exercice-list").empty();
                     $.each(response, function(id, exercice) {
                         $("#exercice-list")
-                            .append($("<article></article>")
-                                .addClass("pointer")
-                                .val(id)
-                                .text("+ " + exercice.name)
-                                .on("click", function() {
-                                    let equipment = $("#exercice-equipment").val() !== "" ? $("#exercice-equipment").val(): null;
-                                    Selector.select.exercice(exercice, equipment);
-                                })
+                            .append($("<tr></tr>")
+                                .addClass("pointer-only")
+                                .append($("<td></td>")
+                                    .addClass("text-body pointer-text")
+                                    .val(id)
+                                    .text(exercice.name)
+                                    .on("click", function() {
+                                        let equipment = $("#exercice-equipment").val() !== "" ? $("#exercice-equipment").val(): null;
+                                        Selector.select.exercice(exercice, equipment);
+                                    })
+                                )
+                                .append($("<td></td>")
+                                    .addClass("text-end align-middle edit-exercice text-nowrap")
+                                    .append($("<a></a>")
+                                        .addClass("text-decoration-none")
+                                        .append($("<i></i>")
+                                            .addClass("fa-solid fa-pen-to-square")
+                                        )
+                                        .attr("data-bs-target", "#_form_exercice")
+                                        .attr("data-bs-toggle", "modal")
+                                        .on("click", function() {
+                                            Generator.render.edit_exercice_form(id, exercice.name, exercice.equipments);
+                                        })
+                                    )
+                                )
                             )
                         ;
                     });
@@ -901,7 +1132,7 @@ export let Selector = {
         exercice: function(exercice, equipment = null) {
             if (!$("#minimum-message").hasClass("d-none")) {
                 $("#minimum-message").addClass("d-none");
-                $("#button-choose").attr("disabled", false);
+                $("#button-choose-exercice").attr("disabled", false);
             }
             let uniqueId = Date.now();
             $("#section-selected-exercices")
@@ -930,7 +1161,7 @@ export let Selector = {
                             if ($("#section-selected-exercices").children().length < 1) {
                                 if ($("#minimum-message").hasClass("d-none")) {
                                     $("#minimum-message").removeClass("d-none");
-                                    $("#button-choose").attr("disabled", true);
+                                    $("#button-choose-exercice").attr("disabled", true);
                                 }
                             }
                         })
@@ -957,7 +1188,7 @@ export let Selector = {
     },
 }
 
-export var Timer = {
+export let Timer = {
     start(start, timer_id) {
         start = new Date(start).getTime();
         setInterval(function() {

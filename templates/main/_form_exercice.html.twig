@@ -1,0 +1,38 @@
+        <aside id="_form_exercice" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <header id="_form_exercice-header" class="modal-header">
+                        <p id="exercice-form-title" class="modal-title fs-5"></p>
+                        <button type="button" class="btn-close" data-bs-target="#_select_exercice" data-bs-toggle="modal"></button>
+                    </header>
+                    <main id="_form_exercice-body" class="modal-body">
+                        {{ form_start(form) }}
+                            <section hidden>
+                                {{ form_widget(form.id) }}
+                            </section>
+                            <section id="section-name" class="form-floating mb-3">
+                                {{ form_widget(form.name) }}
+                                {{ form_label(form.name) }}
+                                <p id="help-name" class="form-text text-danger"></p>
+                            </section>
+                            <section id="section-equipments" class="form-group">
+                                {{ form_label(form.equipments) }}
+{% for choice in form.equipments %}
+                                <div class="form-check">
+                                    {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
+                                    <label class="form-check-label" for="{{ choice.vars.id }}">{{ choice.vars.label|capitalize }}</label>
+                                </div>
+{% endfor %}
+                            </section>
+                        {{ form_end(form) }}
+                    </main>
+                    <footer id="_form_exercice-footer" class="modal-footer">
+                        <div class="d-flex w-100 align-items-center">
+                            <div class="col-12 text-end">
+                                <button id="exercice-form-submit" data-bs-target="#_select_exercice" data-bs-toggle="modal" class="btn btn-success text-nowrap" disabled></button>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </aside>

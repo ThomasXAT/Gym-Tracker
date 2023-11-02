@@ -19,23 +19,29 @@
                                 </div>
                                 <div id="collapse-session-{{ session.id }}" class="accordion-collapse collapse" data-bs-parent="#sessions-accordion">
                                     <div class="accordion-body pt-0">
-                                        <section id="session-exercices-{{ session.id }}" class="mb-3">
-                                            <ol class="list-group">
+                                        <div class="row">
+                                            <section id="session-exercices-{{ session.id }}" class="mb-3 col-12">
+                                                <table class="table mb-0 border exercice-list">
+                                                    <tbody>
 {% for exercice in session.exercices %}
-                                                <li class="list-group-item exercices-list-item">
+                                                        <tr>
+                                                            <td class="text-body">
 {% if exercice.sequence %}
 {% for part in exercice.exercices %}
-                                                    <article class="d-md-inline">{{ part.name ~ ' (' ~ part.equipment|trans ~ ')' }}{% if loop.index != exercice.exercices|length %},{% endif %}</article>
+                                                                {{ part.name ~ ' (' ~ part.equipment|trans ~ ')' }}{% if loop.index != exercice.exercices|length %},{% endif %}
 {% endfor %}
 {% else %}
-                                                    <article>{{ exercice.name ~ ' (' ~ exercice.equipment|trans ~ ')' }}<article>
+                                                                {{ exercice.name ~ ' (' ~ exercice.equipment|trans ~ ')' }}
 {% endif %}
-                                                </li>
+                                                            </td>
+                                                        </tr>
 {% endfor %}
-                                            </ol>
-                                        </section>
+                                                    </tbody>
+                                                </table>
+                                            </section>
+                                        </div>
                                         <section id="section-show" class="d-flex justify-content-center">
-                                            <a class="btn btn-outline-success" href="{{ path('session_display', { 'username': session.athlete.username, 'slug': session.slug, 'string': session.string }) }}">{{ 'main.profile.sessions.show'|trans }}</a>
+                                            <a class="btn btn-success" href="{{ path('session_display', { 'username': session.athlete.username, 'slug': session.slug, 'string': session.string }) }}">{{ 'main.profile.sessions.show'|trans }}</a>
                                         </section>
                                     </div>
                                 </div>

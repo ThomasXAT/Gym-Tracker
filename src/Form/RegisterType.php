@@ -37,21 +37,25 @@ class RegisterType extends AbstractType
             ])     
             ->add('username', TextType::class, [
                 'label' => $this->translator->trans('athlete.username'),
+                'required' => false,
                 'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.username')],
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('email', EmailType::class, [
                 'label' => $this->translator->trans('athlete.email'),
                 'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.email')],
+                'required' => false,
                 'label_attr' => ['class' => 'form-label'],
             ])     
             ->add('password', PasswordType::class, [
                 'label' => $this->translator->trans('athlete.password.label'),
+                'required' => false,
                 'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.password.label')],
                 'label_attr' => ['class' => 'form-label'],
             ])
             ->add('confirmation', PasswordType::class, [
                 'label' => $this->translator->trans('athlete.password.confirmation'),
+                'required' => false,
                 'mapped' => false,
                 'attr' => ['class' => 'form-control', 'placeholder' => $this->translator->trans('athlete.password.confirmation')],
                 'label_attr' => ['class' => 'form-label'],

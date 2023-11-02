@@ -28,7 +28,7 @@ class BiomechanicsDataImportCommand extends Command
         $this->movementRepository = $movementRepository;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption('file', 'f', InputOption::VALUE_REQUIRED, 'The path to the JSON file')

@@ -36,7 +36,7 @@ class AnatomyDataImportCommand extends Command
         $this->muscleRepository = $muscleRepository;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption('file', 'f', InputOption::VALUE_REQUIRED, 'The path to the JSON file')

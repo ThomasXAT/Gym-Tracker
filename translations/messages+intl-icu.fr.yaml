@@ -43,14 +43,13 @@ month:
   10: octobre
   11: novembre
   12: décembre
-app: Gym-Tracker
+app: Gym Tracker
 return: Retour
+save: Enregistrer
 loading: Chargement
-all: Tous
-settings: Paramètres
-required: Champs obligatoires
 delete: Supprimer
 hi: Salut
+all: Tous
 bodyweight: poids du corps
 band: élastique
 barbell: barre
@@ -63,7 +62,8 @@ symmetry:
   label: Symétrie
   unilateral: Unilatéral
   bilateral: Bilatéral
-repetitions: Répts
+repetitions: 
+  label: Répts
 weight: Poids
 tempo:
   label: Tempo
@@ -94,21 +94,46 @@ measurement:
   height: Taille
   weight: Poids
   bmi: IMC
+sequence:
+  label: Enchaînement
+exercice:
+  label: Exercice
+  name: Nom de l'exercice
+  equipments: Équipements utilisables
 authentication:
   login:
     title: Connexion
     form: Formulaire de connexion
     remember_me: Se souvenir de moi
     submit: Se connecter
-    register: Je ne possède pas de compte
+    register: Je ne possède pas de compte.
+    error: Identifiants invalides.
+    forgotten: Mot de passe oublié ?
   logout:
     submit: Se déconnecter
   register:
     title: Inscription
     form: Formulaire d'inscription
     submit: S'inscrire
-    login: Je possède déjà un compte
+    login: Je possède déjà un compte.
 main:  
+  settings:
+    button: Paramètres
+    title: Paramètres
+    measurements:
+      label: Mesures anthropométriques
+      bmi:
+        label: Calculer l'indice de masse corporelle
+      visibility:
+        label: Partager les mesures en public
+    training:
+      label: Carnet d'entraînement
+      unit:
+        label: Unité de masse
+        kg: Système métrique (kilogramme)
+        lbs: Système impérial (livre)
+      timer:
+        label: Afficher le chronomètre
   home:
     title: Accueil
   repertory:
@@ -124,7 +149,7 @@ main:
       list: Consulter l'historique
       edit:
         title: Édition des mesures
-        delete: Supprimer les mesures
+        delete: Supprimer
         submit: Éditer les mesures
       add: Ajouter des mesures
     sessions:
@@ -170,11 +195,20 @@ main:
     muscles: Muscles sollicités
     exercices: Exercices
     exercice:
-      search: Saisissez un nom ou un muscle      
-      choose:
+      create:
         title: Création d'un exercice
-        submit: Valider l'exercice
-        action: Sélectionner l'exercice
+        submit: Créer l'exercice
+        action: Créer un exercice
+      edit:
+        title: Édition d'un exercice
+        submit: Éditer l'exercice
+        action: Éditer un exercice
+      search: Saisissez un nom ou un muscle      
+      empty: Aucun enregistrement correspondant.
+      choose:
+        title: Création d'un enchaînement
+        submit: Valider la sélection
+        action: Sélectionner les exercices
         minimum: Un exercice au minimum est requis.
     set:
       new: Nouvelle série
@@ -194,26 +228,41 @@ dropset:
     add: Ajouter une dégressive
     delete: Supprimer
 validator:
+  title:
+    empty: "L'intitulé de la séance doit être renseigné."
+    size:
+      max: "Taille maximale : 64 caractères."
+  name:
+    empty: "Le nom de l'exercice doit être renseigné."
+    size:
+      max: "Taille maximale : 48 caractères."
+  file:
+    size:
+      max: "Taille maximale : 5 Mo."
   firstname:
-    characters: "Caractères valides : lettres, espaces et tirets."
-    extremities: "Espaces et tirets interdits aux extrémités."
+    characters: "Caractères valides : lettres, espaces et traits d'union."
+    extremities: "Espaces et traits d'union interdits aux extrémités."
     size:
       max: "Taille maximale : 24 caractères."
   surname:
-    characters: "Caractères valides : lettres, espaces et tirets."
-    extremities: "Espaces et tirets interdits aux extrémités."
+    characters: "Caractères valides : lettres, espaces et traits d'union."
+    extremities: "Espaces et traits d'union interdits aux extrémités."
     size:
       max: "Taille maximale : 24 caractères."
   username:
-    characters: "Caractères autorisés : lettres, espaces et tirets bas."
+    empty: "Le nom d'utilisateur doit être renseigné."
+    characters: "Caractères autorisés : lettres, chiffres et tirets bas."
     size:
       min: "Taille minimale : 2 caractères."
       max: "Taille maximale : 16 caractères."
+    taken: "Ce nom d'utilisateur n'est pas disponible."
   email:
+    empty: "L'adresse e-mail doit être renseignée."
     format: "Le format de l'adresse est incorrect."
     size:
       max: "Taille maximale : 128 caractères."
   password:
+    empty: "Le mot de passe doit être renseigné."
     size:
       min: "Taille minimale : 8 caractères."
       max: "Taille maximale : 48 caractères."

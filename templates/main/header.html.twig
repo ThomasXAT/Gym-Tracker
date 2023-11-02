@@ -19,7 +19,7 @@
                     <a class="ps-2 d-none d-md-block" href="{{ path('profile', { 'username': app.user.username }) }}"><img id="picture" width="38px" height="38px" class="profile-picture pointer-only border p-picture-little" src="{% if app.user.picture %}{{ asset(app.user.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}"></a>
                 </section>
 {% endif %}
-{% if app.user.workingOut %}
+{% if app.user.workingOut and app.user.settings.timer %}
                 {# Timer #}<section>
 {% set seconds = 'now'|date('U') - session.start|date('U') %}
 {% set days = (seconds / 86400)|round(0, 'floor') %}
@@ -42,7 +42,7 @@
                         </form>
                     </div>
 {% else %}
-                    <button class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_session">{{ 'main.session.new'|trans }}</button>
+                    <button class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_new_session">{{ 'main.session.new'|trans }}</button>
 {% endif %}
                 </section>
             </nav>

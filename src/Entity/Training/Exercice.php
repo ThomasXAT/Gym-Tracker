@@ -2,6 +2,7 @@
 
 namespace App\Entity\Training;
 
+use App\Entity\Athlete;
 use App\Entity\Biomechanics\Movement;
 use App\Repository\Training\ExerciceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -60,6 +61,9 @@ class Exercice
 
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private array $equipments = [];
+
+    #[ORM\ManyToOne(inversedBy: 'exercices')]
+    private ?Athlete $athlete = null;
 
     public function __construct()
     {
@@ -151,6 +155,18 @@ class Exercice
     public function setEquipments(?array $equipments): self
     {
         $this->equipments = $equipments;
+
+        return $this;
+    }
+
+    public function getAthlete(): ?Athlete
+    {
+        return $this->athlete;
+    }
+
+    public function setAthlete(?Athlete $athlete): static
+    {
+        $this->athlete = $athlete;
 
         return $this;
     }

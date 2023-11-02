@@ -21,10 +21,9 @@ class ApiController extends AbstractController
             $result[$athletes[$i]->getId()]['username'] = $athletes[$i]->getUsername();
             $result[$athletes[$i]->getId()]['firstname'] = $athletes[$i]->getFirstname();
             $result[$athletes[$i]->getId()]['surname'] = $athletes[$i]->getSurname();
-            $result[$athletes[$i]->getId()]['email'] = $athletes[$i]->getEmail();
             $result[$athletes[$i]->getId()]['picture'] = $athletes[$i]->getPicture();
-            $result[$athletes[$i]->getId()]['measurement'] = $athletes[$i]->isMeasurement();
-            if ($athletes[$i]->isMeasurement()) {
+            $result[$athletes[$i]->getId()]['measurement'] = $athletes[$i]->getSettings()->isMeasurement();
+            if ($athletes[$i]->getSettings()->isMeasurement()) {
                 $result[$athletes[$i]->getId()]['height'] = $athletes[$i]->getHeight();
                 $result[$athletes[$i]->getId()]['weight'] = $athletes[$i]->getWeight();
             }
@@ -46,6 +45,7 @@ class ApiController extends AbstractController
             $result[$sessions[$i]->getId()]['start'] = $sessions[$i]->getStart();
             $result[$sessions[$i]->getId()]['end'] = $sessions[$i]->getEnd();
             $result[$sessions[$i]->getId()]['slug'] = $sessions[$i]->getSlug();
+            $result[$sessions[$i]->getId()]['string'] = $sessions[$i]->getString();
             $exercices = $sessions[$i]->getExercices();
             foreach ($exercices as &$exercice) {
                 if ($exercice['sequence']) {
@@ -97,6 +97,7 @@ class ApiController extends AbstractController
             $result[$exercices[$i]->getId()]['id'] = $exercices[$i]->getId();
             $result[$exercices[$i]->getId()]['name'] = $exercices[$i]->getName();
             $result[$exercices[$i]->getId()]['equipments'] = $exercices[$i]->getEquipments();
+            $result[$exercices[$i]->getId()]['athlete'] = $exercices[$i]->getAthlete()->getId();
         }
         return $this->json($result);
     }

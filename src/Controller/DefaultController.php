@@ -3,16 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Athlete;
-use App\Entity\Measurement;
 use App\Entity\Training\Exercice;
-use App\Form\MeasurementType;
+use App\Form\ExerciceType;
 use App\Form\ProfileType;
 use App\Repository\AthleteRepository;
 use App\Repository\MeasurementRepository;
 use App\Repository\Training\ExerciceRepository;
 use App\Repository\Training\SessionRepository;
 use App\Repository\Training\SetRepository;
-use DateTime;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
@@ -37,12 +35,12 @@ class DefaultController extends AbstractController
         $user = $this->getUser();
         if ($user->isWorkingOut()) {
             $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
-            $exercices = $session->getExercices();        
             return $this->render('main/session/index.html.twig', [
                 'page' => 'session',
                 'session' => $session,
-                'equipments' => Exercice::EQUIPMENTS,
                 'exercices' => $exerciceRepository->findAll(),
+                'form' => $this->createForm(ExerciceType::class),
+                'equipments' => Exercice::EQUIPMENTS,
             ]);
         }
         if (isset($_GET["search"])) {
@@ -98,98 +96,68 @@ class DefaultController extends AbstractController
             $params['sessions'] = $sessions;
             if ($this->getUser() === $athlete) {
                 $oldPassword = $athlete->getPassword();
-                $editForm = $this->createForm(ProfileType::class, $athlete);
-                $editForm->handleRequest($request);
-                $oldMeasurement = $measurementRepository->findOneBy(['athlete' => $athlete], ['date' => 'desc']);
-                $newMeasurement = new Measurement();
-                $newMeasurement
-                    ->setHeight($oldMeasurement ? $oldMeasurement->getHeight(): null)
-                    ->setWeight($oldMeasurement ? $oldMeasurement->getWeight(): null)
-                ;
-                $measurementForm = $this->createForm(MeasurementType::class, $newMeasurement);
-                $measurementForm->handleRequest($request);
-                if (
-                    ($editForm->isSubmitted() && $editForm->isValid()) ||
-                    ($measurementForm->isSubmitted() && $measurementForm->isValid())
-                ) {
-                    // Profile form
-                    if ($editForm->isSubmitted() && $editForm->isValid()) {
-                        $newPassword = $editForm->get('password')->getData();
-                        if ($newPassword) {
-                            $athlete->setPassword(
-                                $userPasswordHasher->hashPassword(
-                                    $athlete,
-                                    $newPassword,
-                                )
-                            );
+                $form = $this->createForm(ProfileType::class, $athlete);
+                $form->handleRequest($request);
+                if ($form->isSubmitted() && $form->isValid()) {
+                    // Password
+                    $newPassword = $form->get('password')->getData();
+                    if ($newPassword) {
+                        $athlete->setPassword(
+                            $userPasswordHasher->hashPassword(
+                                $athlete,
+                                $newPassword,
+                            )
+                        );
+                    }
+                    else {
+                        $athlete->setPassword($oldPassword);
+                    }
+
+                    // Picture
+                    /**
+                     * @var UploadedFile $file
+                     */
+                    $file = $form->get('file')->getData();
+                    if ($file) {
+                        $public = $this->getParameter('public');
+                        $directory = 'images/athletes/' . $athlete->getUsername() . '/picture/';
+                        $name = uniqid();
+                        $filesystem = new Filesystem();
+                        if ($filesystem->exists($public . $directory)) {
+                            $filesystem->remove($public . $directory);
                         }
-                        else {
-                            $athlete->setPassword($oldPassword);
-                        }
-                        /**
-                         * @var UploadedFile $file
-                         */
-                        $file = $editForm->get('file')->getData();
-                        if ($file) {
-                            $public = $this->getParameter('public');
-                            $directory = 'images/athletes/' . $athlete->getUsername() . '/picture/';
-                            $name = uniqid();
-                            $filesystem = new Filesystem();
-                            if ($filesystem->exists($public . $directory)) {
-                                $filesystem->remove($public . $directory);
+                        try {
+                            $file->move($public . $directory, $name);
+                            $imagine = new Imagine();
+                            $image = $imagine->open($public . $directory . $name);
+                            $width = $image->getSize()->getWidth();
+                            $height = $image->getSize()->getHeight();
+                            $size = min($width, $height);
+                            $x = ($width - $size) / 2;
+                            $y = ($height - $size) / 2;
+                            $image->crop(new Point($x, $y), new Box($size, $size));
+                            if ($size > 512) {
+                                $image->resize(new Box(512, 512));
                             }
-                            try {
-                                $file->move($public . $directory, $name);
-                                $imagine = new Imagine();
-                                $image = $imagine->open($public . $directory . $name);
-                                $width = $image->getSize()->getWidth();
-                                $height = $image->getSize()->getHeight();
-                                $size = min($width, $height);
-                                $x = ($width - $size) / 2;
-                                $y = ($height - $size) / 2;
-                                $image->crop(new Point($x, $y), new Box($size, $size));
-                                if ($size > 512) {
-                                    $image->resize(new Box(512, 512));
-                                }
-                                $image->save($public . $directory . $name . '.jpg');
-                                $athlete->setPicture($directory . $name . '.jpg');
-                                if ($filesystem->exists($public . $directory . $name)) {
-                                    $filesystem->remove($public . $directory . $name);
-                                }
-                            } catch (FileException $e) {
+                            $image->save($public . $directory . $name . '.jpg');
+                            $athlete->setPicture($directory . $name . '.jpg');
+                            if ($filesystem->exists($public . $directory . $name)) {
+                                $filesystem->remove($public . $directory . $name);
                             }
-                        }
-                        elseif (isset($_POST['profile']['_delete_picture']) && $_POST['profile']['_delete_picture']) {
-                            $athlete->setPicture(null);
-                        }
-                        $athleteRepository->save($athlete, true);
-                        if ($newPassword) {
-                            return $this->redirectToRoute('authentication_logout');
+                        } catch (FileException $e) {
                         }
                     }
-                    // Measurement form
-                    if ($measurementForm->isSubmitted() && $measurementForm->isValid()) {
-                        if (
-                            !$oldMeasurement ||
-                            $oldMeasurement->getHeight() !== $newMeasurement->getHeight() ||
-                            $oldMeasurement->getWeight() !== $newMeasurement->getWeight()
-                        ) {
-                            $newMeasurement
-                                ->setAthlete($athlete)
-                                ->setDate(new DateTime)
-                            ;
-                            $nullMeasurements = $measurementRepository->findBy(['height' => null, 'weight' => null]);
-                            foreach ($nullMeasurements as $nullMeasurement) {
-                                $measurementRepository->remove($nullMeasurement, true);
-                            }
-                            $measurementRepository->save($newMeasurement, true);
-                        }
+                    elseif (isset($_POST['profile']['_delete_picture']) && $_POST['profile']['_delete_picture']) {
+                        $athlete->setPicture(null);
+                    }
+                    $athleteRepository->save($athlete, true);
+                    if ($newPassword) {
+                        return $this->redirectToRoute('authentication_logout');
                     }
                     return $this->redirectToRoute('profile', ['username' => $athlete->getUsername()]);
                 }
                 else {
-                    $params['edit_form'] = $editForm;
-                    $params['measurement_form'] = $measurementForm;
+                    $params['form'] = $form;
                 }
             }
             return $this->render('main/profile/index.html.twig', $params);
@@ -267,7 +235,7 @@ class DefaultController extends AbstractController
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
             $measurements = $measurementRepository->findBy(['athlete' => $athlete], ['date' => 'desc']);
-            if ($measurements && ($athlete->isMeasurement() || $athlete === $user && $athlete->getHeight() && $athlete->getWeight())) {
+            if ($measurements && ($athlete->getSettings()->isMeasurement() || $athlete === $user && $athlete->getHeight() && $athlete->getWeight())) {
                 return $this->render('main/profile/measurements/index.html.twig', [
                     'page' => 'measurements',
                     'athlete' => $athlete,

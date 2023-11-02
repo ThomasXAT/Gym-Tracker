@@ -22,7 +22,7 @@
 {% include("/#{section}/header.html.twig") %}
     </header>
 {% if section == 'main' and not app.user.workingOut %}
-{{ include('main/_session.html.twig') }}
+{{ include('main/_new_session.html.twig') }}
 {% endif %}
     <main id="main" class="{{ section }} p-2 p-md-3">
 {% block body %}{% endblock %}
@@ -31,9 +31,16 @@
 {% include("/#{section}/footer.html.twig") %}
     </footer>
 {% if section == 'main' %}
+{{ include('main/_settings.html.twig') }}
     <div id="nav-mobile" class="{{ section }} d-md-none {% if section == 'main' %}bg-dark border-top {% endif %}d-flex align-items-center">
 {{ include('main/nav-mobile.html.twig') }}
     </div>
+{% if app.user.workingOut %}
+    <div {{ stimulus_controller('exercice') }}>
+{{ include('main/_select_exercice.html.twig') }}
+{{ include('main/_form_exercice.html.twig') }}
+    </div>
+{% endif %}
 {% endif %}
 </body>
 </html>

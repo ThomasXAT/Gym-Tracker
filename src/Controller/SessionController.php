@@ -40,7 +40,7 @@ class SessionController extends AbstractController
                 ->setSlug($sluggerInterface->slug($data['title']))
                 ->setString(uniqid())
                 ->setAthlete($user)
-                ->setStart(new DateTime)
+                ->setStart(new DateTime())
             ;
             $sessionRepository->save($session, true);
         }
@@ -48,7 +48,7 @@ class SessionController extends AbstractController
     }
 
     #[Route(path:'/stop', name: 'stop')]
-    public function stop(SessionRepository $sessionRepository, SequenceRepository $sequenceRepository): Response
+    public function stop(SessionRepository $sessionRepository, SequenceRepository $sequenceRepository, SetRepository $setRepository): Response
     {
         /**
          * @var Athlete $user
@@ -56,9 +56,10 @@ class SessionController extends AbstractController
         $user = $this->getUser();
         if ($session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
             if (sizeof($session->getExercices())) {
+                $lastSet = $setRepository->findOneBy(['session' => $session], ['date' => 'desc']);
                 $session
                     ->setCurrent(false)
-                    ->setEnd(new DateTime)
+                    ->setEnd($lastSet->getDate())
                 ;
                 $sessionRepository->save($session, true);
             }
@@ -79,15 +80,17 @@ class SessionController extends AbstractController
         $data = $_POST;
         foreach ($data['sets'] as $id => $edited) {
             $set = $setRepository->findOneBy(['id' => $id]);
-            $set
-                ->setSymmetry($edited['symmetry'])
-                ->setRepetitions(isset($edited['repetitions']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
-                ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? ($set->getSession()->getAthlete()->getUnit() === 'lbs' ? $edited['weight'] * 0.45359237: $edited['weight']): 0)
-                ->setConcentric(isset($edited['concentric']) && $edited['concentric'] > 1 ? $edited['concentric']: 1)
-                ->setIsometric(isset($edited['isometric']) && $edited['isometric'] > 1 ? $edited['isometric']: 1)
-                ->setEccentric(isset($edited['eccentric']) && $edited['eccentric'] > 1 ? $edited['eccentric']: 1)
-            ;
-            $setRepository->save($set, true);
+            if ($this->getUser() === $set->getSession()->getAthlete()) {
+                $set
+                    ->setSymmetry($edited['symmetry'])
+                    ->setRepetitions(isset($edited['repetitions']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
+                    ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? ($set->getSession()->getAthlete()->getSettings()->getUnit() === 'lbs' ? $edited['weight'] * 0.45359237: $edited['weight']): 0)
+                    ->setConcentric(isset($edited['concentric']) && $edited['concentric'] > 1 ? $edited['concentric']: 1)
+                    ->setIsometric(isset($edited['isometric']) && $edited['isometric'] > 1 ? $edited['isometric']: 1)
+                    ->setEccentric(isset($edited['eccentric']) && $edited['eccentric'] > 1 ? $edited['eccentric']: 1)
+                ;
+                $setRepository->save($set, true);
+            }
         }
         return $this->json($data);
     }
@@ -126,7 +129,7 @@ class SessionController extends AbstractController
                     ->setEquipment($created['equipment'])
                     ->setSymmetry($created['symmetry'])
                     ->setRepetitions(isset($created['repetitions']) && $created['repetitions'] > 0 ? $created['repetitions']: 0)
-                    ->setWeight(isset($created['weight']) && $created['weight'] > 0 ? ($session->getAthlete()->getUnit() === 'lbs' ? $created['weight'] * 0.45359237: $created['weight']): 0)
+                    ->setWeight(isset($created['weight']) && $created['weight'] > 0 ? ($session->getAthlete()->getSettings()->getUnit() === 'lbs' ? $created['weight'] * 0.45359237: $created['weight']): 0)
                     ->setConcentric(isset($created['concentric']) && $created['concentric'] > 1 ? $created['concentric']: 1)
                     ->setIsometric(isset($created['isometric']) && $created['isometric'] > 1 ? $created['isometric']: 1)
                     ->setEccentric(isset($created['eccentric']) && $created['eccentric'] > 1 ? $created['eccentric']: 1)
@@ -145,14 +148,43 @@ class SessionController extends AbstractController
     }
 
     #[Route(path:'/set/delete', name: 'set_delete')]
-    public function set_delete(SetRepository $setRepository): Response
+    public function set_delete(SessionRepository $sessionRepository, SetRepository $setRepository): Response
     {
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
         $data = $_POST;
-        foreach (array_keys($data['sets']) as $id) {
-            $set = $setRepository->findOneBy(['id' => $id]);
-            $setRepository->remove($set, true);
+        if ($user->isWorkingOut()) {
+            $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
+            $exercices = $session->getExercices();
+            $exerciceIndex = sizeof($exercices);
+            $lastExercice = sizeof($exercices) ? end($exercices): false;
+            if ($lastExercice['sequence']) {
+                $setIndex = sizeof($lastExercice['exercices'][0]['sets']);
+                $result = array();
+                for($i = 0; $i < sizeof($lastExercice['exercices']); $i++) {
+                    $exercicePartIndex = $i + 1;
+                    array_push($result, 'exercice-' . $exerciceIndex . '-part-' . $exercicePartIndex . '-set-' . $setIndex);
+                    foreach($lastExercice['exercices'] as $exercicePart) {
+                        foreach($exercicePart['sets'][$setIndex - 1] as $setPart) {
+                            $setRepository->remove($setPart, true);
+                        }
+                    }
+                }
+            }
+            else {
+                $setIndex = sizeof($lastExercice['sets']);
+                $result = ['exercice-' . $exerciceIndex . '-set-' . $setIndex];
+                foreach($lastExercice['sets'][$setIndex - 1] as $setPart) {
+                    $setRepository->remove($setPart, true);
+                }
+            }
         }
-        return $this->json($data);
+        if ($setIndex === 1) {
+            $result = ['exercice-' . $exerciceIndex];
+        }
+        return $this->json($result);
     }
     
     #[Route(path:'/exercice/search', name: 'exercice_search')]
@@ -162,7 +194,7 @@ class SessionController extends AbstractController
         $search = isset($data['search']) ? $data['search']: null;
         $equipment = isset($data['equipment']) ? $data['equipment']: null;
         $result = array();
-        foreach ($exerciceRepository->findBySearch($search, $equipment) as $exercice) {
+        foreach ($exerciceRepository->findBySearch($this->getUser(), $search, $equipment) as $exercice) {
             $result[$exercice->getId()] = ['id' => $exercice->getId(), 'name' => $exercice->getName(), 'equipments' => $exercice->getEquipments()];
         }
         return $this->json($result);

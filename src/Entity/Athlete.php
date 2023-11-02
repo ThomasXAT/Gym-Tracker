@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Culture\Quotation;
+use App\Entity\Training\Exercice;
 use App\Entity\Training\Session;
 use App\Repository\AthleteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -61,16 +62,17 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $registration = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $measurement = null;
+    #[ORM\OneToMany(mappedBy: 'athlete', targetEntity: Exercice::class)]
+    private Collection $exercices;
 
-    #[ORM\Column(length: 255)]
-    private ?string $unit = null;
+    #[ORM\OneToOne(mappedBy: 'athlete', cascade: ['persist', 'remove'])]
+    private ?Settings $settings = null;
 
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
         $this->measurements = new ArrayCollection();
+        $this->exercices = new ArrayCollection();
     }
 
     public function __toString()
@@ -306,18 +308,6 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isMeasurement(): ?bool
-    {
-        return $this->measurement;
-    }
-
-    public function setMeasurement(bool $measurement): self
-    {
-        $this->measurement = $measurement;
-
-        return $this;
-    }
-
     public function isWorkingOut(): bool
     {
         if ($session = $this->getSessions()[$this->getSessions()->count()-1]) {
@@ -348,14 +338,54 @@ class Athlete implements UserInterface, PasswordAuthenticatedUserInterface
         return null;
     }
 
-    public function getUnit(): ?string
+    /**
+     * @return Collection<int, Exercice>
+     */
+    public function getExercices(): Collection
     {
-        return $this->unit;
+        return $this->exercices;
     }
 
-    public function setUnit(string $unit): self
+    public function addExercice(Exercice $exercice): static
     {
-        $this->unit = $unit;
+        if (!$this->exercices->contains($exercice)) {
+            $this->exercices->add($exercice);
+            $exercice->setAthlete($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExercice(Exercice $exercice): static
+    {
+        if ($this->exercices->removeElement($exercice)) {
+            // set the owning side to null (unless already changed)
+            if ($exercice->getAthlete() === $this) {
+                $exercice->setAthlete(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSettings(): ?Settings
+    {
+        return $this->settings;
+    }
+
+    public function setSettings(?Settings $settings): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($settings === null && $this->settings !== null) {
+            $this->settings->setAthlete(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($settings !== null && $settings->getAthlete() !== $this) {
+            $settings->setAthlete($this);
+        }
+
+        $this->settings = $settings;
 
         return $this;
     }

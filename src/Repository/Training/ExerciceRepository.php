@@ -2,6 +2,7 @@
 
 namespace App\Repository\Training;
 
+use App\Entity\Athlete;
 use App\Entity\Training\Exercice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -42,10 +43,12 @@ class ExerciceRepository extends ServiceEntityRepository
     /**
      * @return Exercice[] Returns an array of Exercice objects
      */
-    public function findBySearch($search, $equipment = null): array
+    public function findBySearch(Athlete $athlete, string $search, string $equipment = null): array
     {
         $exercices = $this->createQueryBuilder('e')
+            ->andWhere('e.athlete = :athlete')
             ->andWhere('e.name LIKE :search')
+            ->setParameter('athlete', $athlete)
             ->setParameter('search', '%' . $search . '%')
             ->getQuery()
             ->getResult()
