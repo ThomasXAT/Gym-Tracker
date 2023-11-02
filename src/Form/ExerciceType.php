@@ -21,6 +21,9 @@ class ExerciceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('id', TextType::class, [
+                'required' => false,
+            ])
             ->add('name', TextType::class, [
                 'label' => $this->translator->trans('exercice.name'),
                 'required' => false,

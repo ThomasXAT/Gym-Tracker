@@ -148,14 +148,43 @@ class SessionController extends AbstractController
     }
 
     #[Route(path:'/set/delete', name: 'set_delete')]
-    public function set_delete(SetRepository $setRepository): Response
+    public function set_delete(SessionRepository $sessionRepository, SetRepository $setRepository): Response
     {
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
         $data = $_POST;
-        foreach (array_keys($data['sets']) as $id) {
-            $set = $setRepository->findOneBy(['id' => $id]);
-            $setRepository->remove($set, true);
+        if ($user->isWorkingOut()) {
+            $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
+            $exercices = $session->getExercices();
+            $exerciceIndex = sizeof($exercices);
+            $lastExercice = sizeof($exercices) ? end($exercices): false;
+            if ($lastExercice['sequence']) {
+                $setIndex = sizeof($lastExercice['exercices'][0]['sets']);
+                $result = array();
+                for($i = 0; $i < sizeof($lastExercice['exercices']); $i++) {
+                    $exercicePartIndex = $i + 1;
+                    array_push($result, 'exercice-' . $exerciceIndex . '-part-' . $exercicePartIndex . '-set-' . $setIndex);
+                    foreach($lastExercice['exercices'] as $exercicePart) {
+                        foreach($exercicePart['sets'][$setIndex - 1] as $setPart) {
+                            $setRepository->remove($setPart, true);
+                        }
+                    }
+                }
+            }
+            else {
+                $setIndex = sizeof($lastExercice['sets']);
+                $result = ['exercice-' . $exerciceIndex . '-set-' . $setIndex];
+                foreach($lastExercice['sets'][$setIndex - 1] as $setPart) {
+                    $setRepository->remove($setPart, true);
+                }
+            }
         }
-        return $this->json($data);
+        if ($setIndex === 1) {
+            $result = ['exercice-' . $exerciceIndex];
+        }
+        return $this->json($result);
     }
     
     #[Route(path:'/exercice/search', name: 'exercice_search')]

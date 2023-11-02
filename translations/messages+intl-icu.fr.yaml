@@ -63,8 +63,7 @@ symmetry:
   unilateral: Unilatéral
   bilateral: Bilatéral
 repetitions: 
-  label: répétitions
-  short: Répts
+  label: Répts
 weight: Poids
 tempo:
   label: Tempo
@@ -200,6 +199,10 @@ main:
         title: Création d'un exercice
         submit: Créer l'exercice
         action: Créer un exercice
+      edit:
+        title: Édition d'un exercice
+        submit: Éditer l'exercice
+        action: Éditer un exercice
       search: Saisissez un nom ou un muscle      
       empty: Aucun enregistrement correspondant.
       choose:

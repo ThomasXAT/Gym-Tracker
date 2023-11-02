@@ -1,12 +1,15 @@
-        <aside id="_create_exercice" class="modal fade">
+        <aside id="_form_exercice" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <header id="_create_exercice-header" class="modal-header">
-                        <p class="modal-title fs-5">{{ 'main.session.exercice.create.title'|trans }}</p>
+                    <header id="_form_exercice-header" class="modal-header">
+                        <p id="exercice-form-title" class="modal-title fs-5"></p>
                         <button type="button" class="btn-close" data-bs-target="#_select_exercice" data-bs-toggle="modal"></button>
                     </header>
-                    <main id="_create_exercice-body" class="modal-body">
+                    <main id="_form_exercice-body" class="modal-body">
                         {{ form_start(form) }}
+                            <section hidden>
+                                {{ form_widget(form.id) }}
+                            </section>
                             <section id="section-name" class="form-floating mb-3">
                                 {{ form_widget(form.name) }}
                                 {{ form_label(form.name) }}
@@ -23,10 +26,10 @@
                             </section>
                         {{ form_end(form) }}
                     </main>
-                    <footer id="_create_exercice-footer" class="modal-footer">
+                    <footer id="_form_exercice-footer" class="modal-footer">
                         <div class="d-flex w-100 align-items-center">
                             <div class="col-12 text-end">
-                                <button id="button-create-exercice" data-action="click->exercice#create" data-bs-target="#_select_exercice" data-bs-toggle="modal" class="btn btn-success text-nowrap" disabled>{{ 'main.session.exercice.create.submit'|trans }}</button>
+                                <button id="exercice-form-submit" data-bs-target="#_select_exercice" data-bs-toggle="modal" class="btn btn-success text-nowrap" disabled></button>
                             </div>
                         </div>
                     </footer>

@@ -56,6 +56,8 @@ import {
     MACHINE,
     SEQUENCE_LABEL,
     EXERCICE_NAME,
+    MAIN_SESSION_EXERCICE_EDIT_TITLE,
+    MAIN_SESSION_EXERCICE_EDIT_SUBMIT,
 } from '../translator';
 
 export let Translator = {
@@ -301,9 +303,9 @@ export let Validator = {
             }
             return false;
         },
-        session_form: function(form) {
+        add_form: function() {
             let hide = false;
-            $.each($("." + form + "-input-required"), function(index, input) {
+            $.each($(".add-input-required"), function(index, input) {
                 if ($(input).val() === "" || !$(input).val().match(/^(?=(?:\d,?){0,6}$)\d+(?:,\d{1,2})?$/)) {
                     $(input).removeClass("border-valid").addClass("border-invalid");
                     hide = true;
@@ -312,7 +314,7 @@ export let Validator = {
                     $(input).removeClass("border-invalid").addClass("border-valid");
                 }
             });
-            $("#button-" + form + "-set").attr("disabled", hide);
+            $("#button-add-set").attr("disabled", hide);
         },
         profile_form: function() {
             let fullname = false;
@@ -421,12 +423,15 @@ export let Generator = {
                     if (response.length === 0) {
                         $("#welcome").attr("hidden", false);
                     }
+                    else {
+                        $("#delete-set").attr("hidden", false);
+                    }
                     if ($("#session-delete").length) {
                         $("#session-delete").attr("hidden", false);
                     }
                     $("#session-exercices")
                         .append($("<table></table>")
-                            .addClass("table")
+                            .addClass("table mb-0")
                             .append($("<tbody></tbody>")
                                 .attr("id", "exercices")
                             )
@@ -435,6 +440,25 @@ export let Generator = {
                     $.each(session.exercices, function(i, exercice) {
                         Generator.render.exercice(i + 1, exercice, response)
                     });
+                    if ($("#_add").length && Object.keys(session.exercices).length) {
+                        $.ajax({
+                            url: "/api/exercice?athlete=" + $("#athlete-identifier").text(),
+                            type: "GET",
+                            dataType: "json",
+                            success: function(response) {
+                                let last_exercice = session.exercices[session.exercices.length - 1];
+                                if (last_exercice.sequence) {
+                                    $.each(last_exercice.exercices, function(i, last_exercice_part) {
+                                        Selector.select.exercice(response[last_exercice_part.id], last_exercice_part.equipment);
+                                    });
+                                } 
+                                else {
+                                    Selector.select.exercice(response[last_exercice.id], last_exercice.equipment);   
+                                }
+                                Generator.render.add_form();
+                            }
+                        });
+                    }
                 }
             });
         },
@@ -572,7 +596,7 @@ export let Generator = {
                                             },
                                         });
                                     }
-                                }, 1000);
+                                }, 500);
                             })
                             .append($("<div></div>")
                                 .addClass("col-4 d-flex justify-content-center align-items-center")
@@ -1036,7 +1060,22 @@ export let Generator = {
                 input.setAttribute("inputmode", "decimal");
             });
         },
-        searchOutput: function(search = null, equipment = null) {
+        edit_exercice_form: function(id, name, equipments) {
+            console.log(equipments);
+            $("#exercice-form-title").text(trans(MAIN_SESSION_EXERCICE_EDIT_TITLE));
+            $("#exercice-form-submit").text(trans(MAIN_SESSION_EXERCICE_EDIT_SUBMIT)).attr("data-action", "click->exercice#edit");
+            $("#exercice_id").val(id);
+            $("#exercice_name").val(name);
+            $.each($("#section-equipments").find('input[type="checkbox"]'), function(i, input) {
+                if (equipments.includes(input.value) && input.value) {
+                    console.log("ok");
+                    $(input).prop("checked", true);
+                }
+            });
+            Validator.verify.name($("#exercice_name"), true);
+            $("#exercice-form-submit").prop("disabled", false);
+        },
+        search_output: function(search = null, equipment = null) {
             $.ajax({
                 type: "POST",
                 url: "/session/exercice/search",
@@ -1072,8 +1111,10 @@ export let Generator = {
                                         .append($("<i></i>")
                                             .addClass("fa-solid fa-pen-to-square")
                                         )
+                                        .attr("data-bs-target", "#_form_exercice")
+                                        .attr("data-bs-toggle", "modal")
                                         .on("click", function() {
-                                            alert("ok");
+                                            Generator.render.edit_exercice_form(id, exercice.name, exercice.equipments);
                                         })
                                     )
                                 )

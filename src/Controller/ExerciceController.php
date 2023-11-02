@@ -29,4 +29,23 @@ class ExerciceController extends AbstractController
         $exerciceRepository->save($exercice, true);
         return $this->json($data);
     }
+
+    #[Route(path:'/edit', name: 'edit')]
+    public function edit(ExerciceRepository $exerciceRepository): Response
+    {
+        $data = $_POST;
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
+        $exercice = $exerciceRepository->findOneBy(['id' => $data['exercice']['id']]);
+        if ($user === $exercice->getAthlete()) {
+            $exercice
+                ->setName(isset($data['exercice']['name']) ? $data['exercice']['name']: null)
+                ->setEquipments(isset($data['exercice']['equipments']) ? $data['exercice']['equipments']: array())
+            ;
+            $exerciceRepository->save($exercice, true);
+        }
+        return $this->json($data);
+    }
 }

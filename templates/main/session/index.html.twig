@@ -31,10 +31,15 @@
                         <div id="welcome" class="py-5" hidden>{{ 'main.session.welcome'|trans }} ❤️</div>
                     </section>
                     <section id="session-exercices"></section>
-{% if app.user == session.athlete and not session.current %}
-                    <section id="session-delete" class="text-center pt-md-2" hidden>
+{% if app.user == session.athlete %}
+                    <div id="delete-set" class="text-end mt-1" hidden>
+                        <a data-action="click->session#delete" class="text-decoration-none pointer-only">Supprimer la dernière série</a>
+                    </div>
+{% if not session.current %}
+                    <section id="session-delete" class="text-center pt-md-2 mt-3" hidden>
                         <a href="{{ path('session_delete', { 'id': session.id }) }}"><button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i> {{ 'main.session.delete'|trans }}</button></a>
                     </section>
+{% endif %}
 {% endif %}
 {% if session.current %}
 {{ include('main/session/_add.html.twig') }}

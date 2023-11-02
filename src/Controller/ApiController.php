@@ -97,6 +97,7 @@ class ApiController extends AbstractController
             $result[$exercices[$i]->getId()]['id'] = $exercices[$i]->getId();
             $result[$exercices[$i]->getId()]['name'] = $exercices[$i]->getName();
             $result[$exercices[$i]->getId()]['equipments'] = $exercices[$i]->getEquipments();
+            $result[$exercices[$i]->getId()]['athlete'] = $exercices[$i]->getAthlete()->getId();
         }
         return $this->json($result);
     }

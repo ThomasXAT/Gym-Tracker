@@ -38,9 +38,9 @@ class DefaultController extends AbstractController
             return $this->render('main/session/index.html.twig', [
                 'page' => 'session',
                 'session' => $session,
-                'equipments' => Exercice::EQUIPMENTS,
                 'exercices' => $exerciceRepository->findAll(),
                 'form' => $this->createForm(ExerciceType::class),
+                'equipments' => Exercice::EQUIPMENTS,
             ]);
         }
         if (isset($_GET["search"])) {
