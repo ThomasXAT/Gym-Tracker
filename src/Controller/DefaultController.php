@@ -187,7 +187,7 @@ class DefaultController extends AbstractController
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
             $sessions = $sessionRepository->findBy(['athlete' => $athlete], ['start' => 'desc']);
-            if ($sessions) {
+            if (($athlete === $user || $athlete->getSettings()->isTraining()) && $sessions) {
                 return $this->render('main/profile/sessions/index.html.twig', [
                     'page' => 'sessions',
                     'athlete' => $athlete,
@@ -215,15 +215,20 @@ class DefaultController extends AbstractController
             $session = $sessionRepository->findOneBy(['athlete' => $athlete, 'slug' => $slug, 'string' => $string, 'current' => false]);
             if ($session) {
                 $sessions = $sessionRepository->findBy(['athlete' => $athlete]);
-                for ($i = 0; $i < sizeof($sessions); $i++) {
-                    if ($session->getSlug() === $sessions[$i]->getSlug() && $session->getString() === $sessions[$i]->getString()) {
-                        return $this->render('main/session/index.html.twig', [
-                            'page' => 'session',
-                            'athlete' => $athlete,
-                            'session' => $session,
-                            'position' => $i + 1,
-                        ]);
-                    }
+                $i = 0;
+                while (!($session->getSlug() === $sessions[$i]->getSlug() && $session->getString() === $sessions[$i]->getString())) {
+                    $i++;
+                }
+                if (($athlete === $user || $athlete->getSettings()->isTraining())) {
+                    return $this->render('main/session/index.html.twig', [
+                        'page' => 'session',
+                        'athlete' => $athlete,
+                        'session' => $session,
+                        'position' => $i + 1,
+                    ]);
+                }
+                else {
+                    return $this->redirectToRoute('profile', ['username' => $athlete->getUsername()]);
                 }
             }
             throw new NotFoundHttpException('Session not found. The requested session does not exist.');

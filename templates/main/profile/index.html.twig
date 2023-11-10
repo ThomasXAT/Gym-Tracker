@@ -122,7 +122,7 @@
 {% endif %}
                     </div>
                 </section>
-{% if sessions is defined and sessions %}
+{% if sessions is defined and sessions and (athlete == app.user or athlete.settings.training) %}
                 {# Sessions #}<section id="sessions" class="p-2">
                     <h3 class="text-white">{{ 'main.profile.sessions.label'|trans }}</h3>
 {{ include('main/profile/_sessions.html.twig') }}

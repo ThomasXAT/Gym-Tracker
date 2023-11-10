@@ -21,9 +21,6 @@ export default class extends Controller {
                 $("#_exercice_validity").val(0);
             })
         }
-        $(".input-session-title").on("focus", function() {
-            $(this).select();
-        });
         $(".input-session-title").on("input", function() {
             clearTimeout(timer);
             let title = $(this);
