@@ -6,15 +6,17 @@
             <span hidden id="user-identifier">{{ app.user.id }}</span>
             <span hidden id="user-unit">{{ app.user.settings.unit }}</span>
             <span hidden id="session-identifier">{{ session.id }}</span>
+            <span hidden id="session-label">{{ session.title }}</span>
+            <span hidden id="session-date">{{ session.start|date('d/m/Y') }}</span>
             <span id="draft"></span>
             <div class="row">
-{% if session.current == false %}
+{% if not session.current %}
                 <section id="breadcrumb" class="mb-md-2 p-2 mx-auto d-flex justify-content-end align-items-center">
-                    <div class="col-3 col-md-6 text-white fw-bold fs-3 text-truncate">
+                    <div class="col-6 fs-3 align-middle">
                         <span class="d-md-none">{{ position }}</span>
-                        <span class="d-none d-md-inline identifier">{{ session.title }}</span>
+                        <input class="input-session-title d-none d-md-block form-control-plaintext text-white fw-bold py-0" value="{{ session.title }}">
                     </div>
-                    <div class="col-9 col-md-6 text-end text-truncate" aria-label="breadcrumb">
+                    <div class="col-12 col-md-6 text-end text-truncate" aria-label="breadcrumb">
                         <span><a href="{{ path('profile', {'username': session.athlete.username}) }}" class="text-decoration-none">@{{ session.athlete.username }}</a></span>
                         <span class="mx-1"><i class="fa-solid fa-chevron-right"></i></span>
                         <span class="d-md-none"><a class="text-decoration-none" href="{{ path('sessions', { 'username': session.athlete.username }) }}">{{ 'main.sessions.title'|trans }}</a></span>
@@ -25,20 +27,27 @@
                     </div>
                 </section>
 {% endif %}
+                <section class="fs-3 mb-md-2 p-2{% if session.current %} mt-2{% else %} d-md-none pt-0{% endif %}">
+                    <form id="form-title">
+                        <input name="id" value="{{ session.id }}" hidden>
+                        <input name="title" class="input-session-title form-control-plaintext text-white text-center fw-bold py-0" value="{{ session.title }}">
+                    </form>
+                </section>
                 <section id="session" class="p-2 mx-auto">
                     <section id="session-messages" class="text-center">
                         <div id="loading" class="py-5"><i class="fa-solid fa-syringe"></i> {{ 'loading'|trans }}...</div>
-                        <div id="welcome" class="py-5" hidden>{{ 'main.session.welcome'|trans }} ❤️</div>
+                        <div id="welcome" class="py-5" hidden>{{ 'main.session.welcome'|trans }}</div>
                     </section>
                     <section id="session-exercices"></section>
 {% if app.user == session.athlete %}
-                    <div id="delete-set" class="text-end mt-1" hidden>
+{% if session.current %}
+                    <div id="set-delete" class="text-end mt-1" hidden>
                         <a data-action="click->session#delete" class="text-decoration-none pointer-only">Supprimer la dernière série</a>
                     </div>
-{% if not session.current %}
-                    <section id="session-delete" class="text-center pt-md-2 mt-3" hidden>
+{% else %}
+                    <!--<section id="session-delete" class="text-center pt-md-2 mt-3" hidden>
                         <a href="{{ path('session_delete', { 'id': session.id }) }}"><button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i> {{ 'main.session.delete'|trans }}</button></a>
-                    </section>
+                    </section>-->
 {% endif %}
 {% endif %}
 {% if session.current %}

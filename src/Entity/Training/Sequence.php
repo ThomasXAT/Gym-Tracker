@@ -101,7 +101,6 @@ class Sequence
                     $equipment = $current->getEquipment();
                     array_push($exercices, [
                         'id' => $current->getExercice()->getId(),
-                        'fullname' => $name . ' (' . array_search($equipment, Exercice::EQUIPMENTS) . ')',
                         'name' => $name, 
                         'equipment' => $equipment, 
                         'sets' => [array()],

@@ -424,7 +424,7 @@ export let Generator = {
                         $("#welcome").attr("hidden", false);
                     }
                     else {
-                        $("#delete-set").attr("hidden", false);
+                        $("#set-delete").attr("hidden", false);
                     }
                     if ($("#session-delete").length) {
                         $("#session-delete").attr("hidden", false);
@@ -464,6 +464,16 @@ export let Generator = {
         },
         exercice: function(index, exercice, response, part = false, parent_index = null) {
             let exercice_id = "exercice-" + (part ? parent_index + "-part-": "") + index;
+            let title = "";
+            if (exercice.sequence) {
+                $.each(exercice.exercices, function(i, exercice_part) {
+                    title += exercice_part.name + " (" + Translator.translate.equipment(exercice_part.equipment) + "), "
+                });
+                title = title.slice(0, -2);
+            }
+            else {
+                title += exercice.name + " (" + Translator.translate.equipment(exercice.equipment) + ")"
+            }
             $("#" + (!part ? "exercices": "exercice-" + parent_index + "-parts"))
                 .append($("<tr></tr>")
                     .attr("id", exercice_id)
@@ -474,12 +484,11 @@ export let Generator = {
                             .addClass("table mb-0" + (!exercice.sequence ? " border-start": "") + (!part ? " border-end": ""))
                             .append($("<tbody></tbody>")
                                 .append($("<tr></tr>")
-                                    .addClass("border-bottom-0")
                                     .append($("<td></td>")
                                         .attr("id", exercice_id + "-title")
                                         .attr("colspan", exercice.sequence ? 2: 1)
                                         .addClass("fw-bold" + (!exercice.sequence ? " border-bottom-0" + ((part && index !== 1) || !part ? " border-top": ""): " border-top border-start") + " exercice-title border-body" + (!part ? " text-white": " text-body"))
-                                        .text(exercice.fullname)
+                                        .text(title)
                                     )
                                 )
                                 .append(!part && exercice.sequence ? 
@@ -822,26 +831,30 @@ export let Generator = {
             if (size) {
                 let sequence = size > 1;
                 let title = "";
+                let identifier = "";
                 if (sequence) {
                     $.each($("#section-selected-exercices").children(), function(index, exercice) {
                         title += $("#" + exercice.id + "-title").text() + " (" + Translator.translate.equipment($("#" + exercice.id + "-equipment").val()) + "), ";
+                        identifier += $("#" + exercice.id + "-identifier").val() + "(" + $("#" + exercice.id + "-equipment").val() + ")+";
                     })
                     title = title.slice(0, -2);
+                    identifier = identifier.slice(0, -1);
                 }
                 else {
                     let exercice = $("#section-selected-exercices").children()[0];
                     title = $("#" + exercice.id + "-title").text() + " (" + Translator.translate.equipment($("#" + exercice.id + "-equipment").val()) + ")";
+                    identifier += $("#" + exercice.id + "-identifier").val() + "(" + $("#" + exercice.id + "-equipment").val() + ")";
                 }
                 $("#_add-form")
                     .empty()
                     .append($("<input>")
-                        .attr("id", "fullname")
-                        .attr("name", "fullname")
+                        .attr("id", "identifier")
+                        .attr("name", "identifier")
                         .attr("hidden", true)
-                        .val(title)
+                        .val(identifier)
                     )
                     .append($("<input>")
-                        .attr("iited", "size")
+                        .attr("id", "size")
                         .attr("name", "size")
                         .attr("hidden", true)
                         .val(size)
@@ -1061,14 +1074,12 @@ export let Generator = {
             });
         },
         edit_exercice_form: function(id, name, equipments) {
-            console.log(equipments);
             $("#exercice-form-title").text(trans(MAIN_SESSION_EXERCICE_EDIT_TITLE));
             $("#exercice-form-submit").text(trans(MAIN_SESSION_EXERCICE_EDIT_SUBMIT)).attr("data-action", "click->exercice#edit");
             $("#exercice_id").val(id);
             $("#exercice_name").val(name);
             $.each($("#section-equipments").find('input[type="checkbox"]'), function(i, input) {
                 if (equipments.includes(input.value) && input.value) {
-                    console.log("ok");
                     $(input).prop("checked", true);
                 }
             });
@@ -1139,6 +1150,11 @@ export let Selector = {
                 .append($("<article></article>")
                     .attr("id", "selected-" + uniqueId)
                     .addClass("d-flex align-items-center py-1")
+                    .append($("<input></input>")
+                        .attr("id", "selected-" + uniqueId + "-identifier")
+                        .attr("hidden", true)
+                        .val(exercice.id)
+                    )
                     .append($("<div></div>")
                         .attr("id", "selected-" + uniqueId + "-title")
                         .addClass("col-7 text-white text-end pe-2 pe-md-3")

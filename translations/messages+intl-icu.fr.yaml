@@ -144,8 +144,8 @@ main:
   profile:
     title: Profil
     measurements:
-      public: Données publiques
-      private: Données privées
+      public: Mesures publiques
+      private: Mesures privées
       list: Consulter l'historique
       edit:
         title: Édition des mesures

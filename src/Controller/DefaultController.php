@@ -26,6 +26,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
+    #[Route(path:'/phpinfo', name: 'phpinfo')]
+    public function phpinfo(): Response
+    {
+        ob_start();
+        phpinfo();
+        $result = ob_get_clean();
+        return new Response($result);
+    }
+
     #[Route(path:'/', name: 'home')]
     public function home(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, SetRepository $setRepository, ExerciceRepository $exerciceRepository): Response
     {

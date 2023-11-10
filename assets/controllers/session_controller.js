@@ -6,6 +6,7 @@ import {
 
 export default class extends Controller {
     connect() {
+        let timer;
         Generator.render.session($("#session-identifier").text());
         $("#button-choose-exercice").attr("disabled", $("#minimum-message").hasClass("d-none") ? false: true);
         $(document).on("click keyup", function(event) {
@@ -20,6 +21,39 @@ export default class extends Controller {
                 $("#_exercice_validity").val(0);
             })
         }
+        $(".input-session-title").on("focus", function() {
+            $(this).select();
+        });
+        $(".input-session-title").on("input", function() {
+            clearTimeout(timer);
+            let title = $(this);
+            if (!title.val().length) {
+                title.val("Ma séance du " + $("#session-date").text()).select();
+            }
+            $.each($(".input-session-title"), function(i, input) {
+                $(input).val(title.val().substring(0, 64));
+                if (title.val() === $("#session-label").text()) {
+                    $(input).addClass("text-white");
+                }
+                else {
+                    $(input).removeClass("text-white");
+                }
+            });
+            timer = setTimeout(function() {
+                if (Validator.verify.title(title)) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/session/title/edit",
+                        data: $("#form-title").serialize(),
+                        success: () => {
+                            $.each($(".input-session-title"), function(i, input) {
+                                $(input).addClass("text-white");
+                            });
+                        },
+                    });
+                }
+            }, 500);
+        });
     }
     add() {
         $.each($(".add-input-required"), function(index, input) {
@@ -30,7 +64,7 @@ export default class extends Controller {
             url: "/session/set/add",
             data: $("#_add-form").serialize(),
             success: (response) => {
-                $("#delete-set").attr("hidden", false)
+                $("#set-delete").attr("hidden", false)
                 Generator.render.add_form();
                 let exercice_index = 0;
                 if ($("#exercices").children().length > 0) {
@@ -63,7 +97,7 @@ export default class extends Controller {
             success: (response) => {
                 $.each(response, function(i, id) {
                     $("#" + id).remove();
-                    $("#delete-set").attr("hidden", $("#exercices").children().length ? false: true);
+                    $("#set-delete").attr("hidden", $("#exercices").children().length ? false: true);
                     $("#welcome").attr("hidden", $("#exercices").children().length ? true: false)
                 });
             },

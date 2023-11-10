@@ -67,21 +67,29 @@ export default class extends Controller {
             $("#form-profile").on("input click keyup", function() {
                 Validator.verify.profile_form();
             });
+            $(document).on("click keyup", function(event) {
+                if (!$(event.target).closest($("#section-height, #section-weight, #section-bmi")).length) {
+                    if ($("#measurement_height").val() === $("#old-height").val() && $("#measurement_weight").val() === $("#old-weight").val()) {
+                        $("#measurement_submit").attr("hidden", true);
+                        $("#measurement_height, #measurement_weight, #measurement_bmi").addClass("text-white");
+                    }
+                }
+                Validator.verify.add_form();
+            });
             $("#measurement_height-before, #measurement_height-after").on("click", function() {
                 $("#measurement_height").select();
             });
             $("#measurement_weight-before, #measurement_weight-after").on("click", function() {
                 $("#measurement_weight").select();
             });
-            $("#measurement_height").on("focus", function() {
+            $("#measurement_height, #measurement_weight").on("focus", function() {
                 $(this).select();
             });
-            $("#measurement_weight").on("focus", function() {
-                $(this).select();
-            });
-            $("#section-measurement").on("input", function() {
+            $("#section-height, #section-weight, #section-bmi").on("click input keyup", function() {
                 Generator.render.bmi();
                 $("#measurement_submit").attr("disabled", !Validator.verify.measurement($("#measurement_height"), $("#measurement_weight")));
+                $("#measurement_submit").attr("hidden", false);
+                $("#measurement_height, #measurement_weight, #measurement_bmi").removeClass("text-white");
             });
             $("#measurement_height").on("input", function() {
                 $(this).val($("#measurement_height").val().replace(".", ",").replace(/[^0-9,]/g, ""));
@@ -123,14 +131,18 @@ export default class extends Controller {
                 weight: weight,
             },
             success: function() {
+                $("#measurement_submit").attr("hidden", true);
                 $("#measurements-list").removeClass("d-none");
-                $("#measurement_bmi").addClass("text-white");
                 $("#measurement_height").addClass("text-white").val(height.toString().replace(".", ","));
                 $("#measurement_weight").addClass("text-white").val(weight.toString().replace(".", ","));
+                $("#measurement_bmi").addClass("text-white");
+            },
+            error: function() {
+                $("#measurement_submit").attr("disabled", false);
             },
         });
-        setTimeout(function(){
-            $("#measurement_submit").attr("disabled", false);
-        }, 500);
+    }
+    private() {
+        alert("Mesure privées");
     }
 }
