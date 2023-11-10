@@ -28,6 +28,9 @@ class Settings
     #[ORM\Column]
     private ?bool $timer = null;
 
+    #[ORM\Column]
+    private ?bool $training = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +92,18 @@ class Settings
     public function setTimer(bool $timer): static
     {
         $this->timer = $timer;
+
+        return $this;
+    }
+
+    public function isTraining(): ?bool
+    {
+        return $this->training;
+    }
+
+    public function setTraining(bool $training): static
+    {
+        $this->training = $training;
 
         return $this;
     }

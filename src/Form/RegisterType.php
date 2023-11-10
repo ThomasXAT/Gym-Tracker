@@ -14,7 +14,7 @@ use Symfony\Component\Translation\Translator;
 
 class RegisterType extends AbstractType
 {
-    private $translator;
+    private Translator $translator;
 
     public function __construct() {
         $this->translator = new Translator('fr');

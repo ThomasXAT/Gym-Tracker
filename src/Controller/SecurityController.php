@@ -66,9 +66,10 @@ class SecurityController extends AbstractController
                  */
                 $settings = new Settings();
                 $settings
-                    ->setUnit("kg")
                     ->setMeasurement(false)
                     ->setBmi(true)
+                    ->setTraining(true)
+                    ->setUnit("kg")
                     ->setTimer(true)
                 ;
                 $athlete->setPassword(

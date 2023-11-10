@@ -122,12 +122,14 @@ main:
     title: Paramètres
     measurements:
       label: Mesures anthropométriques
-      bmi:
-        label: Calculer l'indice de masse corporelle
       visibility:
         label: Partager les mesures en public
+      bmi:
+        label: Calculer l'indice de masse corporelle
     training:
       label: Carnet d'entraînement
+      visibility:
+        label: Partager les séances en public
       unit:
         label: Unité de masse
         kg: Système métrique (kilogramme)
@@ -144,8 +146,8 @@ main:
   profile:
     title: Profil
     measurements:
-      public: Données publiques
-      private: Données privées
+      public: Mesures publiques
+      private: Mesures privées
       list: Consulter l'historique
       edit:
         title: Édition des mesures

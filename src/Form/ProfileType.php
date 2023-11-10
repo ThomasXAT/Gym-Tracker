@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints\Image;
 
 class ProfileType extends AbstractType
 {
-    private $translator;
+    private Translator $translator;
 
     public function __construct() {
         $this->translator = new Translator('fr');

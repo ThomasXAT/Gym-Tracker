@@ -20,7 +20,7 @@
 {% for choice in form.equipments %}
                                 <div class="form-check">
                                     {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
-                                    <label class="form-check-label" for="{{ choice.vars.id }}">{{ choice.vars.label|capitalize }}</label>
+                                    <label class="form-check-label" for="{{ choice.vars.id }}">{{ choice.vars.value|trans|capitalize }}</label>
                                 </div>
 {% endfor %}
                             </section>

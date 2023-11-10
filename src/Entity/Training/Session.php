@@ -209,7 +209,6 @@ class Session
                     $exercices[$exercice] = [
                         'sequence' => true,
                         'id' => $current->getSequence()->getId(),
-                        'fullname' => $current->getSequence()->__toString(),
                         'exercices' => $current->getSequence()->getExercices(),
                     ];
                 }
@@ -227,7 +226,6 @@ class Session
                     $exercices[$exercice] = [
                         'sequence' => false,
                         'id' => $current->getExercice()->getId(),
-                        'fullname' => $name . ' (' . array_search($equipment, Exercice::EQUIPMENTS) . ')',
                         'name' => $name,
                         'equipment' => $equipment,
                         'sets' => [array()],

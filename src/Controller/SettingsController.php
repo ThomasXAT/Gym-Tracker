@@ -21,8 +21,9 @@ class SettingsController extends AbstractController
         $user = $this->getUser();
         $settings = $user->getSettings();
         $settings
-            ->setBmi(isset($data['settings']['bmi']))
             ->setMeasurement(isset($data['settings']['measurement']))
+            ->setBmi(isset($data['settings']['bmi']))
+            ->setTraining(isset($data['settings']['training']))
             ->setUnit(isset($data['settings']['unit']) && $data['settings']['unit'] === 'lbs' ? 'lbs': 'kg')
             ->setTimer(isset($data['settings']['timer']))
         ;

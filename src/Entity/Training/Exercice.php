@@ -13,21 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ExerciceRepository::class)]
 class Exercice
 {
-    const DECLINE = 'decline';
-    const FLAT = 'flat';
-    const INCLINE = 'incline';
-    const SEATED = 'seated';
-    const STANDING = 'standing';
-    const PREACHER = 'preacher';
-    const INCLINATIONS = [
-        'Décliné' => self::DECLINE,
-        'Couché' => self::FLAT,
-        'Incliné' => self::INCLINE,
-        'Assis' => self::SEATED,
-        'Debout' => self::STANDING,
-        'Pupitre' => self::PREACHER,
-    ];
-
     const BODYWEIGHT = 'bodyweight';
     const BAND = 'band';
     const BARBELL = 'barbell';
@@ -36,13 +21,13 @@ class Exercice
     const SMITH = 'smith';
     const MACHINE = 'machine';
     const EQUIPMENTS = [
-        'poids du corps' => self::BODYWEIGHT,
-        'élastique' => self::BAND,
-        'barre' => self::BARBELL,
-        'haltères' => self::DUMBBELL,
-        'poulie' => self::CABLE,
-        'barre guidée' => self::SMITH,
-        'machine' => self::MACHINE,
+        self::BODYWEIGHT,
+        self::BAND,
+        self::BARBELL,
+        self::DUMBBELL,
+        self::CABLE,
+        self::SMITH,
+        self::MACHINE,
     ];
 
     #[ORM\Id]
