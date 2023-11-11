@@ -71,7 +71,7 @@ class RegisterType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Athlete::class,
-            'attr' => ['id' => 'form-register', 'class' => 'mx-auto'],
+            'attr' => ['id' => 'form-register', 'autocomplete' => 'off', 'class' => 'mx-auto'],
         ]);
     }
 }

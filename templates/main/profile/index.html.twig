@@ -57,7 +57,7 @@
                                 <div class="text-center">{{ 'measurement.label'|trans }}</div>
                             </header>
                             <main class="card-body">
-                                <section id="section-measurement">
+                                <form id="section-measurement" autocomplete="off">
                                     <section id="section-height" class="mb-2">
                                         <div id="input-height" class="input-group flex-nowrap">
                                             <label for="measurement_height" id="measurement_height-before" class="input-group-text measurement-label justify-content-center">{{ 'measurement.height'|trans }}</label>
@@ -81,7 +81,7 @@
                                         </div>
                                     </section>
 {% endif %}
-                                </section>
+                                </form>
                                 <div id="measurements-list" class="text-end{% if not athlete.measurements|length %} d-none{% endif %}">
                                     <a href="{{ path('measurements', {'username': athlete.username}) }}" class="text-decoration-none">{{ 'main.profile.measurements.list'|trans }}</a>
                                 </div>

@@ -29,27 +29,30 @@ export default class extends Controller {
             }
             $.each($(".input-session-title"), function(i, input) {
                 $(input).val(title.val().substring(0, 64));
-                if (title.val() === $("#session-label").text()) {
+                if (title.val() === $("#old-title").val()) {
                     $(input).addClass("text-white");
                 }
                 else {
                     $(input).removeClass("text-white");
                 }
             });
-            timer = setTimeout(function() {
-                if (Validator.verify.title(title)) {
-                    $.ajax({
-                        type: "POST",
-                        url: "/session/title/edit",
-                        data: $("#form-title").serialize(),
-                        success: () => {
-                            $.each($(".input-session-title"), function(i, input) {
-                                $(input).addClass("text-white");
-                            });
-                        },
-                    });
-                }
-            }, 500);
+            if (title.val() !== $("#old-title").val()) {
+                timer = setTimeout(function() {
+                    if (Validator.verify.title(title)) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/session/title/edit",
+                            data: $("#form-title").serialize(),
+                            success: () => {
+                                $("#old-title").val(title.val());
+                                $.each($(".input-session-title"), function(i, input) {
+                                    $(input).addClass("text-white");
+                                });
+                            },
+                        });
+                    }
+                }, 500);
+            }
         });
     }
     add() {

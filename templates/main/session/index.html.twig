@@ -6,7 +6,6 @@
             <span hidden id="user-identifier">{{ app.user.id }}</span>
             <span hidden id="user-unit">{{ app.user.settings.unit }}</span>
             <span hidden id="session-identifier">{{ session.id }}</span>
-            <span hidden id="session-label">{{ session.title }}</span>
             <span hidden id="session-date">{{ session.start|date('d/m/Y') }}</span>
             <span id="draft"></span>
             <div class="row">
@@ -28,7 +27,10 @@
                 </section>
 {% endif %}
                 <section class="fs-3 mb-md-2 p-2{% if session.current %} mt-2{% else %} d-md-none pt-0{% endif %}">
-                    <form id="form-title">
+                    <div hidden>
+                        <input id="old-title" value="{{ session.title }}">
+                    </div>
+                    <form id="form-title" autocomplete="off">
                         <input name="id" value="{{ session.id }}" hidden>
                         <input name="title" class="input-session-title form-control-plaintext text-white text-center fw-bold py-0" value="{{ session.title }}"{% if session.athlete != app.user %} readonly{% endif %}>
                     </form>

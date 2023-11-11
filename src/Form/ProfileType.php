@@ -101,7 +101,7 @@ class ProfileType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Athlete::class,
-            'attr' => ['id' => 'form-profile', 'class' => 'mx-auto'],
+            'attr' => ['id' => 'form-profile', 'autocomplete' => 'off',  'class' => 'mx-auto'],
         ]);
     }
 }

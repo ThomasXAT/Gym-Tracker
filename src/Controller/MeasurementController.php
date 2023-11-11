@@ -8,6 +8,7 @@ use App\Repository\MeasurementRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/measurement', name: 'measurement_', methods: ['POST'])]
@@ -21,7 +22,14 @@ class MeasurementController extends AbstractController
          * @var Athlete $user
          */
         $user = $this->getUser();
-        if ($data['height'] && $data['weight']) {
+        if (
+            $data['height'] &&
+            $data['weight'] &&
+            (float)$data['height'] >= 0.5 &&
+            (float)$data['height'] <= 3 &&
+            (float)$data['weight'] >= 20 &&
+            (float)$data['weight'] <= 500
+        ) {
             $measurement = new Measurement();
             $measurement
                 ->setHeight($data['height'])
@@ -32,8 +40,11 @@ class MeasurementController extends AbstractController
             if (sizeof($user->getMeasurements()) || ($measurement->getHeight() && $measurement->getWeight())) {
                 $measurementRepository->save($measurement, true);
             }
+            return $this->json($data);
         }
-        return $this->json($data);
+        else {
+            throw new HttpException(500);
+        }
 
     }
 
