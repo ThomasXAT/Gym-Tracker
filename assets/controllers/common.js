@@ -6,6 +6,11 @@ const SET_SUFFIXES = [
     "eccentric",
 ];
 
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
+
+const notyf = new Notyf();
+
 import {
     trans,
     VALIDATOR_TITLE_EMPTY,
@@ -1219,5 +1224,16 @@ export let Timer = {
             $("#" + timer_id + "-minutes").text(minutes < 10 ? "0" + minutes: minutes);
             $("#" + timer_id + "-seconds").text(seconds < 10 ? "0" + seconds: seconds);
         }, 1000);
+    }
+}
+
+export let Notifier = {
+    send: {
+        success: function(text) {
+            notyf.success(text);
+        },
+        error: function(text) {
+            notyf.error(text);
+        },
     }
 }

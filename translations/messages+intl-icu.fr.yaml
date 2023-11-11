@@ -272,3 +272,9 @@ validator:
   measurement:
     height: "Taille incorrecte. Caractères valides : trois chiffres, une virgule et une décimale."
     weight: "Poids incorrect. Caractères valides : trois chiffres, une virgule et une décimale."
+notifier:
+  measurement:
+    private: Mesures privées
+    new:
+      success: Mesures enregistrées
+      error: Enregistrement impossible

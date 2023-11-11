@@ -1,11 +1,15 @@
 import { Controller } from "@hotwired/stimulus";
 import { 
     Validator,
-    Generator 
+    Generator,
+    Notifier,
 } from "./common";
 import {
     trans,
     VALIDATOR_FILE_SIZE_MAX,
+    NOTIFIER_MEASUREMENT_PRIVATE,
+    NOTIFIER_MEASUREMENT_NEW_ERROR,
+    NOTIFIER_MEASUREMENT_NEW_SUCCESS,
 } from '../translator';
 
 export default class extends Controller {
@@ -105,8 +109,8 @@ export default class extends Controller {
                 let max_length = $(this).val().includes(",") ? integer_part.length + 2: 3;
                 $(this).val((integer_part + (decimal_part.length ? "," + decimal_part.replace(/[^0-9]/g, ""): "")).substring(0, max_length));
             });
-            Generator.render.bmi();
         }
+        Generator.render.bmi();
     }
     recto() {
         $("#verso").removeClass("d-flex").addClass("d-none");
@@ -131,6 +135,7 @@ export default class extends Controller {
                 weight: weight,
             },
             success: function() {
+                Notifier.send.success(trans(NOTIFIER_MEASUREMENT_NEW_SUCCESS))
                 $("#measurement_submit").attr("hidden", true);
                 $("#measurements-list").removeClass("d-none");
                 $("#measurement_height").addClass("text-white").val(height.toString().replace(".", ","));
@@ -138,11 +143,12 @@ export default class extends Controller {
                 $("#measurement_bmi").addClass("text-white");
             },
             error: function() {
+                Notifier.send.error(trans(NOTIFIER_MEASUREMENT_NEW_ERROR))
                 $("#measurement_submit").attr("disabled", false);
             },
         });
     }
     private() {
-        alert("Mesure privées");
+        Notifier.send.error(trans(NOTIFIER_MEASUREMENT_PRIVATE));
     }
 }
