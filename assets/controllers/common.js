@@ -6,11 +6,6 @@ const SET_SUFFIXES = [
     "eccentric",
 ];
 
-const HEIGHT_MIN = 1;
-const HEIGHT_MAX = 3;
-const WEIGHT_MIN = 20;
-const WEIGHT_MAX = 500;
-
 import {
     trans,
     VALIDATOR_TITLE_EMPTY,
@@ -160,10 +155,10 @@ export let Validator = {
             let weight_value = parseFloat(weight.val().replace(",", "."));
             if (
                 (
-                    height_value >= HEIGHT_MIN &&
-                    height_value <= HEIGHT_MAX &&
-                    weight_value >= WEIGHT_MIN &&
-                    weight_value <= WEIGHT_MAX
+                    height_value >= 0.5 &&
+                    height_value <= 3 &&
+                    weight_value >= 20 &&
+                    weight_value <= 500
                 )
             ) {
                 return true;
@@ -573,6 +568,7 @@ export let Generator = {
                         .addClass("p-0 border-bottom-0")
                         .append($("<form></form>")
                             .attr("id", set_part.id)
+                            .attr("autocomplete", "off")
                             .addClass("d-flex align-items-center")
                             .on("change input", function() {
                                 clearTimeout(timer);
@@ -676,7 +672,7 @@ export let Generator = {
                                     .attr("name", "sets[" + set_part.id + "][weight]")
                                     .prop("disabled", $("#athlete-identifier").text() !== $("#user-identifier").text())
                                     .addClass("p-0 form-control-plaintext text-white")
-                                    .val(String(Math.floor(($("#user-unit").text() === "lbs" ? set_part.weight / 0.45359237: set_part.weight) * 100) / 100).replace(".", ","))
+                                    .val(String(Math.round(($("#user-unit").text() === "lbs" ? set_part.weight / 0.45359237: set_part.weight) * 100) / 100).replace(".", ","))
                                     .on("focus", function() {
                                         $(this).select();
                                     })
@@ -1210,12 +1206,12 @@ export let Timer = {
         setInterval(function() {
             let current = Date.now();
             let difference = current - start;
-            let seconds = Math.floor(difference / 1000);
-            let days = Math.floor(seconds / 86400);
+            let seconds = Math.round(difference / 1000);
+            let days = Math.round(seconds / 86400);
             seconds = seconds % 86400;
-            let hours = Math.floor(seconds / 3600);
+            let hours = Math.round(seconds / 3600);
             seconds = seconds % 3600;
-            let minutes = Math.floor(seconds / 60);
+            let minutes = Math.round(seconds / 60);
             seconds = seconds % 60;
             $("#" + timer_id + "-separator").text(days ? ":": "");
             $("#" + timer_id + "-days").text(days ? days: "");

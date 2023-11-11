@@ -1,7 +1,7 @@
     <aside id="_new_session" class="modal fade" {{ stimulus_controller('new_session') }}>
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="post" action="{{ path('session_start') }}">
+                <form method="post" action="{{ path('session_start') }}" autocomplete="off">
                     <header class="modal-header">
                         <p class="modal-title fs-5">{{ 'main.session.new'|trans }}</p>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

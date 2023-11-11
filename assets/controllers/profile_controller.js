@@ -85,7 +85,7 @@ export default class extends Controller {
             $("#measurement_height, #measurement_weight").on("focus", function() {
                 $(this).select();
             });
-            $("#section-height, #section-weight, #section-bmi").on("click input keyup", function() {
+            $("#section-measurement").on("click input keyup", function() {
                 Generator.render.bmi();
                 $("#measurement_submit").attr("disabled", !Validator.verify.measurement($("#measurement_height"), $("#measurement_weight")));
                 $("#measurement_submit").attr("hidden", false);

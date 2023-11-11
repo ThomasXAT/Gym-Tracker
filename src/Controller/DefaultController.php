@@ -186,7 +186,7 @@ class DefaultController extends AbstractController
         }
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
-            $sessions = $sessionRepository->findBy(['athlete' => $athlete], ['start' => 'desc']);
+            $sessions = $sessionRepository->findBy(['athlete' => $athlete, 'current' => false], ['start' => 'desc']);
             if (($athlete === $user || $athlete->getSettings()->isTraining()) && $sessions) {
                 return $this->render('main/profile/sessions/index.html.twig', [
                     'page' => 'sessions',
@@ -201,8 +201,8 @@ class DefaultController extends AbstractController
         throw new NotFoundHttpException('Athlete not found. The requested user does not exist.');
     }
 
-    #[Route(path:'/@{username}/sessions/{slug}/{string}', name: 'session_display')]
-    public function session_display(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, string $username, string $slug, string $string) {
+    #[Route(path:'/@{username}/sessions/{string}', name: 'session_display')]
+    public function session_display(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, string $username, string $string) {
         /**
          * @var Athlete $user
          */
@@ -212,11 +212,11 @@ class DefaultController extends AbstractController
         }
         $athlete = $athleteRepository->findOneBy(['username' => $username]);
         if ($athlete) {
-            $session = $sessionRepository->findOneBy(['athlete' => $athlete, 'slug' => $slug, 'string' => $string, 'current' => false]);
+            $session = $sessionRepository->findOneBy(['athlete' => $athlete, 'string' => $string, 'current' => false]);
             if ($session) {
                 $sessions = $sessionRepository->findBy(['athlete' => $athlete]);
                 $i = 0;
-                while (!($session->getSlug() === $sessions[$i]->getSlug() && $session->getString() === $sessions[$i]->getString())) {
+                while (!($session->getId() === $sessions[$i]->getId())) {
                     $i++;
                 }
                 if (($athlete === $user || $athlete->getSettings()->isTraining())) {

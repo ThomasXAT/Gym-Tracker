@@ -8,7 +8,9 @@ export default class extends Controller {
             type: "GET",
             dataType: "json",
             success: function(response) {  
-                Validator.verify.register_form(response);
+                $("#form-register").on("input click keyup", function() {
+                    Validator.verify.register_form(response);
+                });
                 $("#section-firstname").on("input click keyup", function() {
                     Validator.verify.surname($("#register_surname"), true);
                     Validator.verify.firstname($("#register_firstname"), true);
@@ -16,9 +18,6 @@ export default class extends Controller {
                 $("#section-surname").on("input click keyup", function() {
                     Validator.verify.firstname($("#register_firstname"), true);
                     Validator.verify.surname($("#register_surname"), true);
-                });
-                $("#form-register").on("input click keyup", function() {
-                    Validator.verify.register_form(response);
                 });
             }
         });

@@ -44,7 +44,6 @@ class ApiController extends AbstractController
             $result[$sessions[$i]->getId()]['current'] = $sessions[$i]->isCurrent();
             $result[$sessions[$i]->getId()]['start'] = $sessions[$i]->getStart();
             $result[$sessions[$i]->getId()]['end'] = $sessions[$i]->getEnd();
-            $result[$sessions[$i]->getId()]['slug'] = $sessions[$i]->getSlug();
             $result[$sessions[$i]->getId()]['string'] = $sessions[$i]->getString();
             $exercices = $sessions[$i]->getExercices();
             foreach ($exercices as &$exercice) {

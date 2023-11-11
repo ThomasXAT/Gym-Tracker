@@ -53,7 +53,7 @@ class LoginType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Athlete::class,
-            'attr' => ['id' => 'form-login', 'class' => 'mx-auto'],
+            'attr' => ['id' => 'form-login', 'autocomplete' => 'off',  'class' => 'mx-auto'],
         ]);
     }
 }
