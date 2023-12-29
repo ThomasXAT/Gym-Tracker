@@ -132,7 +132,7 @@ export let Validator = {
                 }
                 else {
                     $("#help-title").text("");
-                    Validator.setValid(title);
+                    Validator.setNeutral(title);
                     return true;
                 }
             }

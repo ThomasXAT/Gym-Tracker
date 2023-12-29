@@ -126,7 +126,7 @@
                 {# Sessions #}<section id="sessions" class="p-2">
                     <h3 class="text-white">{{ 'main.profile.sessions.label'|trans }}</h3>
 {{ include('main/profile/_sessions.html.twig') }}
-                    <div class="text-end">
+                    <div class="text-end mt-2">
                         <a class="text-truncate text-decoration-none" href="{{ path('sessions', {'username': athlete.username}) }}">{{ 'main.profile.sessions.list'|trans }}</a>
                     </div>
                 </section>

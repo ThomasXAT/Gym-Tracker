@@ -29,7 +29,7 @@
 {% set minutes = (seconds / 60)|round(0, 'floor') %}
 {% set seconds = seconds % 60 %}
                     <div id="session-timer" class="text-white">
-                        <span id="session-timer-days">{{ days ? days: '' }}</span><span id="session-timer-separator">{{ days ? ':': '' }}</span><span id="session-timer-hours">{{ hours|date('s') }}</span><span>:</span><span id="session-timer-minutes">{{ minutes|date('s') }}</span><span>:</span><span id="session-timer-seconds">{{ seconds|date('s') }}</span>
+                        <span id="session-timer-days">{{ days ? days: '' }}</span><span id="session-timer-separator">{{ days ? ':': '' }}</span><span id="session-timer-hours">{{ hours|date('s') }}</span><span class="text-body">:</span><span id="session-timer-minutes">{{ minutes|date('s') }}</span><span class="text-body">:</span><span id="session-timer-seconds">{{ seconds|date('s') }}</span>
                     </div>
                 </section>
 {% endif %}

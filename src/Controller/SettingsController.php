@@ -29,6 +29,5 @@ class SettingsController extends AbstractController
         ;
         $settingsRepository->save($settings, true);
         return $this->json($data);
-
     }
 }
