@@ -17,6 +17,11 @@ require("@fortawesome/fontawesome-free/js/all.js");
 
 require("bootstrap");
 
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
+
+const notyf = new Notyf();
+
 // CKEditor
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "@ckeditor/ckeditor5-build-classic/build/translations/fr";
@@ -136,4 +141,12 @@ magnifying_glasses.forEach(magnifying_glass => {
             form.submit();
         }
     });
+});
+
+let flashes = document.querySelector("#flashes");
+document.querySelectorAll("#flashes #success input").forEach(function(flash) {
+    notyf.success(flash.value);
+});
+document.querySelectorAll("#flashes #error input").forEach(function(flash) {
+    notyf.error(flash.value);
 });

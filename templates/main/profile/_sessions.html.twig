@@ -1,6 +1,6 @@
                     <div class="accordion accordion-flush" id="sessions-accordion">
 {% for session in sessions %}
-                        <div id="session-{{ session.id }}" class="accordion-item border mb-2">
+                        <div id="session-{{ session.id }}" class="accordion-item border{% if loop.index != sessions|length %} mb-2{% endif %}">
                             <div class="session-title border-bottom d-flex">
                                 <div class="p-2 border-end">
                                     <span>{{ session.start|date('d/m/Y') }}</span>
@@ -20,7 +20,7 @@
                                 <div id="collapse-session-{{ session.id }}" class="accordion-collapse collapse" data-bs-parent="#sessions-accordion">
                                     <div class="accordion-body pt-0">
                                         <div class="row">
-                                            <section id="session-exercices-{{ session.id }}" class="mb-3 col-12">
+                                            <section id="session-exercices-{{ session.id }}" class="mb-3 col-md-6 col-xl-7">
                                                 <table class="table mb-0 border exercice-list">
                                                     <tbody>
 {% for exercice in session.exercices %}
@@ -38,6 +38,41 @@
 {% endfor %}
                                                     </tbody>
                                                 </table>
+                                            </section>
+                                            <section id="session-statistics-{{ session.id }}" class="col-md-6 col-xl-5">
+                                                <article class="mb-2 border d-flex">
+                                                    <div class="border-end text-body text-nowrap p-3 col-8">
+                                                        <span>{{ 'main.profile.sessions.indicators.duration'|trans }}</span>
+                                                    </div>
+                                                    <div class="py-3 col-4 text-center">
+{# Average rest time
+{% set seconds = session.rest %}
+#}
+{% set seconds = session.end|date('U') - session.start|date('U') %}
+{% set hours = (seconds / 3600)|round(0, 'floor') %}
+{% set seconds = seconds % 3600 %}
+{% set minutes = (seconds / 60)|round(0, 'floor') %}
+{% set seconds = seconds % 60 %}
+                                                        {#{% if hours %}{{ hours }}<span class="text-body">h </span>{% endif %}{% if minutes or hours %}{{ minutes }}<span class="text-body">′ </span>{% endif %}{{ seconds }}<span class="text-body">″</span>#}
+                                                        <span>{{ hours|date('s') }}<span><span class="text-body">:</span><span>{{ minutes|date('s') }}</span><span class="text-body">:</span><span>{{ seconds|date('s') }}</span>
+                                                    </div>
+                                                </article>
+                                                <article class="mb-2 border d-flex">
+                                                    <div class="border-end text-body text-nowrap p-3 col-8">
+                                                        <span>{{ 'main.profile.sessions.indicators.repetitions'|trans }}</span>
+                                                    </div>
+                                                    <div class="py-3 col-4 text-center">
+                                                        <span>{{ session.repetitions }}</span>
+                                                    </div>
+                                                </article>
+                                                <article class="mb-3 border d-flex">
+                                                    <div class="border-end text-body text-nowrap p-3 col-8">
+                                                        <span>{{ 'main.profile.sessions.indicators.weight'|trans }}</span>
+                                                    </div>
+                                                    <div class="py-3 col-4 text-center">
+                                                        <span>{% if app.user.settings.unit == 'lbs' %}{{ (session.weight / 0.45359237)|round|number_format(0, ',', ' ') }}{% else %}<span>{{ session.weight|round|number_format(0, ',', ' ') }}</span>{% endif %}</span> <span class="text-body">{{ app.user.settings.unit }}</span>
+                                                    </div>
+                                                </article>
                                             </section>
                                         </div>
                                         <section id="section-show" class="d-flex justify-content-center">

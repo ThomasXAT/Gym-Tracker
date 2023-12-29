@@ -1,4 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
+import { Notifier } from "./common";
+import {
+    trans,
+    NOTIFIER_MEASUREMENT_DELETE_SUCCESS,
+    NOTIFIER_MEASUREMENT_DELETE_ERROR,
+} from '../translator';
 
 export default class extends Controller {
     connect() {
@@ -8,14 +14,18 @@ export default class extends Controller {
                 $.ajax({
                     type: "POST",
                     url: "/measurement/delete/" + measurement_id,
-                    success: (response) => {
+                    success: () => {
                         if ($("#measurements-body").children().length > 1) {
+                            Notifier.send.success(trans(NOTIFIER_MEASUREMENT_DELETE_SUCCESS));
                             $("#measurement-" + measurement_id).remove();
                         }
                         else {
                             window.location.href = "/@" + $("#athlete-username").text();
                         }
                     },
+                    error: () => {
+                        Notifier.send.error(trans(NOTIFIER_MEASUREMENT_DELETE_ERROR));
+                    }
                 });
             });
         });

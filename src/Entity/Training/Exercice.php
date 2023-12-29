@@ -22,11 +22,9 @@ class Exercice
     const MACHINE = 'machine';
     const EQUIPMENTS = [
         self::BODYWEIGHT,
-        self::BAND,
         self::BARBELL,
         self::DUMBBELL,
         self::CABLE,
-        self::SMITH,
         self::MACHINE,
     ];
 

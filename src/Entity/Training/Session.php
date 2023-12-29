@@ -247,4 +247,38 @@ class Session
 
         return $this;
     }
+
+    public function getRest(): float
+    {
+        $rest = 0;
+        $sets = $this->getSets();
+        $nbSets = sizeof($sets);
+        if ($nbSets > 1) {
+            $previous = $this->getStart();
+            for ($i = 1; $i < $nbSets; $i++) {
+                $previous = $sets[$i - 1]->getDate();
+                $current = $sets[$i]->getDate();
+                $rest +=  $current->getTimestamp() - $previous->getTimestamp();
+            }
+        }
+        return $rest / $nbSets;
+    }
+
+    public function getRepetitions(): float
+    {
+        $repetitions = 0;
+        foreach ($this->getSets() as $set) {
+            $repetitions += $set->getRepetitions() * ($set->getSymmetry() === 'unilateral' ? 2: 1);
+        }
+        return $repetitions;
+    }
+
+    public function getWeight(): float
+    {
+        $weight = 0;
+        foreach ($this->getSets() as $set) {
+            $weight += $set->getRepetitions() * ($set->getSymmetry() === 'unilateral' ? 2: 1) * $set->getWeight();
+        }
+        return $weight;
+    }
 }

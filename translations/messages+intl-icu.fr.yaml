@@ -44,13 +44,14 @@ month:
   11: novembre
   12: décembre
 app: Gym Tracker
+description: Gym Tracker
 return: Retour
 save: Enregistrer
 loading: Chargement
 delete: Supprimer
 hi: Salut
 all: Tous
-bodyweight: poids du corps
+bodyweight: sans matériel
 band: élastique
 barbell: barre
 dumbbell: haltères
@@ -99,7 +100,7 @@ sequence:
 exercice:
   label: Exercice
   name: Nom de l'exercice
-  equipments: Équipements utilisables
+  equipments: Variantes
 authentication:
   login:
     title: Connexion
@@ -158,6 +159,10 @@ main:
       label: Dernières séances
       list: Consulter la liste complète
       show: Consulter la séance
+      indicators:
+        duration: Durée de la séance
+        repetitions: Nombre de répétitions
+        weight: Poids total soulevé
     edit:
       button: Éditer le profil
       title: Édition du profil
@@ -278,3 +283,6 @@ notifier:
     new:
       success: Mesures enregistrées
       error: Enregistrement impossible
+    delete:
+      success: Mesures supprimées
+      error: Suppression impossible

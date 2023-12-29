@@ -19,8 +19,7 @@ export default class extends Controller {
         });
         Generator.render.search_output();
         $("#exercice-equipment").val("");
-        Validator.verify.name($("#exercice_name"), true);
-        $("#form-exercice").on("input", function() {
+        $("#form-exercice, #exercice-form-submit").on("input click keyup", function() {
             let name = Validator.verify.name($("#exercice_name"), true);
             let equipments = $('#section-equipments input[type="checkbox"]:checked').length;
             let submit = $("#exercice-form-submit");
@@ -46,7 +45,7 @@ export default class extends Controller {
                 $("#exercice_name").val("");
                 form.find('input[type="checkbox"]').prop('checked', false);
                 $("#exercice-form-submit").prop("disabled", true)
-                Validator.verify.name($("#exercice_name"), true)
+                Validator.setNeutral($("#exercice_name"));
             },
         });
     }
@@ -61,7 +60,7 @@ export default class extends Controller {
                 $("#exercice_name").val("");
                 form.find('input[type="checkbox"]').prop('checked', false);
                 $("#exercice-form-submit").prop("disabled", true)
-                Validator.verify.name($("#exercice_name"), true)
+                Validator.setNeutral($("#exercice_name"));
             },
         });
     }

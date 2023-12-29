@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>{% if app.user and app.user.workingOut %}{{ 'main.session.new'|trans }}{% else %}{% if page == 'home' %}{{ 'app'|trans }} - {% endif %}{% if page == 'profile' or page == 'sessions' or page == 'session' or page =='measurements' %}@{{ athlete.username }} - {% endif %}{% if search is defined and search|length %}« {{ search }} » - {% endif %}{{ (section ~ '.' ~ page ~ '.' ~ 'title')|trans }}{% if page == 'session' %} {{ position }}{% endif %}{% endif %}</title>
+    <meta name="description" content="{{ 'description'|trans }}">
+    <meta name="theme-color" content="#252A2E">
 {% block stylesheets %}
     {{ encore_entry_link_tags('app') }}
 {% endblock %}
@@ -18,6 +20,18 @@
 </head>
 <body>
     <h1 hidden>{{ 'app'|trans }}</h1>
+    <div id="flashes" hidden>
+        <div id="success">
+{% for flash in app.flashes('success') %}
+            <input value="{{ flash }}">
+{% endfor %}
+        </div>
+        <div id="error">     
+{% for flash in app.flashes('error') %}
+            <input value="{{ flash }}">
+{% endfor %}
+        </div>
+    </div>
     <header id="header" class="{{ section }} {% if section == 'main' %}bg-dark border-bottom {% endif %}py-3 px-md-3 d-flex align-items-center">
 {% include("/#{section}/header.html.twig") %}
     </header>
