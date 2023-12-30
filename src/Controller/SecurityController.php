@@ -71,6 +71,7 @@ class SecurityController extends AbstractController
                     ->setTraining(true)
                     ->setUnit("kg")
                     ->setTimer(true)
+                    ->setOffset(0)
                 ;
                 $athlete->setPassword(
                     $userPasswordHasher->hashPassword(

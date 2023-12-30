@@ -27,7 +27,7 @@
                             <section id="section-unit" class="form-floating mb-3">
                                 <select id="settings_unit" name="settings[unit]" class="form-select" placeholder="{{ 'main.settings.training.unit.label'|trans }}">
                                     <option value="kg">{{ 'main.settings.training.unit.kg'|trans }}</option>
-                                    <option value="lbs"{% if app.user.settings.unit =='lbs' %} selected{% endif %}>{{ 'main.settings.training.unit.lbs'|trans }}</option>
+                                    <option value="lbs"{% if app.user.settings.unit == 'lbs' %} selected{% endif %}>{{ 'main.settings.training.unit.lbs'|trans }}</option>
                                 </select>
                                 <label class="form-label required" for="settings_unit">{{ 'main.settings.training.unit.label'|trans }}</label>
                             </section>

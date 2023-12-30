@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Athlete;
+use App\Entity\Settings;
 use App\Entity\Training\Sequence;
 use App\Entity\Training\Session;
 use App\Entity\Training\Set;
@@ -96,7 +97,7 @@ class SessionController extends AbstractController
                 $set
                     ->setSymmetry($edited['symmetry'])
                     ->setRepetitions(isset($edited['repetitions']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
-                    ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? ($set->getSession()->getAthlete()->getSettings()->getUnit() === 'lbs' ? $edited['weight'] * 0.45359237: $edited['weight']): 0)
+                    ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? ($set->getSession()->getAthlete()->getSettings()->getUnit() === Settings::LBS ? $edited['weight'] * 0.45359237: $edited['weight']): 0)
                     ->setConcentric(isset($edited['concentric']) && $edited['concentric'] > 1 ? $edited['concentric']: 1)
                     ->setIsometric(isset($edited['isometric']) && $edited['isometric'] > 1 ? $edited['isometric']: 1)
                     ->setEccentric(isset($edited['eccentric']) && $edited['eccentric'] > 1 ? $edited['eccentric']: 1)
@@ -152,7 +153,7 @@ class SessionController extends AbstractController
                     ->setEquipment($created['equipment'])
                     ->setSymmetry($created['symmetry'])
                     ->setRepetitions(isset($created['repetitions']) && $created['repetitions'] > 0 ? $created['repetitions']: 0)
-                    ->setWeight(isset($created['weight']) && $created['weight'] > 0 ? ($session->getAthlete()->getSettings()->getUnit() === 'lbs' ? $created['weight'] * 0.45359237: $created['weight']): 0)
+                    ->setWeight(isset($created['weight']) && $created['weight'] > 0 ? ($session->getAthlete()->getSettings()->getUnit() === Settings::LBS ? $created['weight'] * 0.45359237: $created['weight']): 0)
                     ->setConcentric(isset($created['concentric']) && $created['concentric'] > 1 ? $created['concentric']: 1)
                     ->setIsometric(isset($created['isometric']) && $created['isometric'] > 1 ? $created['isometric']: 1)
                     ->setEccentric(isset($created['eccentric']) && $created['eccentric'] > 1 ? $created['eccentric']: 1)

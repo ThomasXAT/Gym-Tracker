@@ -20,6 +20,7 @@
 </head>
 <body>
     <h1 hidden>{{ 'app'|trans }}</h1>
+    <input id="offset" type="hidden">
     <div id="flashes" hidden>
         <div id="success">
 {% for flash in app.flashes('success') %}
