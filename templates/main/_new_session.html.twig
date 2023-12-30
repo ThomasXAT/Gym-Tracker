@@ -8,7 +8,7 @@
                     </header>
                     <main class="modal-body">
                         <div class="form-floating">
-                            <input type="text" id="session-title" name="title" class="form-control" placeholder="{{ 'main.session.label'|trans }}" value="Ma séance du {{ 'now'|date('d/m/Y') }}">
+                            <input type="text" id="session-title" name="title" class="form-control" placeholder="{{ 'main.session.label'|trans }}" value="Ma séance du {{ date|date('d/m/Y') }}">
                             <label for="session-title" class="form-label">{{ 'main.session.label'|trans }}</label>
                             <span id="help-title" class="form-text text-danger"></span>
                         </div>

@@ -6,7 +6,7 @@
             <span hidden id="user-identifier">{{ app.user.id }}</span>
             <span hidden id="user-unit">{{ app.user.settings.unit }}</span>
             <span hidden id="session-identifier">{{ session.id }}</span>
-            <span hidden id="session-date">{{ session.start|date('d/m/Y') }}</span>
+            <span hidden id="session-date">{{ (session.start|date('U') + app.user.settings.offset)|date('d/m/Y') }}</span>
             <span id="draft"></span>
             <div class="row">
 {% if not session.current %}

@@ -1,5 +1,6 @@
 {% if app.user %}
 {% set section = 'main' %}
+{% set date = 'now'|date('U') + app.user.settings.offset %}
 {% else %}
 {% set section = 'authentication' %}
 {% endif %}
