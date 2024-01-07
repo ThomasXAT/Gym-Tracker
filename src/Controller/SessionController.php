@@ -247,9 +247,39 @@ class SessionController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-    #[Route(path:'/testFindBestSet/{id}/{equipment}/{symmetry}', name: 'testFindBestSet')]
-    public function testFindBestSet(Exercice $exercice, string $equipment, string $symmetry, SetRepository $setRepository) {
-        dd($setRepository->findBestSet($exercice, $equipment, $symmetry));
-        return $this->json(true);
+    #[Route(path:'/objective', name: 'objective')]
+    public function objective(Request $request, SetRepository $setRepository, ExerciceRepository $exerciceRepository) {
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
+        $objective = array();
+        if ($exercices = $request->get('exercices')) {
+            foreach ($exercices as $exercice) {
+                $exerciceObject = $exerciceRepository->findOneBy(['id' => $exercice['id']]);
+                if ($last = $setRepository->findOneBy(['exercice' => $exerciceObject], ['date' => 'desc'])) {
+                    /**
+                     * @var ?Set $best
+                     */
+                    $best = $setRepository->findTheBest($exerciceObject, $exercice['equipment'], $last->getSymmetry());
+                    array_push(
+                        $objective, 
+                        $best ?
+                        [
+                            'exercice' => $best->getExercice()->getName(),
+                            'equipment' => $best->getEquipment(),
+                            'symmetry' => $best->getSymmetry(),
+                            'repetitions' => $best->getRepetitions() <= 10 ? $best->getRepetitions() + 2: $best->getRepetitions() % 10 + 4,
+                            'weight' => $best->getRepetitions() <= 10 ? $best->getWeight(): $best->getWeight() * 1.05,
+                            'concentric' => $best->getConcentric(),
+                            'isometric' => $best->getIsometric(),
+                            'eccentric' => $best->getEccentric(),
+                        ]:
+                        null
+                    );
+                }
+            }       
+        }
+        return $this->json($objective);
     }
 }

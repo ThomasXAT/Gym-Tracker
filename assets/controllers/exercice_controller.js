@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import { 
     Generator,
     Validator,
+    Calculator,
 } from "./common";
 import {
     trans,
@@ -33,6 +34,7 @@ export default class extends Controller {
     select() {
         $("#_exercice_validity").val(1);
         Generator.render.add_form();
+        Calculator.update.objective();
     }
     create() {
         let form = $("#form-exercice");

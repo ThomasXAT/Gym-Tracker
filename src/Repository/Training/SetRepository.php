@@ -43,7 +43,7 @@ class SetRepository extends ServiceEntityRepository
     /**
      * @return Set[] Returns an array of Set objects
      */
-    public function findBestSet(Exercice $exercice, string $equipment, string $symmetry): ?Set
+    public function findTheBest(Exercice $exercice, string $equipment, string $symmetry): ?Set
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.exercice = :exercice')

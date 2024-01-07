@@ -410,7 +410,7 @@ export let Generator = {
                         .empty()
                     ;
                     Generator.render.exercices(response[id]);
-                }
+                },
             });
         },
         exercices: function(session) {
@@ -456,10 +456,11 @@ export let Generator = {
                                     Selector.select.exercice(response[last_exercice.id], last_exercice.equipment);   
                                 }
                                 Generator.render.add_form();
-                            }
+                                Calculator.update.objective();
+                            },
                         });
                     }
-                }
+                },
             });
         },
         exercice: function(index, exercice, response, part = false, parent_index = null) {
@@ -603,6 +604,7 @@ export let Generator = {
                                                 set_part.concentric = $("#" + set_part.id + "-concentric").addClass("text-white").val();
                                                 set_part.isometric = $("#" + set_part.id + "-isometric").addClass("text-white").val();
                                                 set_part.eccentric = $("#" + set_part.id + "-eccentric").addClass("text-white").val();
+                                                Calculator.update.objective();
                                             },
                                         });
                                     }
@@ -1236,4 +1238,28 @@ export let Notifier = {
             notyf.error(text);
         },
     }
+}
+
+export let Calculator = {
+    update: {
+        objective: function() {
+            let exercices = [];
+            $.each($("#section-selected-exercices").children(), function(index, exercice) {
+                let exercice_id = $(exercice).attr("id");
+                exercices[index] = {};
+                exercices[index]['id'] = $("#" + exercice_id + "-id").text();
+                exercices[index]['equipment'] = $("#" + exercice_id + "-equipment").val();
+            });
+            $.ajax({
+                type: "POST",
+                url: "/session/objective",
+                data: {
+                    exercices: exercices,
+                },
+                success: function(response) {
+                    console.log(response);
+                },
+            });
+        }
+    },
 }

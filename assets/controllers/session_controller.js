@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import { 
     Generator,
     Validator,
+    Calculator,
 } from "./common";
 
 export default class extends Controller {
@@ -84,10 +85,8 @@ export default class extends Controller {
                     });
                 }
                 $("#welcome").attr("hidden", true);
+                Calculator.update.objective();
             },
-            error: function(xhr, status, error) {
-                $("#error").text(error);
-            }
         });
     }
     delete() {
@@ -100,6 +99,7 @@ export default class extends Controller {
                     $("#set-delete").attr("hidden", $("#exercices").children().length ? false: true);
                     $("#welcome").attr("hidden", $("#exercices").children().length ? true: false)
                 });
+                Calculator.update.objective();
             },
         });
     }
