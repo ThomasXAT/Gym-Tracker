@@ -16,11 +16,11 @@ class SettingsController extends AbstractController
     #[Route(path:'/update', name: 'update')]
     public function update(Request $request, SettingsRepository $settingsRepository): Response
     {
-        $data = $request->get('settings');
         /**
          * @var Athlete $user
          */
         $user = $this->getUser();
+        $data = $request->get('settings');
         $settings = $user->getSettings();
         $settings
             ->setMeasurement(isset($data['measurement']))

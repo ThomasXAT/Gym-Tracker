@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Athlete;
 use App\Entity\Settings;
+use App\Entity\Training\Exercice;
 use App\Entity\Training\Sequence;
 use App\Entity\Training\Session;
 use App\Entity\Training\Set;
@@ -104,6 +105,7 @@ class SessionController extends AbstractController
                     ->setIsometric(isset($edited['isometric']) && $edited['isometric'] > 1 ? $edited['isometric']: 1)
                     ->setEccentric(isset($edited['eccentric']) && $edited['eccentric'] > 1 ? $edited['eccentric']: 1)
                 ;
+                $set->updateScore();
                 $setRepository->save($set, true);
             }
         }
@@ -164,6 +166,7 @@ class SessionController extends AbstractController
                     ->setDropping($created['dropping'] === 'true')
                     ->setDate(new DateTime())
                 ;
+                $set->updateScore();
                 $setRepository->save($set, true);
             }
         }
@@ -242,5 +245,11 @@ class SessionController extends AbstractController
             return $this->redirectToRoute('sessions', ['username' => $session->getAthlete()->getUsername()]);
         }
         return $this->redirectToRoute('home');
+    }
+
+    #[Route(path:'/testFindBestSet/{id}/{equipment}/{symmetry}', name: 'testFindBestSet')]
+    public function testFindBestSet(Exercice $exercice, string $equipment, string $symmetry, SetRepository $setRepository) {
+        dd($setRepository->findBestSet($exercice, $equipment, $symmetry));
+        return $this->json(true);
     }
 }

@@ -60,6 +60,9 @@ class Set
     #[ORM\Column]
     private ?bool $dropping = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $score = null;
+
     public function __toString()
     {
         return $this->getExercice()->__toString() . ' ' . $this->getEquipment() . ' ' . $this->getSymmetry() . ' (' . $this->getRepetitions() . 'x' . $this->getWeight() . ')';
@@ -214,29 +217,30 @@ class Set
         return $this;
     }
 
-    public function getScore(): float
+    public function getScore(): ?float
     {
-        return
+        return $this->score;
+    }
+
+    public function setScore(?float $score): self
+    {
+        $this->score = $score;
+
+        return $this;
+    }
+
+    public function updateScore(): self
+    {
+        $this->setScore(
             $this->getRepetitions() ?
-            (
-                $this->getWeight() /
-                (
-                    $this->getSymmetry() === self::BILATERAL ? 2: 1
-                )
-            ) *
-            (
-                1 + (($this->getRepetitions() - 1) / 100)
-            ) *
-            (
-                1 + (($this->getConcentric() - 1) / 100)
-            ) *
-            (
-                1 + (($this->getIsometric() - 1) / 100)
-            ) *
-            (
-                1 + (($this->getEccentric() - 1) / 100)
-            ):
+            ($this->getWeight() / ($this->getSymmetry() === self::BILATERAL ? 2: 1)) *
+            (1 + (($this->getRepetitions() - 1) / 100)) *
+            (1 + (($this->getConcentric() - 1) / 100)) *
+            (1 + (($this->getIsometric() - 1) / 100)) *
+            (1 + (($this->getEccentric() - 1) / 100)):
             0
-        ;
+        );
+
+        return $this;
     }
 }
