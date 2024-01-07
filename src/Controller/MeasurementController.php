@@ -7,6 +7,7 @@ use App\Entity\Measurement;
 use App\Repository\MeasurementRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,32 +16,33 @@ use Symfony\Component\Routing\Annotation\Route;
 class MeasurementController extends AbstractController
 {
     #[Route(path:'/add', name: 'add')]
-    public function add(MeasurementRepository $measurementRepository): Response
+    public function add(Request $request, MeasurementRepository $measurementRepository): Response
     {
-        $data = $_POST;
         /**
          * @var Athlete $user
          */
         $user = $this->getUser();
+        $height = $request->get('height');
+        $weight = $request->get('weight');
         if (
-            $data['height'] &&
-            $data['weight'] &&
-            (float)$data['height'] >= 0.5 &&
-            (float)$data['height'] <= 3 &&
-            (float)$data['weight'] >= 20 &&
-            (float)$data['weight'] <= 500
+            $height &&
+            $weight &&
+            (float)$height >= 0.5 &&
+            (float)$height <= 3 &&
+            (float)$weight >= 20 &&
+            (float)$weight <= 500
         ) {
             $measurement = new Measurement();
             $measurement
-                ->setHeight($data['height'])
-                ->setWeight($data['weight'])
+                ->setHeight($weight)
+                ->setWeight($weight)
                 ->setAthlete($user)
                 ->setDate(new DateTime())
             ;
             if (sizeof($user->getMeasurements()) || ($measurement->getHeight() && $measurement->getWeight())) {
                 $measurementRepository->save($measurement, true);
             }
-            return $this->json($data);
+            return $this->json(true);
         }
         else {
             throw new HttpException(500);

@@ -6,6 +6,7 @@ use App\Entity\Athlete;
 use App\Entity\Settings;
 use App\Repository\SettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -13,36 +14,35 @@ use Symfony\Component\Routing\Annotation\Route;
 class SettingsController extends AbstractController
 {
     #[Route(path:'/update', name: 'update')]
-    public function update(SettingsRepository $settingsRepository): Response
+    public function update(Request $request, SettingsRepository $settingsRepository): Response
     {
-        $data = $_POST;
+        $data = $request->get('settings');
         /**
          * @var Athlete $user
          */
         $user = $this->getUser();
         $settings = $user->getSettings();
         $settings
-            ->setMeasurement(isset($data['settings']['measurement']))
-            ->setBmi(isset($data['settings']['bmi']))
-            ->setTraining(isset($data['settings']['training']))
-            ->setUnit(isset($data['settings']['unit']) && $data['settings']['unit'] === Settings::LBS ? Settings::LBS: Settings::KG)
-            ->setTimer(isset($data['settings']['timer']))
+            ->setMeasurement(isset($data['measurement']))
+            ->setBmi(isset($data['bmi']))
+            ->setTraining(isset($data['training']))
+            ->setUnit(isset($data['unit']) && $data['unit'] === Settings::LBS ? Settings::LBS: Settings::KG)
+            ->setTimer(isset($data['timer']))
         ;
         $settingsRepository->save($settings, true);
         return $this->json($data);
     }
 
     #[Route(path:'/offset', name: 'offset')]
-    public function offset(SettingsRepository $settingsRepository): Response
+    public function offset(Request $request, SettingsRepository $settingsRepository): Response
     {
-        $data = $_GET;
         /**
          * @var Athlete $user
          */
         $user = $this->getUser();
         $settings = $user->getSettings();
-        $settings->setOffset((int) $data['seconds']);
+        $settings->setOffset((int) $request->get('seconds'));
         $settingsRepository->save($settings, true);
-        return $this->json($data);
+        return $this->json(true);
     }
 }

@@ -10,6 +10,7 @@ class Settings
 {
     const KG = 'kg';
     const LBS = 'lbs';
+    const LBS_TO_KG_MULTIPLIER = 0.45359237;
     const UNITS = [
         self::KG,
         self::LBS,
