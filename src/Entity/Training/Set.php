@@ -12,6 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`set`')]
 class Set
 {
+    const UNILATERAL = 'unilateral';
+    const BILATERAL = 'bilateral';
+    const SYMMETRY = [
+        self::UNILATERAL,
+        self::BILATERAL,
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -205,5 +212,31 @@ class Set
         $this->dropping = $dropping;
 
         return $this;
+    }
+
+    public function getScore(): float
+    {
+        return
+            $this->getRepetitions() ?
+            (
+                $this->getWeight() /
+                (
+                    $this->getSymmetry() === self::BILATERAL ? 2: 1
+                )
+            ) *
+            (
+                1 + (($this->getRepetitions() - 1) / 100)
+            ) *
+            (
+                1 + (($this->getConcentric() - 1) / 100)
+            ) *
+            (
+                1 + (($this->getIsometric() - 1) / 100)
+            ) *
+            (
+                1 + (($this->getEccentric() - 1) / 100)
+            ):
+            0
+        ;
     }
 }

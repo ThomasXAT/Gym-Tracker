@@ -10,7 +10,6 @@ use App\Repository\AthleteRepository;
 use App\Repository\MeasurementRepository;
 use App\Repository\Training\ExerciceRepository;
 use App\Repository\Training\SessionRepository;
-use App\Repository\Training\SetRepository;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\Point;

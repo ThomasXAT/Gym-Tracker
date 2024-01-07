@@ -17,17 +17,18 @@ class ApiController extends AbstractController
         $athletes = $athleteRepository->findBy($_GET);
         $result = array();
         for ($i = 0; $i < sizeof($athletes); $i++) {
-            $result[$athletes[$i]->getId()]['id'] = $athletes[$i]->getId();
-            $result[$athletes[$i]->getId()]['username'] = $athletes[$i]->getUsername();
-            $result[$athletes[$i]->getId()]['firstname'] = $athletes[$i]->getFirstname();
-            $result[$athletes[$i]->getId()]['surname'] = $athletes[$i]->getSurname();
-            $result[$athletes[$i]->getId()]['picture'] = $athletes[$i]->getPicture();
-            $result[$athletes[$i]->getId()]['measurement'] = $athletes[$i]->getSettings()->isMeasurement();
+            $id = $athletes[$i]->getId();
+            $result[$id]['id'] = $athletes[$i]->getId();
+            $result[$id]['username'] = $athletes[$i]->getUsername();
+            $result[$id]['firstname'] = $athletes[$i]->getFirstname();
+            $result[$id]['surname'] = $athletes[$i]->getSurname();
+            $result[$id]['picture'] = $athletes[$i]->getPicture();
+            $result[$id]['measurement'] = $athletes[$i]->getSettings()->isMeasurement();
             if ($athletes[$i]->getSettings()->isMeasurement()) {
-                $result[$athletes[$i]->getId()]['height'] = $athletes[$i]->getHeight();
-                $result[$athletes[$i]->getId()]['weight'] = $athletes[$i]->getWeight();
+                $result[$id]['height'] = $athletes[$i]->getHeight();
+                $result[$id]['weight'] = $athletes[$i]->getWeight();
             }
-            $result[$athletes[$i]->getId()]['description'] = $athletes[$i]->getDescription();
+            $result[$id]['description'] = $athletes[$i]->getDescription();
         }
         return $this->json($result);
     }
@@ -37,14 +38,15 @@ class ApiController extends AbstractController
         $sessions = $sessionRepository->findBy($_GET);
         $result = array();
         for ($i = 0; $i < sizeof($sessions); $i++) {
-            $result[$sessions[$i]->getId()]['id'] = $sessions[$i]->getId();
-            $result[$sessions[$i]->getId()]['title'] = $sessions[$i]->getTitle();
-            $result[$sessions[$i]->getId()]['subtitle'] = $sessions[$i]->getSubtitle();
-            $result[$sessions[$i]->getId()]['athlete'] = $sessions[$i]->getAthlete()->getId();
-            $result[$sessions[$i]->getId()]['current'] = $sessions[$i]->isCurrent();
-            $result[$sessions[$i]->getId()]['start'] = $sessions[$i]->getStart();
-            $result[$sessions[$i]->getId()]['end'] = $sessions[$i]->getEnd();
-            $result[$sessions[$i]->getId()]['string'] = $sessions[$i]->getString();
+            $id = $sessions[$i]->getId();
+            $result[$id]['id'] = $sessions[$i]->getId();
+            $result[$id]['title'] = $sessions[$i]->getTitle();
+            $result[$id]['subtitle'] = $sessions[$i]->getSubtitle();
+            $result[$id]['athlete'] = $sessions[$i]->getAthlete()->getId();
+            $result[$id]['current'] = $sessions[$i]->isCurrent();
+            $result[$id]['start'] = $sessions[$i]->getStart();
+            $result[$id]['end'] = $sessions[$i]->getEnd();
+            $result[$id]['string'] = $sessions[$i]->getString();
             $exercices = $sessions[$i]->getExercices();
             foreach ($exercices as &$exercice) {
                 if ($exercice['sequence']) {
@@ -64,7 +66,7 @@ class ApiController extends AbstractController
                     }
                 }
             }
-            $result[$sessions[$i]->getId()]['exercices'] = $exercices;
+            $result[$id]['exercices'] = $exercices;
         }
         return $this->json($result);
     }
@@ -74,16 +76,20 @@ class ApiController extends AbstractController
         $sets = $setRepository->findBy($_GET);
         $result = array();
         for ($i = 0; $i < sizeof($sets); $i++) {
-            $result[$sets[$i]->getId()]['id'] = $sets[$i]->getId();
-            $result[$sets[$i]->getId()]['session'] = $sets[$i]->getSession()->getId();
-            $result[$sets[$i]->getId()]['equipment'] = $sets[$i]->getEquipment();
-            $result[$sets[$i]->getId()]['symmetry'] = $sets[$i]->getSymmetry();
-            $result[$sets[$i]->getId()]['repetitions'] = $sets[$i]->getRepetitions();
-            $result[$sets[$i]->getId()]['weight'] = $sets[$i]->getWeight();
-            $result[$sets[$i]->getId()]['concentric'] = $sets[$i]->getConcentric();
-            $result[$sets[$i]->getId()]['isometric'] = $sets[$i]->getIsometric();
-            $result[$sets[$i]->getId()]['eccentric'] = $sets[$i]->getEccentric();
-            $result[$sets[$i]->getId()]['dropping'] = $sets[$i]->isDropping();
+            $id = $sets[$i]->getId();
+            $result[$id]['id'] = $sets[$i]->getId();
+            $result[$id]['exercice'] = $sets[$i]->getExercice()->getId();
+            $result[$id]['sequence'] = $sets[$i]->getSequence() ? $sets[$i]->getSequence()->getId(): null;
+            $result[$id]['session'] = $sets[$i]->getSession()->getId();
+            $result[$id]['equipment'] = $sets[$i]->getEquipment();
+            $result[$id]['symmetry'] = $sets[$i]->getSymmetry();
+            $result[$id]['repetitions'] = $sets[$i]->getRepetitions();
+            $result[$id]['weight'] = $sets[$i]->getWeight();
+            $result[$id]['concentric'] = $sets[$i]->getConcentric();
+            $result[$id]['isometric'] = $sets[$i]->getIsometric();
+            $result[$id]['eccentric'] = $sets[$i]->getEccentric();
+            $result[$id]['dropping'] = $sets[$i]->isDropping();
+            $result[$id]['score'] = $sets[$i]->getScore();
         }
         return $this->json($result);
     }
@@ -93,10 +99,11 @@ class ApiController extends AbstractController
         $exercices = $exerciceRepository->findBy($_GET);
         $result = array();
         for ($i = 0; $i < sizeof($exercices); $i++) {
-            $result[$exercices[$i]->getId()]['id'] = $exercices[$i]->getId();
-            $result[$exercices[$i]->getId()]['name'] = $exercices[$i]->getName();
-            $result[$exercices[$i]->getId()]['equipments'] = $exercices[$i]->getEquipments();
-            $result[$exercices[$i]->getId()]['athlete'] = $exercices[$i]->getAthlete()->getId();
+            $id = $exercices[$i]->getId();
+            $result[$id]['id'] = $exercices[$i]->getId();
+            $result[$id]['name'] = $exercices[$i]->getName();
+            $result[$id]['equipments'] = $exercices[$i]->getEquipments();
+            $result[$id]['athlete'] = $exercices[$i]->getAthlete()->getId();
         }
         return $this->json($result);
     }
