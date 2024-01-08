@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Athlete;
 use App\Entity\Settings;
-use App\Entity\Training\Exercice;
 use App\Entity\Training\Sequence;
 use App\Entity\Training\Session;
 use App\Entity\Training\Set;
@@ -19,7 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/session', name: 'session_')]
+#[Route(path: '/session', name: 'session_', methods: ['POST'])]
 class SessionController extends AbstractController
 {
     private RequestStack $requestStack;

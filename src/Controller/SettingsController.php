@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/settings', name: 'settings_')]
+#[Route(path: '/settings', name: 'settings_', methods: ['POST'])]
 class SettingsController extends AbstractController
 {
     #[Route(path:'/update', name: 'update')]

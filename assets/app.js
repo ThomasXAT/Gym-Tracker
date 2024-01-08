@@ -118,11 +118,17 @@ if (document.querySelector('#header.main')) {
     // Client timezone
     fetch("https://worldtimeapi.org/api/ip")
         .then(response => response.json())
-        .then(data => {            
-            fetch("/settings/offset?seconds=" + data.raw_offset)
+        .then(data => {
+            const params = new FormData();
+            params.append('seconds', data.raw_offset);
+            fetch("/settings/offset", {
+                method: "POST",
+                body: params,
+            })
+                .then(response => response.json())
                 .catch(error => {
                     console.error(error);
-                })
+                });
         })
         .catch(error => {
             console.error(error);
