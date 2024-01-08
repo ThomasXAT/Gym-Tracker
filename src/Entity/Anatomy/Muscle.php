@@ -22,7 +22,7 @@ class Muscle
     #[ORM\OneToMany(mappedBy: 'muscle', targetEntity: Bundle::class)]
     private Collection $bundles;
 
-    #[ORM\ManyToOne(targetEntity: "MuscleGroup", cascade: ["persist"])]
+    #[ORM\ManyToOne(inversedBy: 'muscles', targetEntity: "MuscleGroup", cascade: ["persist"])]
     private ?MuscleGroup $muscleGroup = null;
 
     #[ORM\ManyToMany(targetEntity: Movement::class, mappedBy: 'Muscles')]

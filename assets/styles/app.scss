@@ -228,4 +228,17 @@ footer.main, .session-title, .session-date, .exercices-list-item, .exercice-list
     border-color: var(--bs-border-color);
 }
 
+#objective {
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    max-width: 480px;
+    bottom: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    @media screen and (min-width: 768px) {
+        bottom: 0;
+    }
+}
+
 /* c5ced6 */

@@ -2,6 +2,7 @@
 
 namespace App\Repository\Training;
 
+use App\Entity\Training\Exercice;
 use App\Entity\Training\Set;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,6 +38,25 @@ class SetRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return Set[] Returns an array of Set objects
+     */
+    public function findTheBest(Exercice $exercice, string $equipment, string $symmetry): ?Set
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exercice = :exercice')
+            ->andWhere('s.equipment = :equipment')
+            ->andWhere('s.symmetry = :symmetry')
+            ->setParameter('exercice', $exercice)
+            ->setParameter('equipment', $equipment)
+            ->setParameter('symmetry', $symmetry)
+            ->orderBy('s.score', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
 //    /**

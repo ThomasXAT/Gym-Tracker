@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Athlete;
+use App\Entity\Settings;
+use App\Entity\Training\Exercice;
 use App\Entity\Training\Sequence;
 use App\Entity\Training\Session;
 use App\Entity\Training\Set;
@@ -12,6 +14,7 @@ use App\Repository\Training\SessionRepository;
 use App\Repository\Training\SetRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,17 +29,17 @@ class SessionController extends AbstractController
     }
 
     #[Route(path:'/start', name: 'start')]
-    public function start(SessionRepository $sessionRepository): Response
+    public function start(Request $request, SessionRepository $sessionRepository): Response
     {
         /**
          * @var Athlete $user
          */
         $user = $this->getUser();
-        $data = $_POST;
-        if (isset($data['title']) && !$sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
+        $title = $request->get('title');
+        if ($title && !$sessionRepository->findOneBy(['athlete' => $user, 'current' => true])) {
             $session = new Session();
             $session
-                ->setTitle($data['title'])
+                ->setTitle($title)
                 ->setString(uniqid())
                 ->setAthlete($user)
                 ->setStart(new DateTime())
@@ -47,16 +50,17 @@ class SessionController extends AbstractController
     }
 
     #[Route(path:'/title/edit', name: 'title_edit')]
-    public function title_edit(SessionRepository $sessionRepository): Response
+    public function title_edit(Request $request, SessionRepository $sessionRepository): Response
     {
-        $data = $_POST;
-        if (isset($data['id']) && isset($data['title']) && $session = $sessionRepository->findOneBy(['id' => $data['id']])) {
-            if ($session->getAthlete() === $this->getUser() && strlen($data['title']) > 0 && strlen($data['title']) <= 64) {
-                $session->setTitle($data['title']);
+        $id = $request->get('id');
+        $title = $request->get('title');
+        if ($id && $title && $session = $sessionRepository->findOneBy(['id' => $id])) {
+            if ($session->getAthlete() === $this->getUser() && strlen($title) > 0 && strlen($title) <= 64) {
+                $session->setTitle($title);
                 $sessionRepository->save($session, true);
             }
         }
-        return $this->json($data);
+        return $this->json(true);
     }
 
     #[Route(path:'/stop', name: 'stop')]
@@ -87,34 +91,37 @@ class SessionController extends AbstractController
     }
 
     #[Route(path:'/set/edit', name: 'set_edit')]
-    public function set_edit(SetRepository $setRepository): Response
+    public function set_edit(Request $request, SetRepository $setRepository): Response
     {
-        $data = $_POST;
-        foreach ($data['sets'] as $id => $edited) {
+        $sets = $request->get('sets');
+        foreach ($sets as $id => $edited) {
             $set = $setRepository->findOneBy(['id' => $id]);
             if ($this->getUser() === $set->getSession()->getAthlete()) {
                 $set
                     ->setSymmetry($edited['symmetry'])
                     ->setRepetitions(isset($edited['repetitions']) && $edited['repetitions'] > 0 ? $edited['repetitions']: 0)
-                    ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? ($set->getSession()->getAthlete()->getSettings()->getUnit() === 'lbs' ? $edited['weight'] * 0.45359237: $edited['weight']): 0)
+                    ->setWeight(isset($edited['weight']) && $edited['weight'] > 0 ? ($set->getSession()->getAthlete()->getSettings()->getUnit() === Settings::LBS ? $edited['weight'] * Settings::LBS_TO_KG_MULTIPLIER: $edited['weight']): 0)
                     ->setConcentric(isset($edited['concentric']) && $edited['concentric'] > 1 ? $edited['concentric']: 1)
                     ->setIsometric(isset($edited['isometric']) && $edited['isometric'] > 1 ? $edited['isometric']: 1)
                     ->setEccentric(isset($edited['eccentric']) && $edited['eccentric'] > 1 ? $edited['eccentric']: 1)
                 ;
+                $set->updateScore();
                 $setRepository->save($set, true);
             }
         }
-        return $this->json($data);
+        return $this->json($sets);
     }
 
     #[Route(path:'/set/add', name: 'set_add')]
-    public function set_add(SessionRepository $sessionRepository, SequenceRepository $sequenceRepository, ExerciceRepository $exerciceRepository, SetRepository $setRepository): Response
+    public function set_add(Request $request, SessionRepository $sessionRepository, SequenceRepository $sequenceRepository, ExerciceRepository $exerciceRepository, SetRepository $setRepository): Response
     {
         /**
          * @var Athlete $user
          */
         $user = $this->getUser();
-        $data = $_POST;
+        $size = $request->get('size');
+        $identifier = $request->get('identifier');
+        $sets = $request->get('sets');
         if ($user->isWorkingOut()) {
             $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
             $exercices = $session->getExercices();
@@ -130,19 +137,19 @@ class SessionController extends AbstractController
                     $lastExercice['identifier'] .= $lastExercice['id'] . '(' . $lastExercice['equipment'] . ')';
                 }
             }
-            if ($data['size'] > 1) {
-                if ($lastExercice && $data['identifier'] === $lastExercice['identifier']) {
+            if ($size > 1) {
+                if ($lastExercice && $identifier === $lastExercice['identifier']) {
                     $sequences = $sequenceRepository->findBy(['session' => $session]);
                     $sequence = end($sequences);
                 }
                 else {
                     $sequence = new Sequence();
                     $sequence->setSession($session);
-                    $sequence->setSize($data['size']);
+                    $sequence->setSize($size);
                     $sequenceRepository->save($sequence, true);
                 }
             }
-            foreach ($data['sets'] as $created) {
+            foreach ($sets as $created) {
                 $exercice = $exerciceRepository->findOneBy(['id' => $created['exercice']]);
                 $set = new Set();
                 $set
@@ -152,19 +159,20 @@ class SessionController extends AbstractController
                     ->setEquipment($created['equipment'])
                     ->setSymmetry($created['symmetry'])
                     ->setRepetitions(isset($created['repetitions']) && $created['repetitions'] > 0 ? $created['repetitions']: 0)
-                    ->setWeight(isset($created['weight']) && $created['weight'] > 0 ? ($session->getAthlete()->getSettings()->getUnit() === 'lbs' ? $created['weight'] * 0.45359237: $created['weight']): 0)
+                    ->setWeight(isset($created['weight']) && $created['weight'] > 0 ? ($session->getAthlete()->getSettings()->getUnit() === Settings::LBS ? $created['weight'] * Settings::LBS_TO_KG_MULTIPLIER: $created['weight']): 0)
                     ->setConcentric(isset($created['concentric']) && $created['concentric'] > 1 ? $created['concentric']: 1)
                     ->setIsometric(isset($created['isometric']) && $created['isometric'] > 1 ? $created['isometric']: 1)
                     ->setEccentric(isset($created['eccentric']) && $created['eccentric'] > 1 ? $created['eccentric']: 1)
                     ->setDropping($created['dropping'] === 'true')
                     ->setDate(new DateTime())
                 ;
+                $set->updateScore();
                 $setRepository->save($set, true);
             }
         }
         $exercices = json_decode(file_get_contents($this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() . '/api/session'), true)[$session->getId()]['exercices'];
         $sets = json_decode(file_get_contents($this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() . '/api/set?session=' . $session->getId()), true);
-        $data['new'] = !$lastExercice || $data['identifier'] !== $lastExercice['identifier'] ? true: false;
+        $data['new'] = !$lastExercice || $identifier !== $lastExercice['identifier'] ? true: false;
         $data['last'] = end($exercices);
         $data['sets'] = $sets;
         return $this->json($data);
@@ -210,11 +218,10 @@ class SessionController extends AbstractController
     }
     
     #[Route(path:'/exercice/search', name: 'exercice_search')]
-    public function exercice_search(ExerciceRepository $exerciceRepository): Response
+    public function exercice_search(Request $request, ExerciceRepository $exerciceRepository): Response
     {
-        $data = $_POST;
-        $search = isset($data['search']) ? $data['search']: null;
-        $equipment = isset($data['equipment']) ? $data['equipment']: null;
+        $search = $request->get('search');
+        $equipment = $request->get('equipment');
         $result = array();
         foreach ($exerciceRepository->findBySearch($this->getUser(), $search, $equipment) as $exercice) {
             $result[$exercice->getId()] = ['id' => $exercice->getId(), 'name' => $exercice->getName(), 'equipments' => $exercice->getEquipments()];
@@ -238,5 +245,57 @@ class SessionController extends AbstractController
             return $this->redirectToRoute('sessions', ['username' => $session->getAthlete()->getUsername()]);
         }
         return $this->redirectToRoute('home');
+    }
+
+    #[Route(path:'/objective', name: 'objective')]
+    public function objective(Request $request, SetRepository $setRepository, ExerciceRepository $exerciceRepository) {
+        $objective = array();
+        if ($exercices = $request->get('exercices')) {
+            foreach ($exercices as $exercice) {
+                $exerciceObject = $exerciceRepository->findOneBy(['id' => $exercice['id']]);
+                if ($last = $setRepository->findOneBy(['exercice' => $exerciceObject, 'dropping' => false], ['date' => 'desc'])) {
+                    /**
+                     * @var ?Set $best
+                     */
+                    $best = $setRepository->findTheBest($exerciceObject, $exercice['equipment'], $last->getSymmetry());
+                }
+                array_push(
+                    $objective, 
+                    $last && $best ?
+                    [
+                        'objective' => true,
+                        'name' => $best->getExercice()->getName(),
+                        'equipment' => $best->getEquipment(),
+                        'symmetry' => $best->getSymmetry(),
+                        'repetitions' =>
+                        $best->getRepetitions() <= 10 ?
+                        $best->getRepetitions() + 2:
+                        $best->getRepetitions() % 10 + 4,
+                        'weight' =>
+                        $best->getRepetitions() <= 10 ?
+                        $best->getWeight():
+                        (
+                            $best->getWeight() <= 30 ?
+                            $best->getWeight() +
+                            (
+                                $best->getSymmetry() === Set::UNILATERAL ?
+                                1:
+                                2
+                            ):
+                            $best->getWeight() * 1.05
+                        ),
+                        'concentric' => $best->getConcentric(),
+                        'isometric' => $best->getIsometric(),
+                        'eccentric' => $best->getEccentric(),
+                    ]:
+                    [
+                        'objective' => false,
+                        'name' => $exerciceObject->getName(),
+                        'equipment' => $exercice['equipment'],
+                    ]
+                );
+            }       
+        }
+        return $this->json($objective);
     }
 }

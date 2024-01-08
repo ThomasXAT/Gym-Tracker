@@ -19,7 +19,7 @@ export default class extends Controller {
                     Validator.verify.firstname($("#register_firstname"), true);
                     Validator.verify.surname($("#register_surname"), true);
                 });
-            }
+            },
         });
     }
 }

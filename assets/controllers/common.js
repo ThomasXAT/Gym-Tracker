@@ -35,13 +35,10 @@ import {
     VALIDATOR_PASSWORD_SIZE_MIN,
     VALIDATOR_PASSWORD_SIZE_MAX,
     VALIDATOR_PASSWORD_CONFIRMATION,
-    SET,
-    SYMMETRY_LABEL,
     SYMMETRY_UNILATERAL,
     SYMMETRY_BILATERAL,
     REPETITIONS_LABEL,
     WEIGHT,
-    TEMPO_LABEL,
     TEMPO_CONCENTRIC,
     TEMPO_ISOMETRIC,
     TEMPO_ECCENTRIC,
@@ -55,9 +52,10 @@ import {
     SMITH,
     MACHINE,
     SEQUENCE_LABEL,
-    EXERCICE_NAME,
     MAIN_SESSION_EXERCICE_EDIT_TITLE,
     MAIN_SESSION_EXERCICE_EDIT_SUBMIT,
+    OBJECTIVE,
+    NO_DATA,
 } from '../translator';
 
 export let Translator = {
@@ -305,7 +303,7 @@ export let Validator = {
         },
         add_form: function() {
             let hide = false;
-            $.each($(".add-input-required"), function(index, input) {
+            $.each($(".input-required"), function(index, input) {
                 if ($(input).val() === "" || !$(input).val().match(/^(?=(?:\d,?){0,6}$)\d+(?:,\d{1,2})?$/)) {
                     $(input).removeClass("border-valid").addClass("border-invalid");
                     hide = true;
@@ -410,7 +408,7 @@ export let Generator = {
                         .empty()
                     ;
                     Generator.render.exercices(response[id]);
-                }
+                },
             });
         },
         exercices: function(session) {
@@ -456,10 +454,11 @@ export let Generator = {
                                     Selector.select.exercice(response[last_exercice.id], last_exercice.equipment);   
                                 }
                                 Generator.render.add_form();
-                            }
+                                Calculator.update.objective();
+                            },
                         });
                     }
-                }
+                },
             });
         },
         exercice: function(index, exercice, response, part = false, parent_index = null) {
@@ -603,6 +602,7 @@ export let Generator = {
                                                 set_part.concentric = $("#" + set_part.id + "-concentric").addClass("text-white").val();
                                                 set_part.isometric = $("#" + set_part.id + "-isometric").addClass("text-white").val();
                                                 set_part.eccentric = $("#" + set_part.id + "-eccentric").addClass("text-white").val();
+                                                Calculator.update.objective();
                                             },
                                         });
                                     }
@@ -709,7 +709,7 @@ export let Generator = {
                                     })
                                 )
                                 .append($("<div></div>")
-                                    .addClass("ps-1")
+                                    .addClass("ms-1")
                                     .text($("#user-unit").text())
                                 )
                             )
@@ -896,7 +896,7 @@ export let Generator = {
                                     .text("+ " + trans(DROPSET_ADD))
                                     .addClass("add-drop-set text-decoration-none pointer-only")
                                     .on("click", function() {
-                                        Generator.render.form_set_part(new_set_id, Date.now(), true, true, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
+                                        Generator.render.form_set_part(new_set_id, Date.now(), true, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
                                         $("#" + new_set_id + "-drop-delete").attr("hidden", false);
                                     })
                                 )
@@ -918,12 +918,13 @@ export let Generator = {
                             )
                         )
                     ;
-                    Generator.render.form_set_part(new_set_id, Date.now(), false, true, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
+                    Generator.render.form_set_part(new_set_id, Date.now(), false, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
                 });
             }
         },
-        form_set_part: function(prefix, set_part_id, is_dropping = false, is_new = false, exercice_id = null, equipment = null) {
-            let form_set_part_id = (is_new ? "_add-": "_edit-") + set_part_id;
+        form_set_part: function(prefix, set_part_id, is_dropping = false
+            , exercice_id = null, equipment = null) {
+            let form_set_part_id = "_add-" + set_part_id;
             $("#" + prefix + "-parts")
                 .append($("<div></div>")
                     .attr("id", form_set_part_id)
@@ -952,7 +953,7 @@ export let Generator = {
                             .append($("<input>")
                                 .attr("id", form_set_part_id + "-repetitions")
                                 .attr("name", "sets[" + set_part_id + "][repetitions]")
-                                .addClass("form-control text-center" + (is_new ? " add-input-required": " edit-input-required"))
+                                .addClass("form-control text-center input-required")
                                 .attr("placeholder", trans(REPETITIONS_LABEL))
                                 .val($("#" + set_part_id + "-repetitions").text())
                                 .on("input", function() {
@@ -965,7 +966,7 @@ export let Generator = {
                             .append($("<input>")
                                 .attr("id", form_set_part_id + "-weight")
                                 .attr("name", "sets[" + set_part_id + "][weight]")
-                                .addClass("form-control text-center" + (is_new ? " add-input-required": " edit-input-required"))
+                                .addClass("form-control text-center input-required")
                                 .attr("placeholder", trans(WEIGHT))
                                 .val($("#" + set_part_id + "-weight").text())
                                 .on("input", function() {
@@ -1055,17 +1056,17 @@ export let Generator = {
                         .attr("hidden", true)
                         .val(is_dropping)
                     )
-                    .append(is_new ? $("<input>")
+                    .append($("<input>")
                         .attr("id", form_set_part_id + "-exercice")
                         .attr("name", "sets[" + set_part_id + "][exercice]")
                         .attr("hidden", true)
-                        .val(exercice_id): null
+                        .val(exercice_id)
                     )
-                    .append(is_new ? $("<input>")
+                    .append($("<input>")
                         .attr("id", form_set_part_id + "-equipment")
                         .attr("name", "sets[" + set_part_id + "][equipment]")
                         .attr("hidden", true)
-                        .val(equipment): null
+                        .val(equipment)
                     )
                 )
             ;
@@ -1211,12 +1212,12 @@ export let Timer = {
         setInterval(function() {
             let current = Date.now();
             let difference = current - start;
-            let seconds = Math.round(difference / 1000);
-            let days = Math.round(seconds / 86400);
+            let seconds = Math.floor(difference / 1000);
+            let days = Math.floor(seconds / (86400));
             seconds = seconds % 86400;
-            let hours = Math.round(seconds / 3600);
+            let hours = Math.floor(seconds / 3600);
             seconds = seconds % 3600;
-            let minutes = Math.round(seconds / 60);
+            let minutes = Math.floor(seconds / 60);
             seconds = seconds % 60;
             $("#" + timer_id + "-separator").text(days ? ":": "");
             $("#" + timer_id + "-days").text(days ? days: "");
@@ -1236,4 +1237,110 @@ export let Notifier = {
             notyf.error(text);
         },
     }
+}
+
+export let Calculator = {
+    update: {
+        objective: function() {
+            if ($("#objective").length) {
+                let exercices = [];
+                $.each($("#section-selected-exercices").children(), function(index, exercice) {
+                    let exercice_id = $(exercice).attr("id");
+                    exercices[index] = {};
+                    exercices[index]['id'] = $("#" + exercice_id + "-id").text();
+                    exercices[index]['equipment'] = $("#" + exercice_id + "-equipment").val();
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/session/objective",
+                    data: {
+                        exercices: exercices,
+                    },
+                    success: function(response) {
+                        $("#objective").attr("hidden", false);
+                        $("#objective-body").empty();
+                        $.each(response, function(index, exercice) {
+                            $("#objective-body")
+                                .append($("<article></article>")
+                                    .addClass(index === 0 ? "": " mt-2")
+                                    .append($("<div></div>")
+                                        .addClass("text-white fw-bold")
+                                        .text(exercice.name + " (" + Translator.translate.equipment(exercice.equipment) + ")")
+                                    )
+                                    .append($("<div></div>")
+                                        .addClass("px-2")
+                                        .append(exercice.objective ? 
+                                            $("<div></div>")
+                                                .append($("<span></span>")
+                                                    .text(trans(OBJECTIVE))
+                                                )
+                                                .append($("<span></span>")
+                                                    .addClass("mx-1")
+                                                    .text(":")
+                                                )
+                                                .append($("<span></span>")
+                                                    .addClass("text-white")
+                                                    .text(exercice.repetitions)
+                                                )
+                                                .append($("<span></span>")
+                                                    .addClass("mx-1")
+                                                    .text("×")
+                                                )
+                                                .append($("<span></span>")
+                                                    .addClass("text-white")
+                                                    .text(Math.round(($("#user-unit").text() === "lbs" ? exercice.weight / 0.45359237: exercice.weight)))
+                                                )
+                                                .append($("<span></span>")
+                                                    .addClass("ms-1")
+                                                    .text(($("#user-unit").text()))
+                                                )
+                                                .append($("<span></span>")
+                                                    .addClass("ms-1")
+                                                    .append($("<span></span>")
+                                                        .text("(")
+                                                    )
+                                                    .append($("<span></span>")
+                                                        .addClass("text-white")
+                                                        .text(Translator.translate.symmetry(exercice.symmetry))
+                                                    )
+                                                    .append($("<span></span>")
+                                                        .addClass("me-1")
+                                                        .text(",")
+                                                    )
+                                                    .append($("<span></span>")
+                                                        .addClass("text-white")
+                                                        .text(exercice.concentric)
+                                                    )
+                                                    .append($("<span></span>")
+                                                        .text("-")
+                                                    )
+                                                    .append($("<span></span>")
+                                                        .addClass("text-white")
+                                                        .text(exercice.isometric)
+                                                    )
+                                                    .append($("<span></span>")
+                                                        .text("-")
+                                                    )
+                                                    .append($("<span></span>")
+                                                        .addClass("text-white")
+                                                        .text(exercice.eccentric)
+                                                    )
+                                                    .append($("<span></span>")
+                                                        .text(")")
+                                                    )
+                                                ):
+                                            $("<div></div>")
+                                                .append($("<span></span>")
+                                                    .text(trans(NO_DATA))
+                                                )
+                                        )
+                                    )
+                                )
+                            ;
+                        });
+                    },
+                });
+            }
+        }
+    },
 }

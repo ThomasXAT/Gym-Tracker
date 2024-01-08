@@ -48,6 +48,7 @@ description: Gym Tracker
 return: Retour
 save: Enregistrer
 loading: Chargement
+no_data: Pas de données
 delete: Supprimer
 hi: Salut
 all: Tous
@@ -58,7 +59,9 @@ dumbbell: haltères
 cable: poulie
 smith: barre guidée
 machine: machine
-set: Série
+set: 
+  label: Série
+  delete: Supprimer la dernière série
 symmetry:
   label: Symétrie
   unilateral: Unilatéral
@@ -75,6 +78,7 @@ unit:
   label: Les poids sont exprimés en
   kg: kilogrammes
   lbs: livres
+objective: Objectif
 athlete:
   label: Athlète
   picture: Photo de profil
@@ -137,6 +141,8 @@ main:
         lbs: Système impérial (livre)
       timer:
         label: Afficher le chronomètre
+      objective:
+        label: Objectifs de performance
   home:
     title: Accueil
   repertory:

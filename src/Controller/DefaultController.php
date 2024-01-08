@@ -10,7 +10,6 @@ use App\Repository\AthleteRepository;
 use App\Repository\MeasurementRepository;
 use App\Repository\Training\ExerciceRepository;
 use App\Repository\Training\SessionRepository;
-use App\Repository\Training\SetRepository;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
@@ -36,7 +35,7 @@ class DefaultController extends AbstractController
     }
 
     #[Route(path:'/', name: 'home')]
-    public function home(AthleteRepository $athleteRepository, SessionRepository $sessionRepository, SetRepository $setRepository, ExerciceRepository $exerciceRepository): Response
+    public function home(Request $request, AthleteRepository $athleteRepository, SessionRepository $sessionRepository, ExerciceRepository $exerciceRepository): Response
     {
         /**
          * @var Athlete $user
@@ -52,8 +51,8 @@ class DefaultController extends AbstractController
                 'equipments' => Exercice::EQUIPMENTS,
             ]);
         }
-        if (isset($_GET["search"])) {
-            $search = $_GET["search"];
+        $search = $request->get('search');
+        if ($search) {
             $results = array();
             if ($search) {
                 if (substr($search, 0, 1) === '@' && $athlete = $athleteRepository->findOneBy(['username' => substr($search, 1)])) {
@@ -156,7 +155,7 @@ class DefaultController extends AbstractController
                         } catch (FileException $e) {
                         }
                     }
-                    elseif (isset($_POST['profile']['_delete_picture']) && $_POST['profile']['_delete_picture']) {
+                    elseif ($request->get('profile')['_delete_picture']) {
                         $athlete->setPicture(null);
                     }
                     $athleteRepository->save($athlete, true);

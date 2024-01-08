@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import { 
     Generator,
     Validator,
+    Calculator,
 } from "./common";
 
 export default class extends Controller {
@@ -54,9 +55,23 @@ export default class extends Controller {
                 }, 500);
             }
         });
+        let objective = $('#objective');
+        if (objective.length) {
+            $(window).on("scroll", function () {
+                if ($(window).scrollTop() + $(window).height() === $(document).height()) {
+                    objective.fadeOut(150);
+                } 
+                else {
+                    objective.fadeIn(200);
+                }
+            });
+            objective.on("click", function() {
+                $(this).fadeOut(150);
+            });
+        }
     }
     add() {
-        $.each($(".add-input-required"), function(index, input) {
+        $.each($(".input-required"), function(index, input) {
             $(input).val($(this).val().replace(",", "."));
         });
         $.ajax({
@@ -84,10 +99,8 @@ export default class extends Controller {
                     });
                 }
                 $("#welcome").attr("hidden", true);
+                Calculator.update.objective();
             },
-            error: function(xhr, status, error) {
-                $("#error").text(error);
-            }
         });
     }
     delete() {
@@ -100,6 +113,7 @@ export default class extends Controller {
                     $("#set-delete").attr("hidden", $("#exercices").children().length ? false: true);
                     $("#welcome").attr("hidden", $("#exercices").children().length ? true: false)
                 });
+                Calculator.update.objective();
             },
         });
     }

@@ -8,6 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SettingsRepository::class)]
 class Settings
 {
+    const KG = 'kg';
+    const LBS = 'lbs';
+    const LBS_TO_KG_MULTIPLIER = 0.45359237;
+    const UNITS = [
+        self::KG,
+        self::LBS,
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -30,6 +38,12 @@ class Settings
 
     #[ORM\Column]
     private ?bool $training = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $offset = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $objective = null;
 
     public function getId(): ?int
     {
@@ -104,6 +118,30 @@ class Settings
     public function setTraining(bool $training): static
     {
         $this->training = $training;
+
+        return $this;
+    }
+
+    public function getOffset(): ?int
+    {
+        return $this->offset;
+    }
+
+    public function setOffset(?int $offset): static
+    {
+        $this->offset = $offset;
+
+        return $this;
+    }
+
+    public function isObjective(): ?bool
+    {
+        return $this->objective;
+    }
+
+    public function setObjective(?bool $objective): static
+    {
+        $this->objective = $objective;
 
         return $this;
     }

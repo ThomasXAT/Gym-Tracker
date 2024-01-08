@@ -3,31 +3,47 @@
 namespace App\Controller;
 
 use App\Entity\Athlete;
+use App\Entity\Settings;
 use App\Repository\SettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/settings', name: 'settings_', methods: ['POST'])]
+#[Route(path: '/settings', name: 'settings_')]
 class SettingsController extends AbstractController
 {
     #[Route(path:'/update', name: 'update')]
-    public function update(SettingsRepository $settingsRepository): Response
+    public function update(Request $request, SettingsRepository $settingsRepository): Response
     {
-        $data = $_POST;
+        /**
+         * @var Athlete $user
+         */
+        $user = $this->getUser();
+        $data = $request->get('settings');
+        $settings = $user->getSettings();
+        $settings
+            ->setMeasurement(isset($data['measurement']))
+            ->setBmi(isset($data['bmi']))
+            ->setTraining(isset($data['training']))
+            ->setUnit(isset($data['unit']) && $data['unit'] === Settings::LBS ? Settings::LBS: Settings::KG)
+            ->setTimer(isset($data['timer']))
+            ->setObjective(isset($data['objective']))
+        ;
+        $settingsRepository->save($settings, true);
+        return $this->json($data);
+    }
+
+    #[Route(path:'/offset', name: 'offset')]
+    public function offset(Request $request, SettingsRepository $settingsRepository): Response
+    {
         /**
          * @var Athlete $user
          */
         $user = $this->getUser();
         $settings = $user->getSettings();
-        $settings
-            ->setMeasurement(isset($data['settings']['measurement']))
-            ->setBmi(isset($data['settings']['bmi']))
-            ->setTraining(isset($data['settings']['training']))
-            ->setUnit(isset($data['settings']['unit']) && $data['settings']['unit'] === 'lbs' ? 'lbs': 'kg')
-            ->setTimer(isset($data['settings']['timer']))
-        ;
+        $settings->setOffset((int) $request->get('seconds'));
         $settingsRepository->save($settings, true);
-        return $this->json($data);
+        return $this->json(true);
     }
 }

@@ -12,20 +12,21 @@ import "./styles/editor.scss";
 // start the Stimulus application
 import "./bootstrap";
 
+// FontAwesome
 require("@fortawesome/fontawesome-free/css/all.min.css");
 require("@fortawesome/fontawesome-free/js/all.js");
 
+// Boostrap
 require("bootstrap");
 
+// Notyf
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
-
 const notyf = new Notyf();
 
 // CKEditor
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "@ckeditor/ckeditor5-build-classic/build/translations/fr";
-
 let editors = document.querySelectorAll(".editor");
 editors.forEach(function(editor) {
     ClassicEditor.create(editor, {
@@ -42,77 +43,92 @@ editors.forEach(function(editor) {
     });
 });
 
+if (document.querySelector('#header.main')) {
+    fetch("/api/athlete")
+        .then(response => response.json())
+        .then(data => {            
+            let athletes = Object.values(data);         
+            let athletes_sorted_by_length = athletes;
+            athletes_sorted_by_length.sort((a, b) => b.username.length - a.username.length);
 
-fetch("/api/athlete")
-    .then(response => response.json())
-    .then(data => {            
-        let athletes = Object.values(data);         
-        let athletes_sorted_by_length = athletes;
-        athletes_sorted_by_length.sort((a, b) => b.username.length - a.username.length);
-
-        // Identifiers
-        let identifiers = document.querySelectorAll(".identifier");
-        if (identifiers.length > 0) { 
-            let string;
-            identifiers.forEach(identifier => {
-                athletes_sorted_by_length.forEach(athlete => {
-                    string = identifier.innerHTML;
-                    identifier.innerHTML = string.replaceAll(
-                        "@" + athlete.username, 
-                        "<a class='text-decoration-none' href='/@~" + athlete.username + "'><span>@</span><span>" + athlete.username + "</span></a>"
-                    );
-                });
-            });
-            identifiers.forEach(identifier => {
-                identifier.innerHTML = identifier.innerHTML.replaceAll("/@~", "/@");
-            });
-        }
-
-        // Inputs
-        let inputs = document.querySelectorAll(".identifier");
-        inputs.forEach(function(input) {
-            input.addEventListener("keyup", function() {
-                let characters = input.value.split('')
-                let position = input.selectionStart;
-                let reversed_at = characters.reverse().indexOf('@', characters.length - position)
-                if (reversed_at !== -1) {
-                    let at = characters.length - reversed_at;
-                    let final_characters = [];
-                    characters.reverse().slice(at).every(function(character) {
-                        if (new RegExp(/[a-zA-Z0-9_]/).test(character)) {
-                            final_characters.push(character);
-                            return true;
-                        }
-                        else {
-                            return false;
-                        }
+            // Identifiers
+            let identifiers = document.querySelectorAll(".identifier");
+            if (identifiers.length > 0) { 
+                let string;
+                identifiers.forEach(identifier => {
+                    athletes_sorted_by_length.forEach(athlete => {
+                        string = identifier.innerHTML;
+                        identifier.innerHTML = string.replaceAll(
+                            "@" + athlete.username, 
+                            "<a class='text-decoration-none' href='/@~" + athlete.username + "'><span>@</span><span>" + athlete.username + "</span></a>"
+                        );
                     });
-                    let distance = position - at;
-                    let size = final_characters.length;
-                    let search = "";
-                    if (distance <= size) {
-                        for (let i = 0; i < distance; i++) {
-                            search += final_characters[i];
-                        }
-                        let results = athletes_sorted_by_length.filter(athlete => athlete.username.startsWith(search));
-                        if (results.length && ((characters[position] === " " || position === characters.length)) && search !== results[0].username) {
-                            const BEFORE = input.value.substring(0, position - distance);
-                            const AFTER = input.value.substring(position);
-                            const VALUE = BEFORE + results[0].username + AFTER;
-                            if (input.id !== "session-title" || VALUE.length <= 64) {
-                                input.value = VALUE;
-                                input.setSelectionRange(position, input.selectionStart - AFTER.length);
+                });
+                identifiers.forEach(identifier => {
+                    identifier.innerHTML = identifier.innerHTML.replaceAll("/@~", "/@");
+                });
+            }
+
+            // Inputs
+            let inputs = document.querySelectorAll(".identifier");
+            inputs.forEach(function(input) {
+                input.addEventListener("keyup", function() {
+                    let characters = input.value.split('')
+                    let position = input.selectionStart;
+                    let reversed_at = characters.reverse().indexOf('@', characters.length - position)
+                    if (reversed_at !== -1) {
+                        let at = characters.length - reversed_at;
+                        let final_characters = [];
+                        characters.reverse().slice(at).every(function(character) {
+                            if (new RegExp(/[a-zA-Z0-9_]/).test(character)) {
+                                final_characters.push(character);
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        });
+                        let distance = position - at;
+                        let size = final_characters.length;
+                        let search = "";
+                        if (distance <= size) {
+                            for (let i = 0; i < distance; i++) {
+                                search += final_characters[i];
+                            }
+                            let results = athletes_sorted_by_length.filter(athlete => athlete.username.startsWith(search));
+                            if (results.length && ((characters[position] === " " || position === characters.length)) && search !== results[0].username) {
+                                const BEFORE = input.value.substring(0, position - distance);
+                                const AFTER = input.value.substring(position);
+                                const VALUE = BEFORE + results[0].username + AFTER;
+                                if (input.id !== "session-title" || VALUE.length <= 64) {
+                                    input.value = VALUE;
+                                    input.setSelectionRange(position, input.selectionStart - AFTER.length);
+                                }
                             }
                         }
                     }
-                }
+                });
             });
-        });
-    })
-    .catch(error => {
-        console.error(error);
-    })
-;
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    ;
+
+    // Client timezone
+    fetch("https://worldtimeapi.org/api/ip")
+        .then(response => response.json())
+        .then(data => {            
+            fetch("/settings/offset?seconds=" + data.raw_offset)
+                .catch(error => {
+                    console.error(error);
+                })
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    ;
+}
 
 import { Modal } from 'bootstrap'
 
@@ -133,6 +149,7 @@ if (document.getElementById("_add")) {
     });
 }
 
+// Magnifying glasses
 let magnifying_glasses = document.querySelectorAll(".magnifying-glass");
 magnifying_glasses.forEach(magnifying_glass => {
     magnifying_glass.addEventListener("click", function() {
@@ -143,7 +160,7 @@ magnifying_glasses.forEach(magnifying_glass => {
     });
 });
 
-let flashes = document.querySelector("#flashes");
+// Flashes
 document.querySelectorAll("#flashes #success input").forEach(function(flash) {
     notyf.success(flash.value);
 });

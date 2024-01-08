@@ -268,7 +268,7 @@ class Session
     {
         $repetitions = 0;
         foreach ($this->getSets() as $set) {
-            $repetitions += $set->getRepetitions() * ($set->getSymmetry() === 'unilateral' ? 2: 1);
+            $repetitions += $set->getRepetitions() * ($set->getSymmetry() === Set::UNILATERAL ? 2: 1);
         }
         return $repetitions;
     }
@@ -277,7 +277,7 @@ class Session
     {
         $weight = 0;
         foreach ($this->getSets() as $set) {
-            $weight += $set->getRepetitions() * ($set->getSymmetry() === 'unilateral' ? 2: 1) * $set->getWeight();
+            $weight += $set->getRepetitions() * ($set->getSymmetry() === Set::UNILATERAL ? 2: 1) * $set->getWeight();
         }
         return $weight;
     }

@@ -6,7 +6,7 @@
             <span hidden id="user-identifier">{{ app.user.id }}</span>
             <span hidden id="user-unit">{{ app.user.settings.unit }}</span>
             <span hidden id="session-identifier">{{ session.id }}</span>
-            <span hidden id="session-date">{{ session.start|date('d/m/Y') }}</span>
+            <span hidden id="session-date">{{ (session.start|date('U') + app.user.settings.offset)|date('d/m/Y') }}</span>
             <span id="draft"></span>
             <div class="row">
 {% if not session.current %}
@@ -38,13 +38,13 @@
                 <section id="session" class="p-2 mx-auto">
                     <section id="session-messages" class="text-center">
                         <div id="loading" class="py-5"><i class="fa-solid fa-syringe"></i> {{ 'loading'|trans }}...</div>
-                        <div id="welcome" class="py-5 fw-bold" hidden>{{ 'main.session.welcome'|trans }}</div>
+                        <div id="welcome" class="py-5" hidden>{{ 'main.session.welcome'|trans }}</div>
                     </section>
                     <section id="session-exercices"></section>
 {% if app.user == session.athlete %}
 {% if session.current %}
                     <div id="set-delete" class="text-end mt-1" hidden>
-                        <a data-action="click->session#delete" class="text-decoration-none pointer-only">Supprimer la dernière série</a>
+                        <a data-action="click->session#delete" class="text-decoration-none pointer-only">{{ 'set.delete'|trans }}</a>
                     </div>
 {% else %}
                     {#<section id="session-delete" class="text-center pt-md-2 mt-3" hidden>
@@ -58,4 +58,12 @@
                 </section>
             </div>
         </section>
+{% if session.current and app.user.settings.objective %}
+        <section id="objective" class="p-2 p-md-3" hidden>
+            <div class="card">
+                <main id="objective-body" class="card-body">
+                </main>
+            </div>
+        </section>
+{% endif %}
 {% endblock %}

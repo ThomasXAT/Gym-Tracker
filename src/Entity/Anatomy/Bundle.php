@@ -19,7 +19,7 @@ class Bundle
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(targetEntity: "Muscle", cascade: ["persist"])]
+    #[ORM\ManyToOne(inversedBy: 'bundles', targetEntity: "Muscle", cascade: ["persist"])]
     private ?Muscle $muscle = null;
 
     #[ORM\ManyToMany(targetEntity: Movement::class, mappedBy: 'Bundles')]
