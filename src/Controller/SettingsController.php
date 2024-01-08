@@ -28,6 +28,7 @@ class SettingsController extends AbstractController
             ->setTraining(isset($data['training']))
             ->setUnit(isset($data['unit']) && $data['unit'] === Settings::LBS ? Settings::LBS: Settings::KG)
             ->setTimer(isset($data['timer']))
+            ->setObjective(isset($data['objective']))
         ;
         $settingsRepository->save($settings, true);
         return $this->json($data);

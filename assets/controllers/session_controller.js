@@ -55,9 +55,23 @@ export default class extends Controller {
                 }, 500);
             }
         });
+        let objective = $('#objective');
+        if (objective.length) {
+            $(window).on("scroll", function () {
+                if ($(window).scrollTop() + $(window).height() === $(document).height()) {
+                    objective.fadeOut(150);
+                } 
+                else {
+                    objective.fadeIn(200);
+                }
+            });
+            objective.on("click", function() {
+                $(this).fadeOut(150);
+            });
+        }
     }
     add() {
-        $.each($(".add-input-required"), function(index, input) {
+        $.each($(".input-required"), function(index, input) {
             $(input).val($(this).val().replace(",", "."));
         });
         $.ajax({

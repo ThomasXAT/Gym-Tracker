@@ -31,9 +31,13 @@
                                 </select>
                                 <label class="form-label required" for="settings_unit">{{ 'main.settings.training.unit.label'|trans }}</label>
                             </section>
-                            <section id="section-timer" class="form-check form-switch">
+                            <section id="section-timer" class="form-check form-switch mb-3">
                                 <input class="form-check-input" name="settings[timer]" type="checkbox" id="settings_timer"{% if app.user.settings.timer %} checked{% endif %}>
                                 <label class="form-check-label" for="settings_timer">{{ 'main.settings.training.timer.label'|trans }}</label>
+                            </section>
+                            <section id="section-objective" class="form-check form-switch">
+                                <input class="form-check-input" name="settings[objective]" type="checkbox" id="settings_objective"{% if app.user.settings.objective %} checked{% endif %}>
+                                <label class="form-check-label" for="settings_objective">{{ 'main.settings.training.objective.label'|trans }}</label>
                             </section>
                         </section>
                     </form>

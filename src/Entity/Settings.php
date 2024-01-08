@@ -42,6 +42,9 @@ class Settings
     #[ORM\Column(nullable: true)]
     private ?int $offset = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $objective = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -127,6 +130,18 @@ class Settings
     public function setOffset(?int $offset): static
     {
         $this->offset = $offset;
+
+        return $this;
+    }
+
+    public function isObjective(): ?bool
+    {
+        return $this->objective;
+    }
+
+    public function setObjective(?bool $objective): static
+    {
+        $this->objective = $objective;
 
         return $this;
     }
