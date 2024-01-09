@@ -51,37 +51,45 @@ class DefaultController extends AbstractController
                 'equipments' => Exercice::EQUIPMENTS,
             ]);
         }
-        $search = $request->get('search');
-        if ($search) {
-            $results = array();
-            if ($search) {
-                if (substr($search, 0, 1) === '@' && $athlete = $athleteRepository->findOneBy(['username' => substr($search, 1)])) {
-                    return $this->redirectToRoute('profile', ['username' => $athlete->getUsername()]);
-                }
-                else {
-                    $results = array_merge(
-                        $results,
-                        $athleteRepository->findByUsername(str_replace('@', '', $search))
-                    );
-                    $results = array_merge(
-                        $results,
-                        $athleteRepository->findByFullname($search)
-                    );
-                    $results = array_merge(
-                        $results,
-                        $athleteRepository->findByDescription($search)
-                    );  
-                    $results = array_unique($results, SORT_REGULAR);
-                }
-            }
-            return $this->render('main/repertory/index.html.twig', [
-                'page' => 'repertory',
-                'search' => $search,
-                'results' => $results,
-            ]);
-        }
         return $this->render('main/home/index.html.twig', [
             'page' => 'home',
+        ]);
+    }
+
+    #[Route(path:'/repertory', name: 'repertory')]
+    public function repertory(Request $request, AthleteRepository $athleteRepository): Response
+    {
+
+        $search = $request->get('search');
+        $results = array();
+        if ($search) {
+            if (substr($search, 0, 1) === '@' && $athlete = $athleteRepository->findOneBy(['username' => substr($search, 1)])) {
+                return $this->redirectToRoute('profile', ['username' => $athlete->getUsername()]);
+            }
+            else {
+                $results = array_merge(
+                    $results,
+                    $athleteRepository->findByUsername(str_replace('@', '', $search))
+                );
+                $results = array_merge(
+                    $results,
+                    $athleteRepository->findByFullname($search)
+                );
+                $results = array_merge(
+                    $results,
+                    $athleteRepository->findByDescription($search)
+                );  
+                $results = array_unique($results, SORT_REGULAR);
+            }
+        }
+        else {
+            $results = $athleteRepository->findAll();
+            shuffle($results);
+        }
+        return $this->render('main/repertory/index.html.twig', [
+            'page' => 'repertory',
+            'search' => $search,
+            'results' => $results,
         ]);
     }
 
