@@ -266,22 +266,18 @@ class SessionController extends AbstractController
                         'name' => $best->getExercice()->getName(),
                         'equipment' => $best->getEquipment(),
                         'symmetry' => $best->getSymmetry(),
-                        'repetitions' =>
-                        $best->getRepetitions() <= 10 ?
-                        $best->getRepetitions() + 2:
-                        $best->getRepetitions() % 10 + 4,
-                        'weight' =>
-                        $best->getRepetitions() <= 10 ?
-                        $best->getWeight():
-                        (
-                            $best->getWeight() <= 30 ?
-                            $best->getWeight() +
-                            (
-                                $best->getSymmetry() === Set::UNILATERAL ?
-                                1:
-                                2
-                            ):
-                            $best->getWeight() * 1.05
+                        'repetitions' => (
+                            $best->getRepetitions() < 12 ?
+                            $best->getRepetitions() + 1:
+                            $best->getRepetitions() % 4 + 8
+                        ),
+                        'weight' => (
+                            $best->getRepetitions() < 12 ?
+                            $best->getWeight():
+                            $best->getWeight()
+                                + (intdiv($best->getRepetitions(), 4) - 2)
+                                * ($best->getSymmetry() === Set::UNILATERAL ? 1: 2)
+                                * (1 + $best->getWeight() / 100)
                         ),
                         'concentric' => $best->getConcentric(),
                         'isometric' => $best->getIsometric(),
