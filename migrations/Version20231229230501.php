@@ -21,7 +21,7 @@ final class Version20231229230501 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE athlete CHANGE roles roles JSON NOT NULL');
-        $this->addSql('ALTER TABLE settings ADD offset INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE settings ADD `offset` INT DEFAULT NULL');
     }
 
     public function down(Schema $schema): void

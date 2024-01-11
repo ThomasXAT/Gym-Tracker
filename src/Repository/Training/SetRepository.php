@@ -4,6 +4,8 @@ namespace App\Repository\Training;
 
 use App\Entity\Training\Exercice;
 use App\Entity\Training\Set;
+use DateInterval;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -45,13 +47,18 @@ class SetRepository extends ServiceEntityRepository
      */
     public function findTheBest(Exercice $exercice, string $equipment, string $symmetry): ?Set
     {
+        $limit = new DateTime();
+        $limit->sub(new DateInterval('P21D'));
         return $this->createQueryBuilder('s')
             ->andWhere('s.exercice = :exercice')
             ->andWhere('s.equipment = :equipment')
             ->andWhere('s.symmetry = :symmetry')
+            ->andWhere('s.date >= :limit')
+            ->andWhere('s.weight <> 0')
             ->setParameter('exercice', $exercice)
             ->setParameter('equipment', $equipment)
             ->setParameter('symmetry', $symmetry)
+            ->setParameter('limit', $limit)
             ->orderBy('s.score', 'DESC')
             ->setMaxResults(1)
             ->getQuery()

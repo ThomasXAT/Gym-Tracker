@@ -233,11 +233,13 @@ class Set
     {
         $this->setScore(
             $this->getRepetitions() ?
-            $this->getWeight() +
-            ($this->getRepetitions() - 1) * ($this->getSymmetry() === Set::UNILATERAL ? 1/4: 1/2) +
-            ($this->getConcentric() - 1) * 1/5 +
-            ($this->getIsometric() - 1) * 1/5 +
-            ($this->getEccentric() - 1) * 1/5:
+            $this->getWeight()
+                / ($this->getSymmetry() === Set::BILATERAL ? 2: 1)
+                + ($this->getRepetitions() - 1) / 4
+                + ($this->getConcentric() - 1) * 1/5
+                + ($this->getIsometric() - 1) * 1/5
+                + ($this->getEccentric() - 1) * 1/5
+            :
             0
         );
 
