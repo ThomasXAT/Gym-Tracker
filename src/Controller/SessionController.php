@@ -247,49 +247,86 @@ class SessionController extends AbstractController
     }
 
     #[Route(path:'/objective', name: 'objective')]
-    public function objective(Request $request, SetRepository $setRepository, ExerciceRepository $exerciceRepository) {
+    public function objective(Request $request, SessionRepository $sessionRepository, SetRepository $setRepository, ExerciceRepository $exerciceRepository) {
         $objective = array();
         if ($exercices = $request->get('exercices')) {
-            foreach ($exercices as $exercice) {
-                $exerciceObject = $exerciceRepository->findOneBy(['id' => $exercice['id']]);
-                if ($last = $setRepository->findOneBy(['exercice' => $exerciceObject, 'dropping' => false], ['date' => 'desc'])) {
-                    /**
-                     * @var ?Set $best
-                     */
-                    $best = $setRepository->findTheBest($exerciceObject, $exercice['equipment'], $last->getSymmetry());
+            /**
+             * @var Athlete $user
+             */
+            $user = $this->getUser();
+            if ($user->isWorkingOut()) {
+                $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
+                if ($sessionExercices = $session->getExercices()) {
+                    $lastExercice = end($sessionExercices);
+                    $lastExerciceIds = $lastExercice['sequence'] ? array(): [$lastExercice['id']];
+                    $currentExerciceIds = array();
+                    if ($lastExercice['sequence']) {
+                        foreach ($lastExercice['exercices'] as $exercice) {
+                            array_push($lastExerciceIds, $exercice['id']);
+                        }
+                    }
+                    foreach ($exercices as $exercice) {
+                        array_push($currentExerciceIds, (int) $exercice['id']);
+                    }
+                    if ($lastExerciceIds === $currentExerciceIds) {
+                        $setIndex = sizeof($lastExercice['sequence'] ? $lastExercice['exercices']['0']['sets']: $lastExercice['sets']) + 1;
+                    }
                 }
-                array_push(
-                    $objective, 
-                    $last && $best ?
-                    [
-                        'objective' => true,
-                        'name' => $best->getExercice()->getName(),
-                        'equipment' => $best->getEquipment(),
-                        'symmetry' => $best->getSymmetry(),
-                        'repetitions' => (
-                            $best->getRepetitions() < 12 ?
-                            $best->getRepetitions() + 1:
-                            $best->getRepetitions() % 4 + 8
-                        ),
-                        'weight' => (
-                            $best->getRepetitions() < 12 ?
-                            $best->getWeight():
-                            $best->getWeight()
-                                + (intdiv($best->getRepetitions(), 4) - 2)
-                                * ($best->getSymmetry() === Set::UNILATERAL ? 1: 2)
-                                * (1 + $best->getWeight() / 100)
-                        ),
-                        'concentric' => $best->getConcentric(),
-                        'isometric' => $best->getIsometric(),
-                        'eccentric' => $best->getEccentric(),
-                    ]:
-                    [
-                        'objective' => false,
-                        'name' => $exerciceObject->getName(),
-                        'equipment' => $exercice['equipment'],
-                    ]
-                );
-            }       
+                if (!isset($setIndex)) {
+                    $setIndex = 1;
+                }
+                foreach ($exercices as $exercice) {
+                    $exerciceObject = $exerciceRepository->findOneBy(['id' => $exercice['id']]);
+                    if ($last = $setRepository->findOneBy(['exercice' => $exerciceObject, 'dropping' => false], ['date' => 'desc'])) {
+                        /**
+                         * @var ?Set $best
+                         */
+                        $best = $setRepository->findTheBest($exerciceObject, $exercice['equipment'], $last->getSymmetry());
+                    }
+                    switch ($setIndex) {
+                        case 1:
+                            $reducer = 0.6;
+                            break;
+                        case 2:
+                            $reducer = 0.8;
+                            break;
+                        default:
+                            $reducer = 1;
+                            break;
+                    }
+                    array_push(
+                        $objective, 
+                        $last && $best ?
+                        [
+                            'objective' => true,
+                            'name' => $best->getExercice()->getName(),
+                            'equipment' => $best->getEquipment(),
+                            'symmetry' => $best->getSymmetry(),
+                            'repetitions' => $reducer === 1 ? (
+                                $best->getRepetitions() < 12 ?
+                                $best->getRepetitions() + 1:
+                                $best->getRepetitions() % 4 + 8
+                            ): 10,
+                            'weight' => (
+                                $best->getRepetitions() < 12 ?
+                                $best->getWeight():
+                                $best->getWeight()
+                                    + (intdiv($best->getRepetitions(), 4) - 2)
+                                    * ($best->getSymmetry() === Set::UNILATERAL ? 1: 2)
+                                    * (1 + $best->getWeight() / 100)
+                            ) * $reducer,
+                            'concentric' => $best->getConcentric(),
+                            'isometric' => $best->getIsometric(),
+                            'eccentric' => $best->getEccentric(),
+                        ]:
+                        [
+                            'objective' => false,
+                            'name' => $exerciceObject->getName(),
+                            'equipment' => $exercice['equipment'],
+                        ]
+                    );
+                }       
+            }
         }
         return $this->json($objective);
     }

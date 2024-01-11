@@ -34,7 +34,7 @@ class MeasurementController extends AbstractController
         ) {
             $measurement = new Measurement();
             $measurement
-                ->setHeight($weight)
+                ->setHeight($height)
                 ->setWeight($weight)
                 ->setAthlete($user)
                 ->setDate(new DateTime())
