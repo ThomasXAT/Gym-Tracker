@@ -77,6 +77,7 @@ class SessionController extends AbstractController
                     ->setEnd($lastSet->getDate())
                 ;
                 $sessionRepository->save($session, true);
+                $this->addFlash('success', 'notifier.session.stop.success');
             }
             else {
                 $sequences = $sequenceRepository->findBy(['session' => $session]);
@@ -84,7 +85,11 @@ class SessionController extends AbstractController
                     $sequenceRepository->remove($sequence, true);
                 }
                 $sessionRepository->remove($session, true);
+                $this->addFlash('error', 'notifier.session.stop.error');
             }
+        }
+        else {
+            $this->addFlash('error', 'notifier.session.stop.error');
         }
         return $this->redirectToRoute('home');
     }
@@ -231,7 +236,8 @@ class SessionController extends AbstractController
     #[Route(path:'/delete/{id}', name: 'delete')]
     public function delete(Session $session, SessionRepository $sessionRepository, SetRepository $setRepository, SequenceRepository $sequenceRepository): Response
     {
-        if ($this->getUser() === $session->getAthlete()) {
+        $athlete = $session->getAthlete();
+        if ($this->getUser() === $athlete) {
             $sets = $session->getSets();
             foreach ($sets as $set) {
                 $setRepository->remove($set, true);
@@ -241,7 +247,13 @@ class SessionController extends AbstractController
                 $sequenceRepository->remove($sequence, true);
             }
             $sessionRepository->remove($session, true);
-            return $this->redirectToRoute('sessions', ['username' => $session->getAthlete()->getUsername()]);
+            $this->addFlash('success', 'notifier.session.delete.success');
+            if ($sessionRepository->findAll(['athlete' => $athlete])) {
+                return $this->redirectToRoute('sessions', ['username' => $athlete->getUsername()]);
+            }
+            else {
+                return $this->redirectToRoute('profile', ['username' => $athlete->getUsername()]);
+            }
         }
         return $this->redirectToRoute('home');
     }
@@ -256,6 +268,7 @@ class SessionController extends AbstractController
             $user = $this->getUser();
             if ($user->isWorkingOut()) {
                 $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
+                $setIndex = 1;
                 if ($sessionExercices = $session->getExercices()) {
                     $lastExercice = end($sessionExercices);
                     $lastExerciceIds = $lastExercice['sequence'] ? array(): [$lastExercice['id']];
@@ -271,9 +284,6 @@ class SessionController extends AbstractController
                     if ($lastExerciceIds === $currentExerciceIds) {
                         $setIndex = sizeof($lastExercice['sequence'] ? $lastExercice['exercices']['0']['sets']: $lastExercice['sets']) + 1;
                     }
-                }
-                if (!isset($setIndex)) {
-                    $setIndex = 1;
                 }
                 foreach ($exercices as $exercice) {
                     $exerciceObject = $exerciceRepository->findOneBy(['id' => $exercice['id']]);

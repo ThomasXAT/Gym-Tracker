@@ -45,6 +45,10 @@ month:
   12: décembre
 app: Gym Tracker
 description: Gym Tracker
+confirm:
+  title: Êtes-vous sûr ? 🥴
+  content: Cette action est irréversible.
+  submit: Confirmer
 return: Retour
 save: Enregistrer
 loading: Chargement
@@ -56,7 +60,7 @@ bodyweight: sans matériel
 band: élastique
 barbell: barre
 dumbbell: haltères
-cable: poulie
+cable: câble
 smith: barre guidée
 machine: machine
 set: 
@@ -292,3 +296,18 @@ notifier:
     delete:
       success: Mesures supprimées
       error: Suppression impossible
+  session:
+    stop:
+      success: Séance enregistrée
+      error: Enregistrement impossible
+    delete:
+      success: Séance supprimée
+      error: Suppression impossible
+  profile:
+    save:
+      success: Profil enregistré
+      error: Enregistrement impossible
+  settings:
+    save:
+      success: Paramètres enregistrés
+      error: Enregistrement impossible

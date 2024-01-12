@@ -163,13 +163,14 @@ class DefaultController extends AbstractController
                         } catch (FileException $e) {
                         }
                     }
-                    elseif ($request->get('profile')['_delete_picture']) {
+                    elseif (isset($request->get('profile')['_delete_picture']) && $request->get('profile')['_delete_picture']) {
                         $athlete->setPicture(null);
                     }
                     $athleteRepository->save($athlete, true);
                     if ($newPassword) {
                         return $this->redirectToRoute('authentication_logout');
                     }
+                    $this->addFlash('success', 'notifier.profile.save.success');
                     return $this->redirectToRoute('profile', ['username' => $athlete->getUsername()]);
                 }
                 else {

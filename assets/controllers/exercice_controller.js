@@ -25,6 +25,11 @@ export default class extends Controller {
             let equipments = $('#section-equipments input[type="checkbox"]:checked').length;
             let submit = $("#exercice-form-submit");
             name && equipments ? submit.prop("disabled", false) : submit.prop("disabled", true);
+            if ($("#minimum-message").hasClass("d-none")) {
+                $("#minimum-message").removeClass("d-none");
+                $("#button-choose-exercice").attr("disabled", true);
+                $("#section-selected-exercices").empty();
+            }
         });
         $("#button-form-exercice").on("click", function() {
             $("#exercice-form-title").text(trans(MAIN_SESSION_EXERCICE_CREATE_TITLE));
