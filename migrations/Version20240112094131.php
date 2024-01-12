@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231229230501 extends AbstractMigration
+final class Version20240112094131 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,14 +20,12 @@ final class Version20231229230501 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE athlete CHANGE roles roles JSON NOT NULL');
-        $this->addSql('ALTER TABLE settings ADD `offset` INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE settings CHANGE `offset` jetlag INT DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE athlete CHANGE roles roles LONGTEXT NOT NULL COLLATE `utf8mb4_bin`');
-        $this->addSql('ALTER TABLE settings DROP `offset`');
+        $this->addSql('ALTER TABLE settings CHANGE jetlag `offset` INT DEFAULT NULL');
     }
 }

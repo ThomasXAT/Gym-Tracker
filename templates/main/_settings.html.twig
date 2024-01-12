@@ -7,7 +7,7 @@
                 </header>
                 <main class="modal-body">
                     <form id="form-settings" name="settings" autocomplete="off">
-                        <label for="section-measurements" class="form-label fw-bold">{{ 'main.settings.measurements.label'|trans }}</label>
+                        <div class="form-label fw-bold">{{ 'main.settings.measurements.label'|trans }}</div>
                         <section id="section-measurements" class="px-2 mb-3">
                             <section id="section-measurements-visibility" class="form-check form-switch mb-3">
                                 <input class="form-check-input" name="settings[measurement]" type="checkbox" id="settings_measurement"{% if app.user.settings.measurement %} checked{% endif %}>
@@ -18,7 +18,7 @@
                                 <label class="form-check-label" for="settings_bmi">{{ 'main.settings.measurements.bmi.label'|trans }}</label>
                             </section>
                         </section>
-                        <label for="section-training" class="form-label fw-bold">{{ 'main.settings.training.label'|trans }}</label>
+                        <div class="form-label fw-bold">{{ 'main.settings.training.label'|trans }}</div>
                         <section id="section-training" class="px-2">
                             <section id="section-sessions-visibility" class="form-check form-switch mb-3">
                                 <input class="form-check-input" name="settings[training]" type="checkbox" id="settings_training"{% if app.user.settings.training %} checked{% endif %}>

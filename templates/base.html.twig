@@ -1,6 +1,6 @@
 {% if app.user %}
 {% set section = 'main' %}
-{% set date = 'now'|date('U') + app.user.settings.offset %}
+{% set date = 'now'|date('U') + app.user.settings.jetlag %}
 {% else %}
 {% set section = 'authentication' %}
 {% endif %}
@@ -21,7 +21,7 @@
 </head>
 <body>
     <h1 hidden>{{ 'app'|trans }}</h1>
-    <input id="offset" type="hidden">
+    <input id="jetlag" type="hidden">
     <div id="flashes" hidden>
         <div id="success">
 {% for flash in app.flashes('success') %}

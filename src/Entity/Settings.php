@@ -40,7 +40,7 @@ class Settings
     private ?bool $training = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $offset = null;
+    private ?int $jetlag = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $objective = null;
@@ -122,14 +122,14 @@ class Settings
         return $this;
     }
 
-    public function getOffset(): ?int
+    public function getJetlag(): ?int
     {
-        return $this->offset;
+        return $this->jetlag;
     }
 
-    public function setOffset(?int $offset): static
+    public function setJetlag(?int $jetlag): static
     {
-        $this->offset = $offset;
+        $this->jetlag = $jetlag;
 
         return $this;
     }

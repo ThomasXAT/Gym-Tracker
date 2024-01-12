@@ -121,7 +121,7 @@ if (document.querySelector('#header.main')) {
         .then(data => {
             const params = new FormData();
             params.append('seconds', data.raw_offset);
-            fetch("/settings/offset", {
+            fetch("/settings/jetlag", {
                 method: "POST",
                 body: params,
             })

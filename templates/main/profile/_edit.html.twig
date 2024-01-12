@@ -7,7 +7,7 @@
                         </header>
                         <main class="modal-body">
                             {{ form_start(form) }}
-                                <label for="section-picture" class="form-label fw-bold">{{ 'athlete.picture'|trans }}</label>
+                                <div class="form-label fw-bold">{{ 'athlete.picture'|trans }}</div>
                                 <section id="section-picture" class="row mb-3">
                                     <div class="col-4 pe-1">
                                         <section id="section-view">
@@ -25,7 +25,7 @@
                                     </div>
                                 </section> 
                                 {{ form_widget(form._delete_picture) }}
-                                <label for="section-identity" class="form-label fw-bold">{{ 'main.profile.edit.identity.label'|trans }}</label>
+                                <div class="form-label fw-bold">{{ 'main.profile.edit.identity.label'|trans }}</div>
                                 <section id="section-identity" class="mx-auto">
                                     <section id="section-fullname" class="mb-3">
                                         <div class="d-flex">
@@ -56,7 +56,7 @@
                                         <p id="help-confirmation" class="form-text text-danger"></p>
                                     </section>
                                 </section>
-                                <label for="section-description" class="form-label fw-bold">{{ 'main.profile.edit.description.label'|trans }}</label>
+                                <div class="form-label fw-bold">{{ 'main.profile.edit.description.label'|trans }}</div>
                                 <section id="section-description" class="form-group mb-2">
                                     {{ form_widget(form.description) }}
                                 </section>

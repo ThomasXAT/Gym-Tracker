@@ -29,6 +29,8 @@ export default class extends Controller {
         $("#button-form-exercice").on("click", function() {
             $("#exercice-form-title").text(trans(MAIN_SESSION_EXERCICE_CREATE_TITLE));
             $("#exercice-form-submit").text(trans(MAIN_SESSION_EXERCICE_CREATE_SUBMIT)).attr("data-action", "click->exercice#create");
+            $("#exercice_name").val($("#exercice-search").val());
+            Validator.verify.name($("#exercice_name"), true);
         });
     }
     select() {
