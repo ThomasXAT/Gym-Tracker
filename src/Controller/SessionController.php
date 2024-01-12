@@ -283,43 +283,45 @@ class SessionController extends AbstractController
                          */
                         $best = $setRepository->findTheBest($exerciceObject, $exercice['equipment'], $last->getSymmetry());
                     }
-                    $symmetry = $best->getSymmetry();
-                    $repetitions = (
-                        $best->getRepetitions() < 12 ?
-                        $best->getRepetitions() + 1:
-                        $best->getRepetitions() % 4 + 8
-                    );
-                    $weight = (
-                        $best->getRepetitions() < 12 ?
-                        $best->getWeight():
-                        $best->getWeight()
-                            + (intdiv($best->getRepetitions(), 4) - 2)
-                            * ($best->getSymmetry() === Set::UNILATERAL ? 1: 2)
-                            * (1 + $best->getWeight() / 100)
-                    );
-                    $concentric = $best->getConcentric();
-                    $isometric = $best->getIsometric();
-                    $eccentric = $best->getEccentric();
-                    switch ($setIndex) {
-                        case 1:
-                            $reducer = 0.6;
-                            break;
-                        case 2:
-                            $currentSet = new Set();
-                            $currentSet
-                                ->setSymmetry($symmetry)
-                                ->setRepetitions(10)
-                                ->setWeight($weight * 0.8)
-                                ->setConcentric($concentric)
-                                ->setIsometric($isometric)
-                                ->setEccentric($eccentric)
-                                ->updateScore()
-                            ;
-                            $reducer = $currentSet->getScore() > $session->getSets()->last()->getScore() ? 0.8: 1;
-                            break;
-                        default:
-                            $reducer = 1;
-                            break;
+                    if ($last && $best) {
+                        $symmetry = $best->getSymmetry();
+                        $repetitions = (
+                            $best->getRepetitions() < 12 ?
+                            $best->getRepetitions() + 1:
+                            $best->getRepetitions() % 4 + 8
+                        );
+                        $weight = (
+                            $best->getRepetitions() < 12 ?
+                            $best->getWeight():
+                            $best->getWeight()
+                                + (intdiv($best->getRepetitions(), 4) - 2)
+                                * ($best->getSymmetry() === Set::UNILATERAL ? 1: 2)
+                                * (1 + $best->getWeight() / 100)
+                        );
+                        $concentric = $best->getConcentric();
+                        $isometric = $best->getIsometric();
+                        $eccentric = $best->getEccentric();
+                        switch ($setIndex) {
+                            case 1:
+                                $reducer = 0.6;
+                                break;
+                            case 2:
+                                $currentSet = new Set();
+                                $currentSet
+                                    ->setSymmetry($symmetry)
+                                    ->setRepetitions(10)
+                                    ->setWeight($weight * 0.8)
+                                    ->setConcentric($concentric)
+                                    ->setIsometric($isometric)
+                                    ->setEccentric($eccentric)
+                                    ->updateScore()
+                                ;
+                                $reducer = $currentSet->getScore() > $session->getSets()->last()->getScore() ? 0.8: 1;
+                                break;
+                            default:
+                                $reducer = 1;
+                                break;
+                        }
                     }
                     array_push(
                         $objective, 

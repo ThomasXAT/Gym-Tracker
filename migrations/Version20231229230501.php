@@ -28,6 +28,6 @@ final class Version20231229230501 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE athlete CHANGE roles roles LONGTEXT NOT NULL COLLATE `utf8mb4_bin`');
-        $this->addSql('ALTER TABLE settings DROP offset');
+        $this->addSql('ALTER TABLE settings DROP `offset`');
     }
 }
