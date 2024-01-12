@@ -3,7 +3,7 @@
                         <div id="session-{{ session.id }}" class="accordion-item border{% if loop.index != sessions|length %} mb-2{% endif %}">
                             <div class="session-title border-bottom d-flex">
                                 <div class="p-2 border-end">
-                                    <span>{{ (session.start|date('U') + app.user.settings.offset)|date('d/m/Y') }}</span>
+                                    <span>{{ (session.start|date('U') + app.user.settings.jetlag)|date('d/m/Y') }}</span>
                                 </div>
                                 <div class="p-2 w-100 text-truncate">
                                     <span>{{ session.subtitle }}</span>

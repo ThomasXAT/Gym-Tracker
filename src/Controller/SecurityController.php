@@ -66,7 +66,7 @@ class SecurityController extends AbstractController
                  */
                 $settings = new Settings();
                 $settings
-                    ->setOffset(0)
+                    ->setJetlag(0)
                     ->setMeasurement(false)
                     ->setBmi(true)
                     ->setTraining(true)

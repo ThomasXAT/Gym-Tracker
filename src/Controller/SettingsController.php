@@ -34,15 +34,15 @@ class SettingsController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route(path:'/offset', name: 'offset')]
-    public function offset(Request $request, SettingsRepository $settingsRepository): Response
+    #[Route(path:'/jetlag', name: 'jetlag')]
+    public function jetlag(Request $request, SettingsRepository $settingsRepository): Response
     {
         /**
          * @var Athlete $user
          */
         $user = $this->getUser();
         $settings = $user->getSettings();
-        $settings->setOffset((int) $request->get('seconds'));
+        $settings->setJetlag((int) $request->get('seconds'));
         $settingsRepository->save($settings, true);
         return $this->json(true);
     }
