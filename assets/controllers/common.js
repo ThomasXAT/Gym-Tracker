@@ -1213,10 +1213,14 @@ export let Timer = {
             let current = Date.now();
             let difference = current - start;
             let seconds = Math.floor(difference / 1000);
+            let days = Math.floor(seconds / (86400));
+            seconds = seconds % 86400;
             let hours = Math.floor(seconds / 3600);
             seconds = seconds % 3600;
             let minutes = Math.floor(seconds / 60);
             seconds = seconds % 60;
+            $("#" + timer_id + "-separator").text(days ? ":": "");
+            $("#" + timer_id + "-days").text(days ? days: "");
             $("#" + timer_id + "-hours").text(hours < 10 ? "0" + hours: hours);
             $("#" + timer_id + "-minutes").text(minutes < 10 ? "0" + minutes: minutes);
             $("#" + timer_id + "-seconds").text(seconds < 10 ? "0" + seconds: seconds);
@@ -1227,10 +1231,16 @@ export let Timer = {
 export let Notifier = {
     send: {
         success: function(text) {
-            notyf.success(text);
+            notyf.success({ 
+                message: text,
+                dismissible: true,
+            });
         },
         error: function(text) {
-            notyf.error(text);
+            notyf.error({ 
+                message: text,
+                dismissible: true,
+            });
         },
     }
 }

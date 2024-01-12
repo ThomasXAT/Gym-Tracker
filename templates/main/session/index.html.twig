@@ -47,9 +47,9 @@
                         <a data-action="click->session#delete" class="text-decoration-none pointer-only">{{ 'set.delete'|trans }}</a>
                     </div>
 {% else %}
-                    {#<section id="session-delete" class="text-center pt-md-2 mt-3" hidden>
-                        <a href="{{ path('session_delete', { 'id': session.id }) }}"><button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i> {{ 'main.session.delete'|trans }}</button></a>
-                    </section>#}
+                    <section id="session-delete" class="text-center pt-md-2 mt-3" hidden>
+                        <button class="btn btn-outline-danger" data-bs-toggle="popover" data-bs-content="<aside class='text-center'><article class='mb-3'><div class='fs-6 text-white fw-bold'>{{ 'confirm.title'|trans }}</div><div>{{ 'confirm.content'|trans }}</div></article><form method='post' action='{{ path('session_delete', { 'id': session.id }) }}'><input type='submit' class='btn btn-success btn-sm' value='{{ 'confirm.submit'|trans }}'></form></aside>"><i class="fa-solid fa-trash"></i> {{ 'main.session.delete'|trans }}</button>
+                    </section>
 {% endif %}
 {% endif %}
 {% if session.current %}

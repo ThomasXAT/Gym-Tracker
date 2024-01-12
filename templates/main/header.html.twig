@@ -22,12 +22,14 @@
 {% if app.user.workingOut and app.user.settings.timer %}
                 {# Timer #}<section>
 {% set seconds = 'now'|date('U') - session.start|date('U') %}
+{% set days = (seconds / 86400)|round(0, 'floor') %}
+{% set seconds = seconds % 86400 %}
 {% set hours = (seconds / 3600)|round(0, 'floor') %}
 {% set seconds = seconds % 3600 %}
 {% set minutes = (seconds / 60)|round(0, 'floor') %}
 {% set seconds = seconds % 60 %}
                     <div id="session-timer" class="text-white">
-                        <span id="session-timer-hours">{{ hours|date('s') }}</span><span class="text-body">:</span><span id="session-timer-minutes">{{ minutes|date('s') }}</span><span class="text-body">:</span><span id="session-timer-seconds">{{ seconds|date('s') }}</span>
+                        <span id="session-timer-days">{{ days ? days: '' }}</span><span id="session-timer-separator" class="text-body">{{ days ? ':': '' }}</span><span id="session-timer-hours">{{ hours|date('s') }}</span><span class="text-body">:</span><span id="session-timer-minutes">{{ minutes|date('s') }}</span><span class="text-body">:</span><span id="session-timer-seconds">{{ seconds|date('s') }}</span>
                     </div>
                 </section>
 {% endif %}
@@ -35,9 +37,8 @@
 {% if app.user.workingOut %}
                     <div class="d-flex">
                         <button class="button-new-set d-none d-md-block btn btn-success text-nowrap me-2"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button>
-                        <form method="post" action="{{ path('session_stop') }}" autocomplete="off">
-                            <button id="session-stop" type="submit" class="btn btn-danger text-nowrap">{{ 'main.session.stop'|trans }}</button>
-                        </form>
+                        <button id="session-stop" class="btn btn-danger" data-bs-toggle="popover" data-bs-content="<aside class='text-center'><article class='mb-3'><div class='fs-6 text-white fw-bold'>{{ 'confirm.title'|trans }}</div><div>{{ 'confirm.content'|trans }}</div></article><form method='post' action='{{ path('session_stop') }}'><input type='submit' class='btn btn-success btn-sm' value='{{ 'confirm.submit'|trans }}'></form></aside>">{{ 'main.session.stop'|trans }}</button>
+
                     </div>
 {% else %}
                     <button class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#_new_session">{{ 'main.session.new'|trans }}</button>

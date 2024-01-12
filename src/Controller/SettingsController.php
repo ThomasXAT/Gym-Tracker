@@ -31,6 +31,7 @@ class SettingsController extends AbstractController
             ->setObjective(isset($data['objective']))
         ;
         $settingsRepository->save($settings, true);
+        $this->addFlash('success', 'notifier.settings.save.success');
         return $this->json($data);
     }
 

@@ -137,7 +137,6 @@ if (document.querySelector('#header.main')) {
 }
 
 import { Modal } from 'bootstrap'
-
 if (document.getElementById("_add")) {
     let buttons_new_set = document.querySelectorAll(".button-new-set");
     let modal_add = new Modal(document.getElementById("_add"));
@@ -168,8 +167,25 @@ magnifying_glasses.forEach(magnifying_glass => {
 
 // Flashes
 document.querySelectorAll("#flashes #success input").forEach(function(flash) {
-    notyf.success(flash.value);
+    notyf.success({
+        message: flash.value,
+        dismissible: true,
+    });
 });
 document.querySelectorAll("#flashes #error input").forEach(function(flash) {
-    notyf.error(flash.value);
+    notyf.error({
+        message: flash.value,
+        dismissible: true,
+    });
 });
+
+// Popovers
+import { Popover } from 'bootstrap'
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+const popoverList = [...popoverTriggerList].map(
+    popoverTriggerEl => new Popover(popoverTriggerEl, {
+        sanitize: false,
+        html: true,
+        trigger: "focus"
+    })
+);

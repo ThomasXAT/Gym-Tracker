@@ -25,12 +25,14 @@
     <div id="flashes" hidden>
         <div id="success">
 {% for flash in app.flashes('success') %}
-            <input value="{{ flash }}">
+tt
+
+            <input value="{{ flash|trans }}">
 {% endfor %}
         </div>
         <div id="error">     
 {% for flash in app.flashes('error') %}
-            <input value="{{ flash }}">
+            <input value="{{ flash|trans }}">
 {% endfor %}
         </div>
     </div>
