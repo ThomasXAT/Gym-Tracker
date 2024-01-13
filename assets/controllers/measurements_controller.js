@@ -20,6 +20,7 @@ export default class extends Controller {
                             $("#measurement-" + measurement_id).remove();
                         }
                         else {
+                            localStorage.setItem("flashes", JSON.stringify([{type: "success", message: trans(NOTIFIER_MEASUREMENT_DELETE_SUCCESS)}]));
                             window.location.href = "/@" + $("#athlete-username").text();
                         }
                     },

@@ -166,6 +166,28 @@ magnifying_glasses.forEach(magnifying_glass => {
 });
 
 // Flashes
+let flashes = JSON.parse(localStorage.getItem("flashes"));
+if (flashes) {
+    flashes.forEach(function(flash) {
+        switch (flash.type) {
+            case "success":
+                notyf.success({
+                    message: flash.message,
+                    dismissible: true,
+                });
+                break;
+            case "error":
+                notyf.error({
+                    message: flash.message,
+                    dismissible: true,
+                });
+                break;
+            default:
+                break;
+        }
+    });
+}
+localStorage.removeItem("flashes");
 document.querySelectorAll("#flashes #success input").forEach(function(flash) {
     notyf.success({
         message: flash.value,
