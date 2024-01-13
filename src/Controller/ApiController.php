@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Training\Set;
 use App\Repository\AthleteRepository;
 use App\Repository\Training\ExerciceRepository;
 use App\Repository\Training\SessionRepository;
@@ -94,15 +95,17 @@ class ApiController extends AbstractController
     }
 
     #[Route(path:'/exercice', name: 'exercice')]
-    public function exercice(ExerciceRepository $exerciceRepository) {
+    public function exercice(ExerciceRepository $exerciceRepository, SetRepository $setRepository) {
         $exercices = $exerciceRepository->findBy($_GET);
         $result = array();
         for ($i = 0; $i < sizeof($exercices); $i++) {
+            $lastSet = $setRepository->findOneBy(['exercice' => $exercices[$i], 'dropping' => false], ['date' => 'desc']);
             $id = $exercices[$i]->getId();
             $result[$id]['id'] = $exercices[$i]->getId();
             $result[$id]['name'] = $exercices[$i]->getName();
             $result[$id]['equipments'] = $exercices[$i]->getEquipments();
             $result[$id]['athlete'] = $exercices[$i]->getAthlete()->getId();
+            $result[$id]['symmetry'] = $lastSet ? $lastSet->getSymmetry(): Set::BILATERAL;
         }
         return $this->json($result);
     }
