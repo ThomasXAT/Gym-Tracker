@@ -37,7 +37,7 @@
 {% if app.user.workingOut %}
                     <div class="d-flex">
                         <button class="button-new-set d-none d-md-block btn btn-success text-nowrap me-2"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button>
-                        <button id="session-stop" class="btn btn-danger" data-bs-toggle="popover" data-bs-content="<aside class='text-center'><article class='mb-3'><div class='fs-6 text-white fw-bold'>{{ 'confirm.title'|trans }}</div><div>{{ 'confirm.content'|trans }}</div></article><form method='post' action='{{ path('session_stop') }}'><input type='submit' class='btn btn-success btn-sm' value='{{ 'confirm.submit'|trans }}'></form></aside>">{{ 'main.session.stop'|trans }}</button>
+                        <a tabindex="0" id="session-stop" class="btn btn-danger" role="button" data-bs-toggle="popover" data-bs-content="<aside class='text-center'><article class='mb-3'><div class='fs-6 text-white fw-bold'>{{ 'confirm.title'|trans }}</div><div>{{ 'confirm.content'|trans }}</div></article><form method='post' action='{{ path('session_stop') }}'><input type='submit' class='btn btn-success btn-sm' value='{{ 'confirm.submit'|trans }}'></form></aside>">{{ 'main.session.stop'|trans }}</a>
 
                     </div>
 {% else %}

@@ -220,18 +220,6 @@ class SessionController extends AbstractController
         }
         return $this->json(isset($setIndex) && $setIndex === 1 ? ['exercice-' . $exerciceIndex]: $result);
     }
-    
-    #[Route(path:'/exercice/search', name: 'exercice_search')]
-    public function exercice_search(Request $request, ExerciceRepository $exerciceRepository): Response
-    {
-        $search = $request->get('search');
-        $equipment = $request->get('equipment');
-        $result = array();
-        foreach ($exerciceRepository->findBySearch($this->getUser(), $search, $equipment) as $exercice) {
-            $result[$exercice->getId()] = ['id' => $exercice->getId(), 'name' => $exercice->getName(), 'equipments' => $exercice->getEquipments()];
-        }
-        return $this->json($result);
-    }
 
     #[Route(path:'/delete/{id}', name: 'delete')]
     public function delete(Session $session, SessionRepository $sessionRepository, SetRepository $setRepository, SequenceRepository $sequenceRepository): Response
@@ -261,7 +249,7 @@ class SessionController extends AbstractController
     #[Route(path:'/objective', name: 'objective')]
     public function objective(Request $request, SessionRepository $sessionRepository, SetRepository $setRepository, ExerciceRepository $exerciceRepository) {
         $objective = array();
-        if ($exercices = $request->get('exercices')) {
+        if ($exercices = $request->get('sets')) {
             /**
              * @var Athlete $user
              */
@@ -279,80 +267,88 @@ class SessionController extends AbstractController
                         }
                     }
                     foreach ($exercices as $exercice) {
-                        array_push($currentExerciceIds, (int)$exercice['id']);
+                        if ($exercice['dropping'] !== 'true') {
+                            array_push($currentExerciceIds, (int)$exercice['exercice']);
+                        }
                     }
                     if ($lastExerciceIds === $currentExerciceIds) {
                         $setIndex = sizeof($lastExercice['sequence'] ? $lastExercice['exercices']['0']['sets']: $lastExercice['sets']) + 1;
                     }
                 }
                 foreach ($exercices as $exercice) {
-                    $exerciceObject = $exerciceRepository->findOneBy(['id' => $exercice['id']]);
-                    if ($last = $setRepository->findOneBy(['exercice' => $exerciceObject, 'dropping' => false], ['date' => 'desc'])) {
-                        /**
-                         * @var ?Set $best
-                         */
-                        $best = $setRepository->findTheBest($exerciceObject, $exercice['equipment'], $last->getSymmetry());
-                    }
-                    if ($last && $best) {
-                        $symmetry = $best->getSymmetry();
-                        $repetitions = (
-                            $best->getRepetitions() < 12 ?
-                            $best->getRepetitions() + 1:
-                            $best->getRepetitions() % 4 + 8
-                        );
-                        $weight = (
-                            $best->getRepetitions() < 12 ?
-                            $best->getWeight():
-                            $best->getWeight()
-                                + (intdiv($best->getRepetitions(), 4) - 2)
-                                * ($best->getSymmetry() === Set::UNILATERAL ? 1: 2)
-                                * (1 + $best->getWeight() / 100)
-                        );
-                        $concentric = $best->getConcentric();
-                        $isometric = $best->getIsometric();
-                        $eccentric = $best->getEccentric();
-                        switch ($setIndex) {
-                            case 1:
-                                $reducer = 0.6;
-                                break;
-                            case 2:
-                                $currentSet = new Set();
-                                $currentSet
-                                    ->setSymmetry($symmetry)
-                                    ->setRepetitions(10)
-                                    ->setWeight($weight * 0.8)
-                                    ->setConcentric($concentric)
-                                    ->setIsometric($isometric)
-                                    ->setEccentric($eccentric)
-                                    ->updateScore()
-                                ;
-                                $reducer = $currentSet->getScore() > $session->getSets()->last()->getScore() ? 0.8: 1;
-                                break;
-                            default:
-                                $reducer = 1;
-                                break;
+                    if ($exercice['dropping'] !== 'true') {
+                        $exerciceObject = $exerciceRepository->findOneBy(['id' => $exercice['exercice']]);
+                        $equipment = $exercice['equipment'];
+                        $symmetry = $exercice['symmetry'];
+                        if ($last = $setRepository->findOneBy(['exercice' => $exerciceObject, 'dropping' => false], ['date' => 'desc'])) {
+                            /**
+                             * @var ?Set $best
+                             */
+                            $best = $setRepository->findTheBest($exerciceObject, $equipment, $symmetry);
                         }
+                        if ($last && $best) {
+                            $repetitions = (
+                                $best->getRepetitions() < 12 ?
+                                $best->getRepetitions() + 1:
+                                $best->getRepetitions() % 4 + 8
+                            );
+                            $weight = (
+                                $best->getRepetitions() < 12 ?
+                                $best->getWeight():
+                                $best->getWeight()
+                                    + (intdiv($best->getRepetitions(), 4) - 2)
+                                    * ($best->getSymmetry() === Set::UNILATERAL ? 1: 2)
+                                    * (1 + $best->getWeight() / 100)
+                            );
+                            if ($best->getRepetitions() >= 12 && $symmetry === Set::BILATERAL) {
+                                $weight += round($weight) % 2;
+                            }
+                            $concentric = $best->getConcentric();
+                            $isometric = $best->getIsometric();
+                            $eccentric = $best->getEccentric();
+                            switch ($setIndex) {
+                                case 1:
+                                    $reducer = 0.6;
+                                    break;
+                                case 2:
+                                    $currentSet = new Set();
+                                    $currentSet
+                                        ->setSymmetry($symmetry)
+                                        ->setRepetitions(10)
+                                        ->setWeight($weight * 0.8)
+                                        ->setConcentric($concentric)
+                                        ->setIsometric($isometric)
+                                        ->setEccentric($eccentric)
+                                        ->updateScore()
+                                    ;
+                                    $reducer = $currentSet->getScore() > $session->getSets()->last()->getScore() ? 0.8: 1;
+                                    break;
+                                default:
+                                    $reducer = 1;
+                                    break;
+                            }
+                        }
+                        array_push(
+                            $objective, 
+                            $last && $best ?
+                            [
+                                'objective' => true,
+                                'name' => $best->getExercice()->getName(),
+                                'equipment' => $best->getEquipment(),
+                                'symmetry' => $symmetry,
+                                'repetitions' => $reducer === 1 ? $repetitions: 10,
+                                'weight' => $weight * $reducer,
+                                'concentric' => $concentric,
+                                'isometric' => $isometric,
+                                'eccentric' => $eccentric,
+                            ]:
+                            [
+                                'objective' => false,
+                                'name' => $exerciceObject->getName(),
+                                'equipment' => $exercice['equipment'],
+                            ]
+                        );
                     }
-                    array_push(
-                        $objective, 
-                        $last && $best ?
-                        [
-                            'objective' => true,
-                            'name' => $best->getExercice()->getName(),
-                            'equipment' => $best->getEquipment(),
-                            'symmetry' => $symmetry,
-                            'repetitions' => $reducer === 1 ? $repetitions: 10,
-                            'weight' => $weight * $reducer,
-                            'concentric' => $concentric,
-                            'isometric' => $isometric,
-                            'eccentric' => $eccentric,
-                        ]:
-                        [
-                            'objective' => false,
-                            'name' => $exerciceObject->getName(),
-                            'equipment' => $exercice['equipment'],
-                        ]
-                    );
                 }       
             }
         }

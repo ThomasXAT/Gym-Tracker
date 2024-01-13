@@ -867,6 +867,7 @@ export let Generator = {
                 ;
                 $.each($("#section-selected-exercices").children(), function(index, exercice) {
                     let new_set_id = "_add-set-" + index;
+                    let symmetry_id = exercice.id + "-symmetry";
                     $("#_add-form")
                         .append($("<article></article>")
                             .addClass(index === $("#section-selected-exercices").children().length - 1 ? "": "mb-2")
@@ -896,7 +897,7 @@ export let Generator = {
                                     .text("+ " + trans(DROPSET_ADD))
                                     .addClass("add-drop-set text-decoration-none pointer-only")
                                     .on("click", function() {
-                                        Generator.render.form_set_part(new_set_id, Date.now(), true, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
+                                        Generator.render.form_set_part(new_set_id, Date.now(), symmetry_id, true, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
                                         $("#" + new_set_id + "-drop-delete").attr("hidden", false);
                                     })
                                 )
@@ -918,12 +919,11 @@ export let Generator = {
                             )
                         )
                     ;
-                    Generator.render.form_set_part(new_set_id, Date.now(), false, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
+                    Generator.render.form_set_part(new_set_id, Date.now(), symmetry_id, false, $("#" + exercice.id + "-id").text(), $("#" + exercice.id + "-equipment").val());
                 });
             }
         },
-        form_set_part: function(prefix, set_part_id, is_dropping = false
-            , exercice_id = null, equipment = null) {
+        form_set_part: function(prefix, set_part_id, symmetry_id, is_dropping = false, exercice_id = null, equipment = null) {
             let form_set_part_id = "_add-" + set_part_id;
             $("#" + prefix + "-parts")
                 .append($("<div></div>")
@@ -945,7 +945,13 @@ export let Generator = {
                                     .val("bilateral")
                                     .text(trans(SYMMETRY_BILATERAL))
                                 )
-                                .val($("#" + set_part_id + "-symmetry").text() === Translator.translate.equipment("unilateral") ? "unilateral": "bilateral")
+                                .val($("#" + symmetry_id).text())
+                                .on("change", function() {
+                                    if (!is_dropping) {
+                                        Calculator.update.objective();
+                                        $("#" + symmetry_id).text($(this).val());
+                                    };
+                                })
                             )
                         )
                         .append($("<div></div>")
@@ -1091,7 +1097,7 @@ export let Generator = {
         search_output: function(search = null, equipment = null) {
             $.ajax({
                 type: "POST",
-                url: "/session/exercice/search",
+                url: "/exercice/search",
                 data: {
                     search: search,
                     equipment: equipment,
@@ -1114,7 +1120,7 @@ export let Generator = {
                                     .text(exercice.name)
                                     .on("click", function() {
                                         let equipment = $("#exercice-equipment").val() !== "" ? $("#exercice-equipment").val(): null;
-                                        Selector.select.exercice(exercice, equipment);
+                                        Selector.select.exercice(exercice, equipment, exercice.symmetry);
                                     })
                                 )
                                 .append($("<td></td>")
@@ -1189,6 +1195,11 @@ export let Selector = {
                         .text(exercice.id)
                         .attr("hidden", true)
                     )
+                    .append($("<div></div>")
+                        .attr("id", "selected-" + uniqueId + "-symmetry")
+                        .text(exercice.symmetry)
+                        .attr("hidden", true)
+                    )
                 )
             ;
             $.each(exercice.equipments, function(index, value) {
@@ -1249,19 +1260,10 @@ export let Calculator = {
     update: {
         objective: function() {
             if ($("#objective").length) {
-                let exercices = [];
-                $.each($("#section-selected-exercices").children(), function(index, exercice) {
-                    let exercice_id = $(exercice).attr("id");
-                    exercices[index] = {};
-                    exercices[index]['id'] = $("#" + exercice_id + "-id").text();
-                    exercices[index]['equipment'] = $("#" + exercice_id + "-equipment").val();
-                });
                 $.ajax({
                     type: "POST",
                     url: "/session/objective",
-                    data: {
-                        exercices: exercices,
-                    },
+                    data: $("#_add-form").serialize(),
                     success: function(response) {
                         $("#objective").attr("hidden", false);
                         $("#objective-body").empty();

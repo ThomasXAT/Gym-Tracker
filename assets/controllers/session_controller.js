@@ -80,7 +80,6 @@ export default class extends Controller {
             data: $("#_add-form").serialize(),
             success: (response) => {
                 $("#set-delete").attr("hidden", false)
-                Generator.render.add_form();
                 let exercice_index = 0;
                 if ($("#exercices").children().length > 0) {
                     exercice_index = parseInt($("#exercices").children().last().attr("id").replace("exercice-", ""));
@@ -100,6 +99,7 @@ export default class extends Controller {
                 }
                 $("#welcome").attr("hidden", true);
                 Calculator.update.objective();
+                Generator.render.add_form();
             },
         });
     }
