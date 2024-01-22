@@ -43,7 +43,7 @@
                     <section id="session-exercices"></section>
 {% if app.user == session.athlete %}
 {% if session.current %}
-                    <div id="set-delete" class="text-end mt-1" hidden>
+                    <div id="set-delete" class="text-end mt-2" hidden>
                         <a data-action="click->session#delete" class="text-decoration-none pointer-only">{{ 'set.delete'|trans }}</a>
                     </div>
 {% else %}
@@ -59,7 +59,7 @@
             </div>
         </section>
 {% if session.current and app.user.settings.objective %}
-        <section id="objective" class="p-2 p-md-3" hidden>
+        <section id="objective" class="p-2 p-md-3">
             <div class="card">
                 <main id="objective-body" class="card-body">
                 </main>

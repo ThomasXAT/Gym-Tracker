@@ -128,13 +128,13 @@ authentication:
 main:  
   settings:
     button: Paramètres
-    title: Paramètres
+    title: Édition des paramètres
     measurements:
       label: Mesures anthropométriques
       visibility:
         label: Partager les mesures en public
       bmi:
-        label: Calculer l'indice de masse corporelle
+        label: Indice de masse corporelle
     training:
       label: Carnet d'entraînement
       visibility:
@@ -144,7 +144,7 @@ main:
         kg: Système métrique (kilogramme)
         lbs: Système impérial (livre)
       timer:
-        label: Afficher le chronomètre
+        label: Chronomètre
       objective:
         label: Objectifs de performance
   home:
@@ -220,7 +220,7 @@ main:
         title: Édition d'un exercice
         submit: Éditer l'exercice
         action: Éditer un exercice
-      search: Saisissez un nom ou un muscle      
+      search: Rechercher un exercice      
       empty: Aucun enregistrement correspondant.
       choose:
         title: Création d'un enchaînement
@@ -311,3 +311,15 @@ notifier:
     save:
       success: Paramètres enregistrés
       error: Enregistrement impossible
+  exercice:
+    save:
+      success: Exercice enregistré
+      error: Enregistrement impossible
+  set:
+    new:
+      success: Série ajoutée
+      error: Ajout impossible
+    delete:
+      success: Série supprimée
+      error: Suppression impossible
+    congratulations: Nouvel objectif débloqué

@@ -3,7 +3,16 @@ import {
     Generator,
     Validator,
     Calculator,
+    Notifier,
 } from "./common";
+import {
+    trans,
+    NOTIFIER_SET_NEW_SUCCESS,
+    NOTIFIER_SET_NEW_ERROR,
+    NOTIFIER_SET_DELETE_SUCCESS,
+    NOTIFIER_SET_DELETE_ERROR,
+    NOTIFIER_SET_CONGRATULATIONS,
+} from '../translator';
 
 export default class extends Controller {
     connect() {
@@ -55,14 +64,16 @@ export default class extends Controller {
                 }, 500);
             }
         });
-        let objective = $('#objective');
+        let objective = $("#objective");
         if (objective.length) {
             $(window).on("scroll", function () {
                 if ($(window).scrollTop() + $(window).height() === $(document).height()) {
                     objective.fadeOut(150);
                 } 
                 else {
-                    objective.fadeIn(200);
+                    if ($("#objective-body").children().length) {
+                        objective.fadeIn(200);
+                    }
                 }
             });
             objective.on("click", function() {
@@ -79,6 +90,9 @@ export default class extends Controller {
             url: "/session/set/add",
             data: $("#_add-form").serialize(),
             success: (response) => {
+                if (response.performance && $("#objective").length) {
+                    Notifier.send.crown(trans(NOTIFIER_SET_CONGRATULATIONS));
+                }
                 $("#set-delete").attr("hidden", false)
                 let exercice_index = 0;
                 if ($("#exercices").children().length > 0) {
@@ -100,7 +114,11 @@ export default class extends Controller {
                 $("#welcome").attr("hidden", true);
                 Calculator.update.objective();
                 Generator.render.add_form();
+                //Notifier.send.success(trans(NOTIFIER_SET_NEW_SUCCESS));
             },
+            error: () => {
+                //Notifier.send.error(trans(NOTIFIER_SET_NEW_ERROR));
+            }
         });
     }
     delete() {
@@ -114,7 +132,11 @@ export default class extends Controller {
                     $("#welcome").attr("hidden", $("#exercices").children().length ? true: false)
                 });
                 Calculator.update.objective();
+                //Notifier.send.success(trans(NOTIFIER_SET_DELETE_SUCCESS));
             },
+            error: () => {
+                //Notifier.send.error(trans(NOTIFIER_SET_DELETE_ERROR));
+            }
         });
     }
 }

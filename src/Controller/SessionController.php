@@ -126,6 +126,7 @@ class SessionController extends AbstractController
         $size = $request->get('size');
         $identifier = $request->get('identifier');
         $sets = $request->get('sets');
+        $data["performance"] = false;
         if ($user->isWorkingOut()) {
             $session = $sessionRepository->findOneBy(['athlete' => $user, 'current' => true]);
             $exercices = $session->getExercices();
@@ -155,6 +156,10 @@ class SessionController extends AbstractController
             }
             foreach ($sets as $created) {
                 $exercice = $exerciceRepository->findOneBy(['id' => $created['exercice']]);
+                /**
+                 * @var ?Set $best
+                 */
+                $best = $setRepository->findTheBest($exercice, $created['equipment'], $created['symmetry']);
                 $set = new Set();
                 $set
                     ->setSession($session)
@@ -169,14 +174,17 @@ class SessionController extends AbstractController
                     ->setEccentric(isset($created['eccentric']) && $created['eccentric'] > 1 ? $created['eccentric']: 1)
                     ->setDropping($created['dropping'] === 'true')
                     ->setDate(new DateTime())
+                    ->updateScore()
                 ;
-                $set->updateScore();
                 $setRepository->save($set, true);
+                if (!$best || $set->getScore() > $best->getScore()) {
+                    $data["performance"] = true;
+                }
             }
         }
         $exercices = json_decode(file_get_contents($this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() . '/api/session'), true)[$session->getId()]['exercices'];
         $sets = json_decode(file_get_contents($this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() . '/api/set?session=' . $session->getId()), true);
-        $data['new'] = !$lastExercice || $identifier !== $lastExercice['identifier'] ? true: false;
+        $data['new'] = !$lastExercice || $identifier !== $lastExercice['identifier'];
         $data['last'] = end($exercices);
         $data['sets'] = $sets;
         return $this->json($data);
@@ -300,9 +308,6 @@ class SessionController extends AbstractController
                                     * ($best->getSymmetry() === Set::UNILATERAL ? 1: 2)
                                     * (1 + $best->getWeight() / 100)
                             );
-                            if ($best->getRepetitions() >= 12 && $symmetry === Set::BILATERAL) {
-                                $weight += round($weight) % 2;
-                            }
                             $concentric = $best->getConcentric();
                             $isometric = $best->getIsometric();
                             $eccentric = $best->getEccentric();
@@ -336,7 +341,7 @@ class SessionController extends AbstractController
                                 'name' => $best->getExercice()->getName(),
                                 'equipment' => $best->getEquipment(),
                                 'symmetry' => $symmetry,
-                                'repetitions' => $reducer === 1 ? $repetitions: 10,
+                                'repetitions' => $reducer === 1 ? $repetitions: ($reducer === 0.8 ? intdiv(10 + $repetitions, 2): 10),
                                 'weight' => $weight * $reducer,
                                 'concentric' => $concentric,
                                 'isometric' => $isometric,

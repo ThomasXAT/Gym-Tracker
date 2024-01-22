@@ -53,7 +53,6 @@ import {
     MACHINE,
     SEQUENCE_LABEL,
     MAIN_SESSION_EXERCICE_EDIT_TITLE,
-    MAIN_SESSION_EXERCICE_EDIT_SUBMIT,
     OBJECTIVE,
     NO_DATA,
 } from '../translator';
@@ -455,8 +454,12 @@ export let Generator = {
                                 }
                                 Generator.render.add_form();
                                 Calculator.update.objective();
+                                $(".button-new-set").attr("disabled", false);
                             },
                         });
+                    }
+                    else {
+                        $(".button-new-set").attr("disabled", false);
                     }
                 },
             });
@@ -1083,7 +1086,7 @@ export let Generator = {
         },
         edit_exercice_form: function(id, name, equipments) {
             $("#exercice-form-title").text(trans(MAIN_SESSION_EXERCICE_EDIT_TITLE));
-            $("#exercice-form-submit").text(trans(MAIN_SESSION_EXERCICE_EDIT_SUBMIT)).attr("data-action", "click->exercice#edit");
+            $("#exercice-form-submit").attr("data-action", "click->exercice#edit");
             $("#exercice_id").val(id);
             $("#exercice_name").val(name);
             $.each($("#section-equipments").find('input[type="checkbox"]'), function(i, input) {
@@ -1253,6 +1256,14 @@ export let Notifier = {
                 dismissible: true,
             });
         },
+        crown: function(text) {
+            notyf.success({
+                message: text,
+                dismissible: true,
+                icon: "<i class=\"fa-solid fa-crown\"></i>",
+                background: "Goldenrod"
+            })
+        }
     }
 }
 
@@ -1265,9 +1276,10 @@ export let Calculator = {
                     url: "/session/objective",
                     data: $("#_add-form").serialize(),
                     success: function(response) {
-                        $("#objective").attr("hidden", false);
+                        $("#objective").fadeIn();
                         $("#objective-body").empty();
                         $.each(response, function(index, exercice) {
+                            let weight = Math.round(($("#user-unit").text() === "lbs" ? exercice.weight / 0.45359237: exercice.weight));
                             $("#objective-body")
                                 .append($("<article></article>")
                                     .addClass(index === 0 ? "": " mt-2")
@@ -1296,7 +1308,7 @@ export let Calculator = {
                                                 )
                                                 .append($("<span></span>")
                                                     .addClass("text-white")
-                                                    .text(Math.round(($("#user-unit").text() === "lbs" ? exercice.weight / 0.45359237: exercice.weight)))
+                                                    .text(exercice.symmetry === "bilateral" ? weight + weight % 2: weight)
                                                 )
                                                 .append($("<span></span>")
                                                     .addClass("ms-1")
