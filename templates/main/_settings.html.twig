@@ -7,6 +7,13 @@
                 </header>
                 <main class="modal-body">
                     <form id="form-settings" name="settings" autocomplete="off">
+                        <div class="form-label fw-bold">{{ 'main.settings.profile.label'|trans }}</div>
+                        <section id="section-profile" class="px-2 mb-3">
+                            <section id="section-email" class="form-check form-switch">
+                                <input class="form-check-input" name="settings[email]" type="checkbox" id="settings_email"{% if app.user.settings.email %} checked{% endif %}>
+                                <label class="form-check-label" for="settings_email">{{ 'main.settings.profile.email.label'|trans }}</label>
+                            </section>
+                        </section>
                         <div class="form-label fw-bold">{{ 'main.settings.measurements.label'|trans }}</div>
                         <section id="section-measurements" class="px-2 mb-3">
                             <section id="section-measurements-visibility" class="form-check form-switch mb-3">

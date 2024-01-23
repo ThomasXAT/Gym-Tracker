@@ -129,6 +129,10 @@ main:
   settings:
     button: Paramètres
     title: Édition des paramètres
+    profile:
+      label: Informations personnelles
+      email:
+        label: Partager l'adresse e-mail en public
     measurements:
       label: Mesures anthropométriques
       visibility:

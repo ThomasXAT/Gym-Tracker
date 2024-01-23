@@ -54,7 +54,7 @@ class SetRepository extends ServiceEntityRepository
             ->andWhere('s.equipment = :equipment')
             ->andWhere('s.symmetry = :symmetry')
             ->andWhere('s.date >= :limit')
-            ->andWhere('s.weight <> 0')
+            ->andWhere('s.repetitions <> 0')
             ->setParameter('exercice', $exercice)
             ->setParameter('equipment', $equipment)
             ->setParameter('symmetry', $symmetry)
