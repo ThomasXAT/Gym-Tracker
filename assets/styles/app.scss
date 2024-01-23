@@ -229,6 +229,7 @@ footer.main, .session-title, .session-date, .exercices-list-item, .exercice-list
 }
 
 #objective {
+    display: none;
     position: fixed;
     z-index: 1000;
     width: 100%;

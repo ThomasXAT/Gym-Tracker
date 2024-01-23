@@ -23,6 +23,7 @@ class SettingsController extends AbstractController
         $data = $request->get('settings');
         $settings = $user->getSettings();
         $settings
+            ->setEmail(isset($data['email']))
             ->setMeasurement(isset($data['measurement']))
             ->setBmi(isset($data['bmi']))
             ->setTraining(isset($data['training']))

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-        <section class="content container" {{ stimulus_controller('repertory') }}>
+        <section class="container" {{ stimulus_controller('repertory') }}>
             {# Search #}<section id="section-search-mobile" class="d-md-none p-3 mx-auto">
                 <form method="get" action="/repertory" autocomplete="off">
                     <div class="input-group">
@@ -16,36 +16,38 @@
                 <h2 class="fs-3">« <span class="text-white">{{ search }}</span> »</h2>
             </section>
 {% endif %}
-            {# Results #}<section id="results" class="text-center">
+            {# Results #}<section id="results" class="text-center row">
 {% if results|length %}
 {% for athlete in results %}
 {% if athlete != app.user %}
-                <div class="card athlete pointer-only mx-auto my-2" data-username="{{ athlete.username }}">
-                    <main class="card-body d-flex justify-content-between align-items-center">
-                        <section class="text-start">
-                            <img id="picture" width="96px" height="96px" class="profile-picture border p-picture-repertory" src="{% if athlete.picture %}{{ asset(athlete.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}">
-                        </section>
-                        <section class="text-center mx-auto px-3 overflow-auto">
+                <div class="col-md-6 col-xl-4">
+                    <div class="card athlete pointer-only mx-auto my-2" data-username="{{ athlete.username }}">
+                        <main class="card-body d-flex justify-content-between align-items-center">
+                            <section class="text-start">
+                                <img id="picture" width="96px" height="96px" class="profile-picture border p-picture-repertory{% if athlete.workingOut %} border-success border-2{% endif %}" src="{% if athlete.picture %}{{ asset(athlete.picture) }}{% else %}{{ asset('images/placeholder-athlete.jpg') }}{% endif %}">
+                            </section>
+                            <section class="text-center mx-auto px-3 overflow-auto">
 {% if athlete.firstname or athlete.surname %}
-                            <section id="section-fullname" class="text-truncate">
-                                <span class="profile-fullname">
+                                <section id="section-fullname" class="text-truncate">
+                                    <span class="profile-fullname">
 {% if athlete.firstname %}
-                                    <span>{{ athlete.firstname }}</span>
+                                        <span>{{ athlete.firstname }}</span>
 {% if athlete.surname %}
     
 {% endif %}
 {% endif %}
 {% if athlete.surname %}
-                                    <span>{{ athlete.surname }}</span>
+                                        <span>{{ athlete.surname }}</span>
 {% endif %}
-                                </span>
-                            </section>
+                                    </span>
+                                </section>
 {% endif %}
-                            <section id="section-username" class="text-truncate">
-                                <span><a href="{{ path('profile', {'username': athlete.username}) }}" class="text-decoration-none">@{{ athlete.username }}</a></span>
+                                <section id="section-username" class="text-truncate">
+                                    <span><a href="{{ path('profile', {'username': athlete.username}) }}" class="text-decoration-none">@{{ athlete.username }}</a></span>
+                                </section>
                             </section>
-                        </section>
-                    </main>
+                        </main>
+                    </div>
                 </div>
 {% endif %}
 {% endfor %}

@@ -1,3 +1,5 @@
+console.info("Welcome to the PӨЯПGYM")
+
 /*
  * Welcome to your app"s main JavaScript file!
  *
@@ -208,6 +210,5 @@ const popoverList = [...popoverTriggerList].map(
     popoverTriggerEl => new Popover(popoverTriggerEl, {
         sanitize: false,
         html: true,
-        trigger: "focus"
     })
 );

@@ -89,7 +89,9 @@ class ApiController extends AbstractController
             $result[$id]['isometric'] = $sets[$i]->getIsometric();
             $result[$id]['eccentric'] = $sets[$i]->getEccentric();
             $result[$id]['dropping'] = $sets[$i]->isDropping();
+            $result[$id]['date'] = $sets[$i]->getDate();
             $result[$id]['score'] = $sets[$i]->getScore();
+
         }
         return $this->json($result);
     }

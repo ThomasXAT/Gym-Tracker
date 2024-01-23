@@ -45,6 +45,9 @@ class Settings
     #[ORM\Column(nullable: true)]
     private ?bool $objective = null;
 
+    #[ORM\Column]
+    private ?bool $email = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -142,6 +145,18 @@ class Settings
     public function setObjective(?bool $objective): static
     {
         $this->objective = $objective;
+
+        return $this;
+    }
+
+    public function isEmail(): ?bool
+    {
+        return $this->email;
+    }
+
+    public function setEmail(bool $email): static
+    {
+        $this->email = $email;
 
         return $this;
     }

@@ -3,11 +3,13 @@ import {
     Generator,
     Validator,
     Calculator,
+    Notifier,
 } from "./common";
 import {
     trans,
     MAIN_SESSION_EXERCICE_CREATE_TITLE,
-    MAIN_SESSION_EXERCICE_CREATE_SUBMIT,
+    NOTIFIER_EXERCICE_SAVE_SUCCESS,
+    NOTIFIER_EXERCICE_SAVE_ERROR,
 } from '../translator';
 
 export default class extends Controller {
@@ -33,7 +35,7 @@ export default class extends Controller {
         });
         $("#button-form-exercice").on("click", function() {
             $("#exercice-form-title").text(trans(MAIN_SESSION_EXERCICE_CREATE_TITLE));
-            $("#exercice-form-submit").text(trans(MAIN_SESSION_EXERCICE_CREATE_SUBMIT)).attr("data-action", "click->exercice#create");
+            $("#exercice-form-submit").attr("data-action", "click->exercice#create");
             $("#exercice_name").val($("#exercice-search").val());
             Validator.verify.name($("#exercice_name"), true);
         });
@@ -55,7 +57,11 @@ export default class extends Controller {
                 form.find('input[type="checkbox"]').prop('checked', false);
                 $("#exercice-form-submit").prop("disabled", true)
                 Validator.setNeutral($("#exercice_name"));
+                Notifier.send.success(trans(NOTIFIER_EXERCICE_SAVE_SUCCESS));
             },
+            error: () => {
+                Notifier.send.error(trans(NOTIFIER_EXERCICE_SAVE_ERROR));
+            }
         });
     }
     edit() {
@@ -70,7 +76,11 @@ export default class extends Controller {
                 form.find('input[type="checkbox"]').prop('checked', false);
                 $("#exercice-form-submit").prop("disabled", true)
                 Validator.setNeutral($("#exercice_name"));
+                Notifier.send.success(trans(NOTIFIER_EXERCICE_SAVE_SUCCESS));
             },
+            error: () => {
+                Notifier.send.error(trans(NOTIFIER_EXERCICE_SAVE_ERROR));
+            }
         });
     }
 }

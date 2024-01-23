@@ -2,7 +2,7 @@
 {% if app.user.workingOut %}
             <ul class="nav text-center">
                 <li class="col-3 my-auto">{# <i class="fa-solid fa-chart-pie fa-lg"></i> #}</li>
-                <li class="col-6 my-auto"><button class="button-new-set btn btn-success text-nowrap"><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button></li>
+                <li class="col-6 my-auto"><button class="button-new-set btn btn-success text-nowrap" disabled><i class="fa-solid fa-plus"></i> {{ 'main.session.set.new'|trans }}</button></li>
                 <li class="col-3 my-auto">{# <i class="fa-solid fa-table-list fa-lg"></i> #}</li>
             </ul>
 {% else %}
