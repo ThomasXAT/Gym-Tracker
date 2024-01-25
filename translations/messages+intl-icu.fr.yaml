@@ -151,6 +151,8 @@ main:
         label: Chronomètre
       objective:
         label: Objectifs de performance
+      warm_up:
+        label: Séries d'échauffement
   home:
     title: Accueil
   repertory:

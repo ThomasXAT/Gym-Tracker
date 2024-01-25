@@ -311,26 +311,31 @@ class SessionController extends AbstractController
                             $concentric = $best->getConcentric();
                             $isometric = $best->getIsometric();
                             $eccentric = $best->getEccentric();
-                            switch ($setIndex) {
-                                case 1:
-                                    $reducer = 0.6;
-                                    break;
-                                case 2:
-                                    $currentSet = new Set();
-                                    $currentSet
-                                        ->setSymmetry($symmetry)
-                                        ->setRepetitions(10)
-                                        ->setWeight($weight * 0.8)
-                                        ->setConcentric($concentric)
-                                        ->setIsometric($isometric)
-                                        ->setEccentric($eccentric)
-                                        ->updateScore()
-                                    ;
-                                    $reducer = $currentSet->getScore() > $session->getSets()->last()->getScore() ? 0.8: 1;
-                                    break;
-                                default:
-                                    $reducer = 1;
-                                    break;
+                            if ($user->getSettings()->isWarmUp()) {
+                                switch ($setIndex) {
+                                    case 1:
+                                        $reducer = 0.6;
+                                        break;
+                                    case 2:
+                                        $currentSet = new Set();
+                                        $currentSet
+                                            ->setSymmetry($symmetry)
+                                            ->setRepetitions(10)
+                                            ->setWeight($weight * 0.8)
+                                            ->setConcentric($concentric)
+                                            ->setIsometric($isometric)
+                                            ->setEccentric($eccentric)
+                                            ->updateScore()
+                                        ;
+                                        $reducer = $currentSet->getScore() > $session->getSets()->last()->getScore() ? 0.8: 1;
+                                        break;
+                                    default:
+                                        $reducer = 1;
+                                        break;
+                                }
+                            }
+                            else {
+                                $reducer = 1;
                             }
                         }
                         array_push(

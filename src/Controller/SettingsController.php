@@ -30,6 +30,7 @@ class SettingsController extends AbstractController
             ->setUnit(isset($data['unit']) && $data['unit'] === Settings::LBS ? Settings::LBS: Settings::KG)
             ->setTimer(isset($data['timer']))
             ->setObjective(isset($data['objective']))
+            ->setWarmUp(isset($data['warm_up']))
         ;
         $settingsRepository->save($settings, true);
         $this->addFlash('success', 'notifier.settings.save.success');

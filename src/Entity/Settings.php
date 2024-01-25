@@ -48,6 +48,9 @@ class Settings
     #[ORM\Column]
     private ?bool $email = null;
 
+    #[ORM\Column]
+    private ?bool $warmUp = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -157,6 +160,18 @@ class Settings
     public function setEmail(bool $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function isWarmUp(): ?bool
+    {
+        return $this->warmUp;
+    }
+
+    public function setWarmUp(bool $warmUp): static
+    {
+        $this->warmUp = $warmUp;
 
         return $this;
     }

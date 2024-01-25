@@ -46,6 +46,10 @@
                                 <input class="form-check-input" name="settings[objective]" type="checkbox" id="settings_objective"{% if app.user.settings.objective %} checked{% endif %}>
                                 <label class="form-check-label" for="settings_objective">{{ 'main.settings.training.objective.label'|trans }}</label>
                             </section>
+                            <section id="section-warm-up" class="form-check form-switch mt-3"{% if not app.user.settings.objective %} hidden{% endif %}>
+                                <input class="form-check-input" name="settings[warm_up]" type="checkbox" id="settings_warm_up"{% if app.user.settings.warmUp %} checked{% endif %}>
+                                <label class="form-check-label" for="settings_warm_up">{{ 'main.settings.training.warm_up.label'|trans }}</label>    
+                            </section>
                         </section>
                     </form>
                 </main>
